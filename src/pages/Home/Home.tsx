@@ -1,4 +1,6 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { Card } from "../../components/Card";
+import { mockProducts } from "../../data/products.mock";
 
 export default function Home() {
   const [params, setParams] = useSearchParams();
@@ -7,7 +9,9 @@ export default function Home() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-3xl font-bold">Suplementos Deportivos</h1>
+      <h1 className="text-3xl font-bold flex justify-center">
+        Suplementos Deportivos
+      </h1>
       <div className="flex gap-2 items-center">
         <input
           className="border rounded px-3 py-2"
@@ -42,15 +46,11 @@ export default function Home() {
         </select>
       </div>
 
-      <ul className="grid md:grid-cols-3 gap-4">
-        {[1,2,3,4,5,6].map((id) => (
-          <li key={id} className="border rounded p-3">
-            <h3 className="font-medium">Producto #{id}</h3>
-            <p className="text-sm opacity-80">Descripción breve...</p>
-            <Link className="underline" to={`/producto/${id}`}>Ver detalle</Link>
-          </li>
+      <div className="grid md:grid-cols-3 gap-4">
+        {mockProducts.map((product) => (
+          <Card key={product.id} product={product} />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
