@@ -21,9 +21,7 @@ export function Login() {
   return (
     <div className="flex items-center justify-center min-h-fit p-5 ">
       <div className="flex flex-col gap-4 w-full max-w-sm ">
-        <h2 className="w-auto text-center py-2 text-2xl font-bold">
-          Iniciar Sesión
-        </h2>
+        <h2 className="w-auto text-center py-2 text-2xl font-bold">Login</h2>
         <Form {...form}>
           <FormField
             control={form.control}
@@ -56,11 +54,11 @@ export function Login() {
         </Form>
 
         <Button type="submit" className="cursor-pointer">
-          LogIn
+          Log In
         </Button>
-        <p className="underline cursor-pointer">¿Olvidaste tu contraseña?</p>
+        <p className="underline cursor-pointer">¿You forgot your password?</p>
         <Link to="/register">
-          <p className="underline cursor-pointer">Registrarse</p>
+          <p className="underline cursor-pointer">Register</p>
         </Link>
       </div>
     </div>

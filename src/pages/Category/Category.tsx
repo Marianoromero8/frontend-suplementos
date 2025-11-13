@@ -15,7 +15,10 @@ export default function Category() {
           <li key={c.slug} className="border rounded p-3">
             <div className="flex items-center justify-between">
               <span>{c.nombre}</span>
-              <button className="underline" onClick={() => navigate(`/categoria/${c.slug}`)}>
+              <button
+                className="underline"
+                onClick={() => navigate(`/categoria/${c.slug}`)}
+              >
                 Ver
               </button>
             </div>

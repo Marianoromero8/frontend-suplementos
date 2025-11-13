@@ -11,6 +11,7 @@ import { Login } from "../pages/Auth/Login";
 import { Register } from "../pages/Auth/Register";
 import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
+import { Dashboard } from "../pages/Dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,17 @@ export const router = createBrowserRouter([
             <Profile />
           </RequireAuth>
         ),
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+        children: [
+          { index: true, element: <h1>Dashboard Home</h1> },
+          { path: "products", element: <h1>Products</h1> },
+          { path: "users", element: <h1>Users</h1> },
+          { path: "orders", element: <h1>Sells</h1> },
+          { path: "reports", element: <h1>Reports</h1> },
+        ],
       },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
