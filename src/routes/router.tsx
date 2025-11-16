@@ -1,15 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "../AppLayout";
-import Home from "../pages/Home";
-import Category from "../pages/Category";
-import Categorydetail from "../pages/Categorydetail";
-import Productdetail from "../pages/Productdetail";
-import Cart from "../pages/Cart";
-import Checkout from "../pages/Checkout";
-import Profile from "../pages/Profile";
-import Login from "../pages/Login";
-import Notfound from "../pages/Notfound";
+import Home from "../pages/Home/Home";
+import Category from "../pages/Category/Category";
+import Categorydetail from "../pages/Category/Categorydetail";
+import Productdetail from "../pages/Product/Productdetail";
+import Cart from "../pages/Cart/Cart";
+import Checkout from "../pages/Checkout/Checkout";
+import Profile from "../pages/Profile/Profile";
+import { Login } from "../pages/Auth/Login";
+import { Register } from "../pages/Auth/Register";
+import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
+import { Dashboard } from "../pages/Dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -17,13 +19,39 @@ export const router = createBrowserRouter([
     errorElement: <Notfound />,
     children: [
       { index: true, element: <Home /> },
-      { path: "/categorias", element: <Category /> },
-      { path: "/categoria/:slug", element: <Categorydetail /> },
+      { path: "/category", element: <Category /> },
+      { path: "/category/:slug", element: <Categorydetail /> },
       { path: "/producto/:id", element: <Productdetail /> },
-      { path: "/carrito", element: <Cart /> },
-      { path: "/checkout", element: <RequireAuth><Checkout /></RequireAuth> },
-      { path: "/perfil", element: <RequireAuth><Profile /></RequireAuth> },
-      { path: "/ingresar", element: <Login /> },
+      { path: "/cart", element: <Cart /> },
+      {
+        path: "/checkout",
+        element: (
+          <RequireAuth>
+            <Checkout />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <RequireAuth>
+            <Profile />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+        children: [
+          { index: true, element: <h1>Dashboard Home</h1> },
+          { path: "products", element: <h1>Products</h1> },
+          { path: "users", element: <h1>Users</h1> },
+          { path: "orders", element: <h1>Sells</h1> },
+          { path: "reports", element: <h1>Reports</h1> },
+        ],
+      },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
       { path: "*", element: <Notfound /> },
     ],
   },
