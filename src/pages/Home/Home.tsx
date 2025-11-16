@@ -48,7 +48,7 @@ export default function Home() {
 
       <div className="grid md:grid-cols-4 gap-8">
         {mockProducts.map((product) => (
-          <Card key={product.id} product={product} />
+          <Card key={product.product_id} product={product} />
         ))}
       </div>
     </section>

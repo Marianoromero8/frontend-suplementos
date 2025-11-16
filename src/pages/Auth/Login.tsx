@@ -7,13 +7,11 @@ import {
   FormItem,
   FormLabel,
 } from "../../components/ui/form";
-import { useAuth } from "../../contexts/AuthContext";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
 
 export function Login() {
-  const { login } = useAuth();
   const form = useForm();
   // const navigate = useNavigate();
   // const location = useLocation() as any;
