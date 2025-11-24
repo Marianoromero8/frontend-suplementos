@@ -1,11 +1,18 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Card } from "../../components/Card";
-import { mockProducts } from "../../data/products.mock";
+import { useEffect, useState } from "react";
+import { getProducts } from "@/services/product.service";
+import type { ProductSchema } from "@/schemas/product.schema";
 
 export default function Home() {
   const [params, setParams] = useSearchParams();
   const q = params.get("q") ?? "";
   const sort = params.get("sort") ?? "relevancia";
+  const [products, setProducts] = useState<ProductSchema[]>([]);
+
+  useEffect(() => {
+    getProducts().then((data) => setProducts(data));
+  }, []);
 
   return (
     <section className="space-y-4">
@@ -47,8 +54,10 @@ export default function Home() {
       </div>
 
       <div className="grid md:grid-cols-4 gap-8">
-        {mockProducts.map((product) => (
-          <Card key={product.product_id} product={product} />
+        {products.map((product) => (
+          <Link key={product.product_id} to={`/product/${product.product_id}`}>
+            <Card product={product} />
+          </Link>
         ))}
       </div>
     </section>
