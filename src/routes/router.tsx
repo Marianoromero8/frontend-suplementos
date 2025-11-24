@@ -11,7 +11,7 @@ import { Register } from "../pages/Auth/Register";
 import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
-import { CategoryDetail } from "@/pages/Category/CategoryDetail";
+import { Categorydetail } from "@/pages/Category/CategoryDetail";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "/categories", element: <Category /> },
-      { path: "/categories/:id", element: <CategoryDetail /> },
+      { path: "/categories/:id", element: <Categorydetail /> },
       { path: "/product/:id", element: <Productdetail /> },
       { path: "/cart", element: <Cart /> },
       {
