@@ -1,9 +1,9 @@
-import { Star } from "lucide-react";
-import type { Product } from "../types/products";
+import { ShoppingBasket, Star } from "lucide-react";
 import { Button } from "./ui/button";
+import type { ProductSchema } from "@/schemas/product.schema";
 
 interface CardProps {
-  product: Product;
+  product: ProductSchema;
 }
 
 export function Card({ product }: CardProps) {
@@ -22,9 +22,11 @@ export function Card({ product }: CardProps) {
         <Star className="text-[#fae843] fill-[#fae843]" />
         <p>{product.rating}</p>
       </div>
-      <Button type="button" className="cursor-pointer">
-        Add cart
-      </Button>
+      <div className="flex justify-end">
+        <Button className="flex align-center w-fit cursor-pointer">
+          <ShoppingBasket />
+        </Button>
+      </div>
     </div>
   );
 }
