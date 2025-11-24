@@ -15,3 +15,10 @@ export async function getProductById(
 
   return productSchema.parse(product);
 }
+
+export async function getProductsByCategory(
+  categoryId: number
+): Promise<ProductSchema[]> {
+  const filtered = mockProducts.filter((p) => p.category_id === categoryId);
+  return productSchema.array().parse(filtered);
+}

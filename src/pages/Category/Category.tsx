@@ -1,30 +1,35 @@
-import { useNavigate } from "react-router-dom";
+import type { CategorySchema } from "@/schemas/category.schema";
+import { getCategories } from "@/services/categories.service";
+import { Home } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-export default function Category() {
-  const navigate = useNavigate();
-  const categorias = [
-    { slug: "proteinas", nombre: "Proteínas" },
-    { slug: "creatinas", nombre: "Creatinas" },
-    { slug: "preentrenos", nombre: "Pre‑entrenos" },
-  ];
+export default function Categories() {
+  const [categories, setCategories] = useState<CategorySchema[]>([]);
+
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
+
   return (
-    <section className="space-y-4">
-      <h1 className="text-2xl font-semibold">Categorías</h1>
-      <ul className="grid md:grid-cols-3 gap-4">
-        {categorias.map((c) => (
-          <li key={c.slug} className="border rounded p-3">
-            <div className="flex items-center justify-between">
-              <span>{c.nombre}</span>
-              <button
-                className="underline"
-                onClick={() => navigate(`/categoria/${c.slug}`)}
-              >
-                Ver
-              </button>
-            </div>
-          </li>
+    <section className="flex flex-col justify-center items-center gap-8">
+      <h1 className="text-5xl font-bold">Categorías</h1>
+
+      <div className="grid md:grid-cols-3 gap-6 w-full">
+        {categories.map((cat) => (
+          <Link
+            key={cat.category_id}
+            to={`/categories/${cat.category_id}`}
+            className="p-4 bg-white shadow rounded-lg hover:shadow-xl transition"
+          >
+            <h2 className="text-xl font-semibold">{cat.name}</h2>
+            <p className="opacity-70">{cat.description}</p>
+          </Link>
         ))}
-      </ul>
+      </div>
+      <Link to="/">
+        <Home />
+      </Link>
     </section>
   );
 }

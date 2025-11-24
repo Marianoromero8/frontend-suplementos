@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "../AppLayout";
 import Home from "../pages/Home/Home";
 import Category from "../pages/Category/Category";
-import Categorydetail from "../pages/Category/Categorydetail";
 import Productdetail from "../pages/Product/Productdetail";
 import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Checkout/Checkout";
@@ -12,6 +11,7 @@ import { Register } from "../pages/Auth/Register";
 import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
+import CategoryDetail from "@/pages/Category/Categorydetail";
 
 export const router = createBrowserRouter([
   {
@@ -19,8 +19,8 @@ export const router = createBrowserRouter([
     errorElement: <Notfound />,
     children: [
       { index: true, element: <Home /> },
-      { path: "/category", element: <Category /> },
-      { path: "/category/:slug", element: <Categorydetail /> },
+      { path: "/categories", element: <Category /> },
+      { path: "/categories/:id", element: <CategoryDetail /> },
       { path: "/product/:id", element: <Productdetail /> },
       { path: "/cart", element: <Cart /> },
       {

@@ -7,7 +7,7 @@ export function NavBar() {
     <header className="flex justify-between backdrop-blur-lg">
       <div className="w-full flex justify-center gap-40 p-4">
         <Link to="/">Tienda</Link>
-        <Link to="/category">Categorías</Link>
+        <Link to="/categories">Categorías</Link>
         <Link to="/cart">Carrito</Link>
       </div>
       <div className="p-4 mr-5">
