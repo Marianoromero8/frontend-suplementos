@@ -11,7 +11,7 @@ import { Register } from "../pages/Auth/Register";
 import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
-import CategoryDetail from "@/pages/Category/Categorydetail";
+import CategoryDetail from "@/pages/Category/CategoryDetail";
 
 export const router = createBrowserRouter([
   {
