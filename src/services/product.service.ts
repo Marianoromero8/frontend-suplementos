@@ -3,6 +3,9 @@ import { productSchema } from "../schemas/product.schema";
 import { mockProducts } from "@/data/products.mock";
 
 export async function getProducts(): Promise<ProductSchema[]> {
+  //   const res = await fetch(`${API_URL}/products`);
+  //   const data = await res.json();
+  //   return productSchema.array().parse(data);
   return productSchema.array().parse(mockProducts);
 }
 
