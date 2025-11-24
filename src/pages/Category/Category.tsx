@@ -4,7 +4,7 @@ import { Home } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function Categories() {
+export function Category() {
   const [categories, setCategories] = useState<CategorySchema[]>([]);
 
   useEffect(() => {

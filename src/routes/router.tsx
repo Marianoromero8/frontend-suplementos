@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import AppLayout from "../AppLayout";
-import Home from "../pages/Home/Home";
-import Category from "../pages/Category/Category";
-import Productdetail from "../pages/Product/Productdetail";
+import { AppLayout } from "../AppLayout";
+import { Home } from "../pages/Home/Home";
+import { Category } from "../pages/Category/Category";
+import { Productdetail } from "../pages/Product/Productdetail";
 import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Checkout/Checkout";
 import Profile from "../pages/Profile/Profile";
@@ -11,7 +11,7 @@ import { Register } from "../pages/Auth/Register";
 import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
-import CategoryDetail from "@/pages/Category/CategoryDetail";
+import { CategoryDetail } from "@/pages/Category/CategoryDetail";
 
 export const router = createBrowserRouter([
   {

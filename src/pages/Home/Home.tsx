@@ -5,7 +5,7 @@ import { getProducts } from "@/services/product.service";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { Filters } from "../../components/Filters";
 
-export default function Home() {
+export function Home() {
   const [params] = useSearchParams();
   const category = params.get("category") ?? "";
   const brand = params.get("brand") ?? "";

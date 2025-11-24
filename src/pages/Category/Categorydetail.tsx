@@ -7,7 +7,7 @@ import type { ProductSchema } from "@/schemas/product.schema";
 import { Card } from "@/components/Card";
 import { ArrowLeftIcon } from "lucide-react";
 
-export default function CategoryDetail() {
+export function CategoryDetail() {
   const { id } = useParams();
   const idCat = Number(id);
   const [category, setCategory] = useState<CategorySchema | null>(null);

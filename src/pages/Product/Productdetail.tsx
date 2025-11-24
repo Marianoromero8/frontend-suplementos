@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-export default function Productdetail() {
+export function Productdetail() {
   const { id } = useParams();
   const [product, setProduct] = useState<ProductSchema | null>(null);
 

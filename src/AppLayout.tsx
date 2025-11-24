@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import Footer from "./components/Footer";
 
-export default function AppLayout() {
+export function AppLayout() {
   const location = useLocation();
 
   const hideNavAndFooterRoutes = [
