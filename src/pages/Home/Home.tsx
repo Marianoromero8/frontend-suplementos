@@ -6,7 +6,7 @@ import type { ProductSchema } from "@/schemas/product.schema";
 import { Filters } from "../../components/Filters";
 
 export default function Home() {
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const category = params.get("category") ?? "";
   const brand = params.get("brand") ?? "";
   const rating = params.get("rating") ?? "";
