@@ -20,14 +20,12 @@ export function CategoryDetail() {
     getProductsByCategory(idCat).then(setProducts);
   }, [idCat]);
 
-  if (!category) return <p>Cargando categoría...</p>;
-
   return (
     <section className="flex flex-col items-center gap-5">
       <div className="flex flex-row items-center">
         <div className="flex flex-col items-center">
-          <h1 className="text-4xl font-bold">{category.name}</h1>
-          <p className="opacity-70">{category.description}</p>
+          <h1 className="text-4xl font-bold">{category?.name}</h1>
+          <p className="opacity-70">{category?.description}</p>
         </div>
       </div>
 
