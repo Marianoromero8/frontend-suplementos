@@ -15,7 +15,6 @@ export function Categorydetail() {
 
   useEffect(() => {
     if (!idCat) return;
-
     getCategoryById(idCat).then(setCategory);
     getProductsByCategory(idCat).then(setProducts);
   }, [idCat]);
