@@ -4,7 +4,7 @@ import { getCategoryById } from "@/services/categories.service";
 import { getProductsByCategory } from "@/services/product.service";
 import type { CategorySchema } from "@/schemas/category.schema";
 import type { ProductSchema } from "@/schemas/product.schema";
-import { Card } from "@/components/Card";
+import { CardProducts } from "@/components/CardProducts";
 import { ArrowLeftIcon } from "lucide-react";
 
 export function Categorydetail() {
@@ -31,7 +31,7 @@ export function Categorydetail() {
       {products.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-8">
           {products.map((product) => (
-            <Card key={product.product_id} product={product} />
+            <CardProducts key={product.product_id} product={product} />
           ))}
         </div>
       ) : (

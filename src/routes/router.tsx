@@ -12,6 +12,11 @@ import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
 import { Categorydetail } from "@/pages/Category/Categorydetail";
+import { DashboardHome } from "@/pages/Dashboard/components/DashboardHome";
+import { DashboardProducts } from "@/pages/Dashboard/components/DashboardProducts";
+import { DashboardUsers } from "@/pages/Dashboard/components/DashboardUsers";
+import { DashboardOrders } from "@/pages/Dashboard/components/DashboardOrders";
+import { DashboardReports } from "@/pages/Dashboard/components/DashboardReports";
 
 export const router = createBrowserRouter([
   {
@@ -43,11 +48,11 @@ export const router = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard />,
         children: [
-          { index: true, element: <h1>Dashboard Home</h1> },
-          { path: "products", element: <h1>Products</h1> },
-          { path: "users", element: <h1>Users</h1> },
-          { path: "orders", element: <h1>Sells</h1> },
-          { path: "reports", element: <h1>Reports</h1> },
+          { index: true, element: <DashboardHome /> },
+          { path: "products", element: <DashboardProducts /> },
+          { path: "users", element: <DashboardUsers /> },
+          { path: "orders", element: <DashboardOrders /> },
+          { path: "reports", element: <DashboardReports /> },
         ],
       },
       { path: "/login", element: <Login /> },

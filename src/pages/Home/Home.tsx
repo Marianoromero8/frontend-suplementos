@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { Card } from "../../components/Card";
+import { CardProducts } from "../../components/CardProducts";
 import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "@/services/product.service";
 import type { ProductSchema } from "@/schemas/product.schema";
@@ -52,7 +52,7 @@ export function Home() {
               key={product.product_id}
               to={`/product/${product.product_id}`}
             >
-              <Card product={product} />
+              <CardProducts product={product} />
             </Link>
           ))
         ) : (
