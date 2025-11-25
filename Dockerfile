@@ -1,10 +1,10 @@
-FROM node:20-alpine
+FROM node:20-slim
 WORKDIR /app
 
 # Copiamos package.json y package-lock.json
 COPY package*.json ./
 
-# Instalamos todas las dependencias (incluidas devDependencies)
+# Instalamos todas las dependencias 
 RUN npm install
 
 # Copiamos el resto del código
