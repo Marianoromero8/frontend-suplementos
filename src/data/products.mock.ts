@@ -1,11 +1,11 @@
-import type { Product } from "../types/products";
+import type { ProductSchema } from "@/schemas/product.schema";
 
-export const mockProducts: Product[] = [
+export const mockProducts: ProductSchema[] = [
   {
     product_id: 1,
     name: "Whey Protein Isolate",
     price: 29999,
-    image: "/public/Jps_logo.png",
+    image: "/Jps_logo.png",
     category_id: 3,
     stock: 15,
     rating: 4.7,
@@ -16,7 +16,7 @@ export const mockProducts: Product[] = [
     product_id: 2,
     name: "Creatina Monohidratada",
     price: 18999,
-    image: "/public/Jps_logo.png",
+    image: "/Jps_logo.png",
     category_id: 2,
     stock: 40,
     rating: 4.8,
@@ -27,7 +27,7 @@ export const mockProducts: Product[] = [
     product_id: 3,
     name: "Pre Entreno C4 Original",
     price: 24999,
-    image: "/public/Jps_logo.png",
+    image: "/Jps_logo.png",
     category_id: 4,
     stock: 25,
     rating: 4.6,
@@ -38,7 +38,7 @@ export const mockProducts: Product[] = [
     product_id: 4,
     name: "Aminoácidos BCAA 2:1:1",
     price: 15999,
-    image: "/public/suplementos-deportivos.webp",
+    image: "/suplementos-deportivos.webp",
     category_id: 2,
     stock: 30,
     rating: 4.5,
@@ -61,7 +61,7 @@ export const mockProducts: Product[] = [
     product_id: 6,
     name: "Glutamina Micronizada",
     price: 16999,
-    image: "/public/suplementos-deportivos.webp",
+    image: "/suplementos-deportivos.webp",
     category_id: 2,
     stock: 20,
     rating: 4.6,
@@ -73,7 +73,7 @@ export const mockProducts: Product[] = [
     product_id: 7,
     name: "Omega 3 Fish Oil 1000mg",
     price: 14999,
-    image: "/public/suplementos-deportivos.webp",
+    image: "/suplementos-deportivos.webp",
     category_id: 5,
     stock: 35,
     rating: 4.9,
@@ -85,7 +85,7 @@ export const mockProducts: Product[] = [
     product_id: 8,
     name: "Barrita Proteica Chocolate",
     price: 4999,
-    image: "/public/suplementos-deportivos.webp",
+    image: "/suplementos-deportivos.webp",
     category_id: 6,
     stock: 50,
     rating: 4.3,
