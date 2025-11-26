@@ -52,7 +52,7 @@ export function Home() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-3xl font-bold flex justify-center">
+      <h1 className="text-5xl font-bold flex justify-center">
         Suplementos Deportivos
       </h1>
 

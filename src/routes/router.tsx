@@ -46,7 +46,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: (
+          // <RequireAuth>
+          <Dashboard />
+          // </RequireAuth>
+        ),
         children: [
           { index: true, element: <DashboardHome /> },
           { path: "products", element: <DashboardProducts /> },

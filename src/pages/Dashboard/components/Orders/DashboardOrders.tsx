@@ -55,8 +55,9 @@ export function DashboardOrders() {
           <TableHeader>
             <TableRow>
               <TableHead>ID order</TableHead>
-              <TableHead>items</TableHead>
+              <TableHead>Items</TableHead>
               <TableHead>Total Amount</TableHead>
+              <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>PDF</TableHead>
             </TableRow>
@@ -69,6 +70,7 @@ export function DashboardOrders() {
                 </TableCell>
                 <TableCell>{order.details.length}</TableCell>
                 <TableCell>${order.total}</TableCell>
+                <TableCell>{order.order_date}</TableCell>
                 <TableCell>{statusOrder(order.status)}</TableCell>
                 <TableCell>
                   {order.status === "completed" ? (
