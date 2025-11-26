@@ -12,11 +12,11 @@ import Notfound from "../pages/NotFound/Notfound";
 import RequireAuth from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
 import { Categorydetail } from "@/pages/Category/Categorydetail";
-import { DashboardHome } from "@/pages/Dashboard/components/DashboardHome";
-import { DashboardProducts } from "@/pages/Dashboard/components/DashboardProducts";
-import { DashboardUsers } from "@/pages/Dashboard/components/DashboardUsers";
-import { DashboardOrders } from "@/pages/Dashboard/components/DashboardOrders";
-import { DashboardReports } from "@/pages/Dashboard/components/DashboardReports";
+import { DashboardHome } from "@/pages/Dashboard/Home/DashboardHome";
+import { DashboardProducts } from "@/pages/Dashboard/components/Products/DashboardProducts";
+import { DashboardUsers } from "@/pages/Dashboard/components/Users/DashboardUsers";
+import { DashboardOrders } from "@/pages/Dashboard/components/Orders/DashboardOrders";
+import { DashboardReports } from "@/pages/Dashboard/components/Reports/DashboardReports";
 
 export const router = createBrowserRouter([
   {

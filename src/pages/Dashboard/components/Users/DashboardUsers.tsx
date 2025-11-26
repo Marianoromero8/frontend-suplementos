@@ -1,3 +1,4 @@
+import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,15 +15,34 @@ import {
 } from "@/components/ui/table";
 import { mockUsers } from "@/data/users.mock";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Edit2Icon, MoreVertical, Trash } from "lucide-react";
+import { Edit2Icon, MoreVertical, Trash, UserPlus } from "lucide-react";
+import { useState } from "react";
+import { UserForm } from "./UserForm";
 
 export function DashboardUsers() {
   const users = mockUsers;
+  const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const usersPagination = users.slice((page - 1) * pageSize, page * pageSize);
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Users</h1>
-        <p className="text-muted-foreground">Users Register</p>
+      <div className="flex flex-row items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Users</h1>
+          <p className="text-muted-foreground">Users Register</p>
+        </div>
+        <div>
+          <Button
+            variant="ghost"
+            onClick={() => setOpen(true)}
+            className="cursor-pointer"
+          >
+            <UserPlus />
+            Add User
+          </Button>
+        </div>
       </div>
       <div>
         <Table>
@@ -34,7 +54,7 @@ export function DashboardUsers() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
+            {usersPagination.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="font-semibold">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
@@ -61,6 +81,19 @@ export function DashboardUsers() {
           </TableBody>
         </Table>
       </div>
+      <Pagination
+        page={page}
+        pageSize={pageSize}
+        total={users.length}
+        onChange={setPage}
+      />
+      <UserForm
+        open={open}
+        onClose={() => setOpen(false)}
+        onSubmit={() => {
+          setOpen(false);
+        }}
+      />
     </div>
   );
 }

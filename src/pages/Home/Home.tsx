@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "@/services/product.service";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { Filters } from "../../components/Filters";
+import { Pagination } from "@/components/Pagination";
 
 export function Home() {
   const [params] = useSearchParams();
@@ -37,6 +38,18 @@ export function Home() {
     getProducts().then((data) => setProducts(data));
   }, []);
 
+  useEffect(() => {
+    setPage(1);
+  }, [category, brand, rating]);
+
+  const [page, setPage] = useState(1);
+  const pageSize = 8;
+
+  const productsHome = filteredProducts.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
   return (
     <section className="space-y-4">
       <h1 className="text-3xl font-bold flex justify-center">
@@ -46,8 +59,8 @@ export function Home() {
       <Filters products={products} />
 
       <div className="grid md:grid-cols-4 justify-center gap-8">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
+        {productsHome.length > 0 ? (
+          productsHome.map((product) => (
             <Link
               key={product.product_id}
               to={`/product/${product.product_id}`}
@@ -59,6 +72,14 @@ export function Home() {
           <p>Product, Brand or Category Not Found</p>
         )}
       </div>
+      {filteredProducts.length > 0 && (
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          total={filteredProducts.length}
+          onChange={setPage}
+        />
+      )}
     </section>
   );
 }

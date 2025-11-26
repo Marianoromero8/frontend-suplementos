@@ -1,3 +1,4 @@
+import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,15 +15,38 @@ import {
 } from "@/components/ui/table";
 import { mockProducts } from "@/data/products.mock";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Edit2Icon, MoreVertical, Trash } from "lucide-react";
+import { Edit2Icon, MoreVertical, PlusCircle, Trash } from "lucide-react";
+import { useState } from "react";
+import { ProductForm } from "./ProductForm";
 
 export function DashboardProducts() {
+  const [open, setOpen] = useState(false);
   const products = mockProducts;
+
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const productsPaginate = products.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Products</h1>
-        <p className="text-muted-foreground">Products available</p>
+      <div className="flex flex-row items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Products</h1>
+          <p className="text-muted-foreground">Products available</p>
+        </div>
+        <div className="flex justify-end">
+          <Button
+            variant="ghost"
+            onClick={() => setOpen(true)}
+            className="cursor-pointer"
+          >
+            <PlusCircle />
+            Add Product
+          </Button>
+        </div>
       </div>
       <div>
         <Table>
@@ -35,7 +59,7 @@ export function DashboardProducts() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((prod) => (
+            {productsPaginate.map((prod) => (
               <TableRow key={prod.product_id}>
                 <TableCell className="font-semibold">{prod.name}</TableCell>
                 <TableCell>{prod.brand}</TableCell>
@@ -62,6 +86,19 @@ export function DashboardProducts() {
           </TableBody>
         </Table>
       </div>
+      <Pagination
+        page={page}
+        pageSize={pageSize}
+        total={products.length}
+        onChange={setPage}
+      />
+      <ProductForm
+        open={open}
+        onClose={() => setOpen(false)}
+        onSubmit={() => {
+          setOpen(false);
+        }}
+      />
     </div>
   );
 }

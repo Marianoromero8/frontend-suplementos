@@ -7,7 +7,10 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { Check, Clock, X } from "lucide-react";
+import { Check, Clock, File, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Pagination } from "@/components/Pagination";
 
 const statusOrder = (status: string) => {
   if (status === "completed")
@@ -35,6 +38,10 @@ const statusOrder = (status: string) => {
 
 export function DashboardOrders() {
   const orders = mockOrders;
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const ordersPagination = orders.slice((page - 1) * pageSize, page * pageSize);
   return (
     <div>
       <div>
@@ -51,10 +58,11 @@ export function DashboardOrders() {
               <TableHead>items</TableHead>
               <TableHead>Total Amount</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>PDF</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order) => (
+            {ordersPagination.map((order) => (
               <TableRow key={order.order_id}>
                 <TableCell className="font-semibold">
                   {order.order_id}
@@ -62,11 +70,26 @@ export function DashboardOrders() {
                 <TableCell>{order.details.length}</TableCell>
                 <TableCell>${order.total}</TableCell>
                 <TableCell>{statusOrder(order.status)}</TableCell>
+                <TableCell>
+                  {order.status === "completed" ? (
+                    <Button variant="ghost">
+                      <File />
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+      <Pagination
+        page={page}
+        pageSize={pageSize}
+        total={orders.length}
+        onChange={setPage}
+      />
     </div>
   );
 }
