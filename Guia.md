@@ -99,6 +99,7 @@ npm run lint      # Corre ESLint
 
 # Estructura del Proyecto
 
+```bash
 /
 ├─ public/
 │ └─ vite.svg
@@ -166,7 +167,7 @@ npm run lint      # Corre ESLint
 │ │ │ │ ├─ Products/
 │ │ │ │ │ ├─ DashboardProducts.tsx
 │ │ │ │ │ └─ ProductForm.tsx
-│ │ │ │ │  
+│ │ │ │ │
 │ │ │ │ ├─ Reports/
 │ │ │ │ │ └─ DashboardReports.tsx
 │ │ │ │ ├─ Reviews/
@@ -227,3 +228,4 @@ npm run lint      # Corre ESLint
 ├─ tsconfig.json
 ├─ tsconfig.node.json
 └─ vite.config.ts
+```
