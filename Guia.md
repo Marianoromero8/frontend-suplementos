@@ -206,7 +206,6 @@ npm run lint      # Corre ESLint
 │ │ ├─ categories.service.ts
 │ │ └─ product.service.ts
 │ │
-│ └─ test/
 │ ├─ App.tsx
 │ ├─ AppLayout.tsx
 │ ├─ index.css
