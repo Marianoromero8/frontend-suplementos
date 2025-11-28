@@ -64,46 +64,42 @@ export function DashboardHome() {
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardTitle>Total Usuarios</CardTitle>
+            <CardTitle>Total Users</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{users}</p>
-            <p className="text-muted-foreground text-sm">
-              Usuarios registrados
-            </p>
+            <p className="text-muted-foreground text-sm">Registered Users</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Total Productos</CardTitle>
+            <CardTitle>Total Products</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{products}</p>
-            <p className="text-muted-foreground text-sm">
-              Productos en catálogo
-            </p>
+            <p className="text-muted-foreground text-sm">Products in Catalog</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Total Órdenes</CardTitle>
+            <CardTitle>Total Orders</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{orders}</p>
-            <p className="text-muted-foreground text-sm">Pedidos realizados</p>
+            <p className="text-muted-foreground text-sm">Orders Completed</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Ingresos Totales</CardTitle>
+            <CardTitle>Total Revenue</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">${totalRevenue}</p>
             <p className="text-muted-foreground text-sm">
-              Basado en órdenes completadas
+              Based on completed orders
             </p>
           </CardContent>
         </Card>
@@ -112,7 +108,7 @@ export function DashboardHome() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Ventas mensuales</CardTitle>
+            <CardTitle>Monthly Sales</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-end gap-2 h-48">
@@ -135,14 +131,14 @@ export function DashboardHome() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Últimas órdenes</CardTitle>
+            <CardTitle>Latest Orders</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Usuario</TableHead>
-                  <TableHead>Fecha</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>Date</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                 </TableRow>
               </TableHeader>

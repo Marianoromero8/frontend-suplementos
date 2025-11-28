@@ -15,7 +15,6 @@ export function CardProducts({ product }: CardProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <p>{product.description}</p>
         <p className="text-2xl font-semibold">${product.price}</p>
       </div>
       <div className="flex flex-row gap-1">

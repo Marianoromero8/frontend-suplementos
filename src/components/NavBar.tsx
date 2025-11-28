@@ -1,18 +1,28 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { HomeIcon, ListTreeIcon, ShoppingCart } from "lucide-react";
+import {
+  HomeIcon,
+  LayoutDashboardIcon,
+  ListTreeIcon,
+  ShoppingCart,
+  UserCheck,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function NavBar() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isAdmin } = useAuth();
   return (
     <header className="flex justify-between backdrop-blur-lg">
       <div className="w-full flex justify-center gap-40 p-4">
-        <div>
-          <Link to="/" className="flex flex-row items-center gap-2">
-            <HomeIcon />
-            Home
+        {isAdmin && (
+          <Link to="/dashboard" className="flex flex-row items-center gap-2">
+            <LayoutDashboardIcon />
+            Dashboard
           </Link>
-        </div>
+        )}
+        <Link to="/" className="flex flex-row items-center gap-2">
+          <HomeIcon />
+          Home
+        </Link>
         <Link to="/categories" className="flex flex-row items-center gap-2">
           <ListTreeIcon />
           Categoríes
@@ -25,7 +35,10 @@ export function NavBar() {
       <div className="p-4 mr-5">
         {isAuthenticated ? (
           <>
-            <Link to="/profile">Profile</Link>
+            <Link to="/profile" className="flex flex-row items-center gap-2">
+              <UserCheck />
+              Profile
+            </Link>
             <span className="">Hi {user?.name}</span>
           </>
         ) : (

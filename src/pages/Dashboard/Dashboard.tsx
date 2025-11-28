@@ -1,6 +1,16 @@
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Button } from "../../components/ui/button";
+import {
+  FileChartColumn,
+  HomeIcon,
+  ListTreeIcon,
+  ShoppingBag,
+  ShoppingBasket,
+  ShoppingCart,
+  Star,
+  Users,
+} from "lucide-react";
 
 export function Dashboard() {
   const { user, logout } = useAuth();
@@ -12,33 +22,59 @@ export function Dashboard() {
         <nav className="flex-1 space-y-4 p-4">
           <Link
             to="/dashboard"
-            className="block p-2 rounded hover:bg-[#5D737E]"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
           >
+            <HomeIcon />
             Home
           </Link>
           <Link
             to="/dashboard/products"
-            className="block p-2 rounded hover:bg-[#5D737E]"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
           >
+            <ShoppingBag />
             Products
           </Link>
           <Link
             to="/dashboard/users"
-            className="block p-2 rounded hover:bg-[#5D737E]"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
           >
+            <Users />
             Users
           </Link>
           <Link
-            to="/dashboard/orders"
-            className="block p-2 rounded hover:bg-[#5D737E]"
+            to="/dashboard/categories"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
           >
+            <ListTreeIcon />
+            Categories
+          </Link>
+          <Link
+            to="/dashboard/orders"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <ShoppingCart />
             Orders
           </Link>
           <Link
-            to="/dashboard/reports"
-            className="block p-2 rounded hover:bg-[#5D737E]"
+            to="/dashboard/reviews"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
           >
+            <Star />
+            Reviews
+          </Link>
+          <Link
+            to="/dashboard/reports"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <FileChartColumn />
             Reports
+          </Link>
+          <Link
+            to="/"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <ShoppingBasket />
+            Store
           </Link>
         </nav>
         <div className="flex flex-row justify-between items-center px-3 m-2">

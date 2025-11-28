@@ -21,11 +21,7 @@ interface ProductFormSheetProps {
   onSubmit: (data: any) => void;
 }
 
-export function ProductForm({
-  open,
-  onClose,
-  onSubmit,
-}: ProductFormSheetProps) {
+export function ProductForm({ open, onClose }: ProductFormSheetProps) {
   const categories = mockCategories;
 
   return (

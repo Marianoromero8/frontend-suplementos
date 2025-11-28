@@ -9,7 +9,7 @@ import Profile from "../pages/Profile/Profile";
 import { Login } from "../pages/Auth/Login";
 import { Register } from "../pages/Auth/Register";
 import Notfound from "../pages/NotFound/Notfound";
-import RequireAuth from "./RequireAuth";
+import { RequireAuth } from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
 import { Categorydetail } from "@/pages/Category/Categorydetail";
 import { DashboardHome } from "@/pages/Dashboard/Home/DashboardHome";
@@ -17,6 +17,8 @@ import { DashboardProducts } from "@/pages/Dashboard/components/Products/Dashboa
 import { DashboardUsers } from "@/pages/Dashboard/components/Users/DashboardUsers";
 import { DashboardOrders } from "@/pages/Dashboard/components/Orders/DashboardOrders";
 import { DashboardReports } from "@/pages/Dashboard/components/Reports/DashboardReports";
+import { DashboardCategories } from "@/pages/Dashboard/components/Categories/DashboardCategories";
+import { DashboardReviews } from "@/pages/Dashboard/components/Reviews/DashboardReviews";
 
 export const router = createBrowserRouter([
   {
@@ -39,23 +41,25 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: (
-          <RequireAuth>
-            <Profile />
-          </RequireAuth>
+          // <RequireAuth>
+          <Profile />
+          // </RequireAuth>
         ),
       },
       {
         path: "/dashboard",
         element: (
-          // <RequireAuth>
+          // <RequireAdmin>
           <Dashboard />
-          // </RequireAuth>
+          // </RequireAdmin>
         ),
         children: [
           { index: true, element: <DashboardHome /> },
           { path: "products", element: <DashboardProducts /> },
           { path: "users", element: <DashboardUsers /> },
+          { path: "categories", element: <DashboardCategories /> },
           { path: "orders", element: <DashboardOrders /> },
+          { path: "reviews", element: <DashboardReviews /> },
           { path: "reports", element: <DashboardReports /> },
         ],
       },
