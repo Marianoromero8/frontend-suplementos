@@ -20,7 +20,7 @@ export function Productdetail() {
 
       getProductById(Number(id)).then((data) => setProduct(data));
     } catch (error) {
-      throw new Error("No se encuentra informacion del producto");
+      throw new Error(`Information of product not found, ${error}`);
     }
   }, [id]);
 
@@ -38,7 +38,6 @@ export function Productdetail() {
           <Star className="text-[#fae843] fill-[#fae843]" />
           <p>{product?.rating}</p>
         </div>
-        {/* Agregar al carrito */}
         <Button className="w-fit">
           <ShoppingBasket />
         </Button>

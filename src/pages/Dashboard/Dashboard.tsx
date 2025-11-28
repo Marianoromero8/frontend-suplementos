@@ -1,42 +1,94 @@
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Button } from "../../components/ui/button";
+import {
+  FileChartColumn,
+  HomeIcon,
+  ListTreeIcon,
+  ShoppingBag,
+  ShoppingBasket,
+  ShoppingCart,
+  Star,
+  Users,
+} from "lucide-react";
 
 export function Dashboard() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-[#FCFCFC] text-[#30292F]">
-      <aside className="w-fit bg-[#02111B] text-[#FCFCFC] flex flex-col">
+      <aside className="w-64 bg-[#02111B] text-[#FCFCFC] flex flex-col">
         <div className="p-4 text-2xl font-bold">Admin Dashboard</div>
         <nav className="flex-1 space-y-4 p-4">
           <Link
             to="/dashboard"
-            className="block p-2 rounded hover:bg-[#5D737E]"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
           >
+            <HomeIcon />
             Home
           </Link>
-          <Link to="products" className="block p-2 rounded hover:bg-[#5D737E]">
+          <Link
+            to="/dashboard/products"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <ShoppingBag />
             Products
           </Link>
-          <Link to="users" className="block p-2 rounded hover:bg-[#5D737E]">
+          <Link
+            to="/dashboard/users"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <Users />
             Users
           </Link>
-          <Link to="orders" className="block p-2 rounded hover:bg-[#5D737E]">
-            Sells
+          <Link
+            to="/dashboard/categories"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <ListTreeIcon />
+            Categories
           </Link>
-          <Link to="reports" className="block p-2 rounded hover:bg-[#5D737E]">
+          <Link
+            to="/dashboard/orders"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <ShoppingCart />
+            Orders
+          </Link>
+          <Link
+            to="/dashboard/reviews"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <Star />
+            Reviews
+          </Link>
+          <Link
+            to="/dashboard/reports"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <FileChartColumn />
             Reports
           </Link>
+          <Link
+            to="/"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <ShoppingBasket />
+            Store
+          </Link>
         </nav>
-
-        {/* Hacer handle logout para el boton */}
         <div className="flex flex-row justify-between items-center px-3 m-2">
           Hi {user?.name}
-          <Button variant="destructive" className="border-0 bg-transparent">
+          <Button
+            onClick={logout}
+            variant="destructive"
+            className="border-0 bg-transparent"
+          >
             LogOut
           </Button>
         </div>
+
+        {/* Hacer handle logout para el boton */}
       </aside>
 
       <main className="flex-1 p-6">

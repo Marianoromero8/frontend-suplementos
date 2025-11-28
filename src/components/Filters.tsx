@@ -91,7 +91,7 @@ export function Filters({ products }: { products: ProductSchema[] }) {
         onClick={clearFilters}
         className="text-[#30292F] bg-blur-3xl"
       >
-        Limpiar filtros
+        Clean filters
       </Button>
     </div>
   );
