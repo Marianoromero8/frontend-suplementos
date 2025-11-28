@@ -1,6 +1,23 @@
 # Suplementos Deportivos – Frontend
 
-Proyecto frontend desarrollado con **React + Vite + TypeScript**, estilado con **Tailwind/Shadcn** y dockerizado para facilitar el desarrollo y despliegue.
+## Tecnologías utilizadas
+
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- Shadcn/UI
+- React Router 6
+- useContext
+- Axios
+- Zod
+- Docker & Docker Compose
+
+---
+
+## Despliegue del Proyecto
+
+https://frontend-suplementos-one.vercel.app/
 
 ---
 
@@ -16,7 +33,7 @@ Asegurate de tener instalado:
 
 # Modo Desarrollo (npm run dev)
 
-Este modo NO usa Docker. Ideal para trabajar día a día.
+Este modo NO usa Docker. Usado para trabajar día a día.
 
 ### 1️- Instalar dependencias
 
@@ -24,7 +41,7 @@ Este modo NO usa Docker. Ideal para trabajar día a día.
 npm install
 ```
 
-### 2- Ejecutar comanado para el servidor de desarrollo
+### 2- Ejecutar comando para el servidor de desarrollo
 
 ```bash
 npm run dev
@@ -35,6 +52,16 @@ npm run dev
 ```
 http://localhost:5173
 ```
+
+---
+
+# Build de Producción
+
+```bash
+npm run build
+```
+
+Esto creara una carpeta llamada `dist/` que servira para ser desplegada.
 
 ---
 
@@ -60,13 +87,6 @@ docker compose down
 
 ---
 
-### Variables de entorno
-
-PONER VARIABLES DE ENTORNO NECESARIAS
-(APIURL, APIKEY, USUARIO DE PRUEBA)
-
----
-
 ### Scripts
 
 ```bash
@@ -79,4 +99,131 @@ npm run lint      # Corre ESLint
 
 # Estructura del Proyecto
 
-AGREGAR LA ESTRUCTURA DE CARPETAS
+/
+├─ public/
+│ └─ vite.svg
+│
+├─ src/
+│ ├─ assets/
+│ │ └─ react.svg
+│ │
+│ ├─ components/
+│ │ ├─ ui/ #Componentes de shadcn
+│ │ │ ├─ button.tsx
+│ │ │ ├─ card.tsx
+│ │ │ ├─ chart.tsx
+│ │ │ ├─ dialog.tsx
+│ │ │ ├─ dropdown-menu.tsx
+│ │ │ ├─ form.tsx
+│ │ │ ├─ input.tsx
+│ │ │ ├─ label.tsx
+│ │ │ ├─ select.tsx
+│ │ │ ├─ separator.tsx
+│ │ │ ├─ sheet.tsx
+│ │ │ └─ table.tsx
+│ │ │
+│ │ ├─ CardProducts.tsx
+│ │ ├─ Filters.tsx
+│ │ ├─ Footer.tsx
+│ │ ├─ NavBar.tsx
+│ │ └─ Pagination.tsx
+│ │
+│ ├─ contexts/
+│ │ ├─ AuthContext.tsx
+│ │ └─ CartContext.tsx
+│ │
+│ ├─ data/
+│ │ ├─ categories.mock.ts
+│ │ ├─ orders.mock.ts
+│ │ ├─ products.mock.ts
+│ │ ├─ reviews.mock.ts
+│ │ └─ users.mock.ts
+│ │
+│ ├─ lib/
+│ │ └─ utils.ts
+│ │
+│ ├─ pages/
+│ │ ├─ Auth/
+│ │ │ ├─ Login.tsx
+│ │ │ └─ Register.tsx
+│ │ │
+│ │ ├─ Cart/
+│ │ │ └─ Cart.tsx
+│ │ │
+│ │ ├─ Category/
+│ │ │ ├─ Category.tsx
+│ │ │ └─ CategoryDetail.tsx
+│ │ │
+│ │ ├─ Checkout/
+│ │ │ └─ Checkout.tsx
+│ │ │
+│ │ ├─ Dashboard/
+│ │ │ ├─ components/
+│ │ │ │ ├─ Categories/
+│ │ │ │ │ └─ DashboardCategories.tsx
+│ │ │ │ ├─ Orders/
+│ │ │ │ │ └─ DashboardOrders.tsx
+│ │ │ │ ├─ Products/
+│ │ │ │ │ ├─ DashboardProducts.tsx
+│ │ │ │ │ └─ ProductForm.tsx
+│ │ │ │ │  
+│ │ │ │ ├─ Reports/
+│ │ │ │ │ └─ DashboardReports.tsx
+│ │ │ │ ├─ Reviews/
+│ │ │ │ │ └─ DashboardReviews.tsx
+│ │ │ │ └─ Users/
+│ │ │ │ ├─ DashboardUsers.tsx
+│ │ │ │ └─ UserForm.tsx
+│ │ │ │
+│ │ │ └─ Dashboard.tsx
+│ │ │
+│ │ ├─ Home/
+│ │ │ └─ Home.tsx
+│ │ │
+│ │ ├─ NotFound/
+│ │ │ └─ NotFound.tsx
+│ │ │
+│ │ ├─ Product/
+│ │ │ └─ ProductDetail.tsx
+│ │ │
+│ │ └─ Profile/
+│ │ └─ Profile.tsx
+│ │
+│ ├─ routes/
+│ │ ├─ RequireAuth.tsx
+│ │ └─ router.tsx
+│ │
+│ ├─ schemas/
+│ │ ├─ category.schema.ts
+│ │ ├─ login.schema.ts
+│ │ ├─ product.schema.ts
+│ │ └─ user.schema.ts
+│ │
+│ ├─ services/
+│ │ ├─ auth.service.ts
+│ │ ├─ cart.service.ts
+│ │ ├─ categories.service.ts
+│ │ └─ product.service.ts
+│ │
+│ └─ test/
+│ ├─ App.tsx
+│ ├─ AppLayout.tsx
+│ ├─ index.css
+│ └─ main.tsx
+│
+├─ .dockerignore
+├─ .env
+├─ .gitignore
+├─ components.json
+├─ docker-compose.yml
+├─ Dockerfile
+├─ ESLint.config.js
+├─ Guia.md
+├─ index.html
+├─ package.json
+├─ package-lock.json
+├─ README.md
+├─ tsconfig.app.json
+├─ tsconfig.json
+├─ tsconfig.node.json
+└─ vite.config.ts
