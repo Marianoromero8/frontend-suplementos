@@ -1,73 +1,243 @@
-# React + TypeScript + Vite
+# Suplementos Deportivos – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Tecnologías utilizadas
 
-Currently, two official plugins are available:
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- Shadcn/UI
+- React Router 6
+- useContext
+- Axios
+- Zod
+- Docker & Docker Compose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Despliegue del Proyecto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+https://frontend-suplementos-one.vercel.app/
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Usuarios para ingresar
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> Admin
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    email: admin@example.com
+    password: 123456
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+> User
+
+    email: julieta@example.com
+    password: 123456
+
+---
+
+## Requisitos
+
+Asegurate de tener instalado:
+
+- **Node.js 20+**
+- **npm 9+**
+- **Docker y Docker Compose**
+
+---
+
+# Modo Desarrollo (npm run dev)
+
+Este modo NO usa Docker. Usado para trabajar día a día.
+
+### 1️- Instalar dependencias
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2- Ejecutar comando para el servidor de desarrollo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 3- Abrir en el navegador
+
+```
+http://localhost:5173
+```
+
+---
+
+# Build de Producción
+
+```bash
+npm run build
+```
+
+Esto creara una carpeta llamada `dist/` que servira para ser desplegada.
+
+---
+
+# Docker Compose (Desarrollo en Contenedor)
+
+1- Construir imagen y levantar contenedor
+
+```bash
+docker compose up --build
+```
+
+2- Abrir en el navegador
+
+```
+http://localhost:5173
+```
+
+3- Cerrar el contenedor
+
+```
+docker compose down
+```
+
+---
+
+### Scripts
+
+```bash
+npm run dev       # Ejecuta Vite en modo desarrollo
+npm run build     # Compila el proyecto para producción
+npm run lint      # Corre ESLint
+```
+
+---
+
+# Estructura del Proyecto
+
+```bash
+/
+├─ public/
+│ └─ vite.svg
+│
+├─ src/
+│ ├─ assets/
+│ │ └─ react.svg
+│ │
+│ ├─ components/
+│ │ ├─ ui/ #Componentes de shadcn
+│ │ │ ├─ button.tsx
+│ │ │ ├─ card.tsx
+│ │ │ ├─ chart.tsx
+│ │ │ ├─ dialog.tsx
+│ │ │ ├─ dropdown-menu.tsx
+│ │ │ ├─ form.tsx
+│ │ │ ├─ input.tsx
+│ │ │ ├─ label.tsx
+│ │ │ ├─ select.tsx
+│ │ │ ├─ separator.tsx
+│ │ │ ├─ sheet.tsx
+│ │ │ └─ table.tsx
+│ │ │
+│ │ ├─ CardProducts.tsx
+│ │ ├─ Filters.tsx
+│ │ ├─ Footer.tsx
+│ │ ├─ NavBar.tsx
+│ │ └─ Pagination.tsx
+│ │
+│ ├─ contexts/
+│ │ ├─ AuthContext.tsx
+│ │ └─ CartContext.tsx
+│ │
+│ ├─ data/
+│ │ ├─ categories.mock.ts
+│ │ ├─ orders.mock.ts
+│ │ ├─ products.mock.ts
+│ │ ├─ reviews.mock.ts
+│ │ └─ users.mock.ts
+│ │
+│ ├─ lib/
+│ │ └─ utils.ts
+│ │
+│ ├─ pages/
+│ │ ├─ Auth/
+│ │ │ ├─ Login.tsx
+│ │ │ └─ Register.tsx
+│ │ │
+│ │ ├─ Cart/
+│ │ │ └─ Cart.tsx
+│ │ │
+│ │ ├─ Category/
+│ │ │ ├─ Category.tsx
+│ │ │ └─ CategoryDetail.tsx
+│ │ │
+│ │ ├─ Checkout/
+│ │ │ └─ Checkout.tsx
+│ │ │
+│ │ ├─ Dashboard/
+│ │ │ ├─ components/
+│ │ │ │ ├─ Categories/
+│ │ │ │ │ └─ DashboardCategories.tsx
+│ │ │ │ ├─ Orders/
+│ │ │ │ │ └─ DashboardOrders.tsx
+│ │ │ │ ├─ Products/
+│ │ │ │ │ ├─ DashboardProducts.tsx
+│ │ │ │ │ └─ ProductForm.tsx
+│ │ │ │ │
+│ │ │ │ ├─ Reports/
+│ │ │ │ │ └─ DashboardReports.tsx
+│ │ │ │ ├─ Reviews/
+│ │ │ │ │ └─ DashboardReviews.tsx
+│ │ │ │ └─ Users/
+│ │ │ │ ├─ DashboardUsers.tsx
+│ │ │ │ └─ UserForm.tsx
+│ │ │ │
+│ │ │ └─ Dashboard.tsx
+│ │ │
+│ │ ├─ Home/
+│ │ │ └─ Home.tsx
+│ │ │
+│ │ ├─ NotFound/
+│ │ │ └─ NotFound.tsx
+│ │ │
+│ │ ├─ Product/
+│ │ │ └─ ProductDetail.tsx
+│ │ │
+│ │ └─ Profile/
+│ │ └─ Profile.tsx
+│ │
+│ ├─ routes/
+│ │ ├─ RequireAuth.tsx
+│ │ └─ router.tsx
+│ │
+│ ├─ schemas/
+│ │ ├─ category.schema.ts
+│ │ ├─ login.schema.ts
+│ │ ├─ product.schema.ts
+│ │ └─ user.schema.ts
+│ │
+│ ├─ services/
+│ │ ├─ auth.service.ts
+│ │ ├─ cart.service.ts
+│ │ ├─ categories.service.ts
+│ │ └─ product.service.ts
+│ │
+│ ├─ App.tsx
+│ ├─ AppLayout.tsx
+│ ├─ index.css
+│ └─ main.tsx
+│
+├─ .dockerignore
+├─ .env
+├─ .gitignore
+├─ components.json
+├─ docker-compose.yml
+├─ Dockerfile
+├─ ESLint.config.js
+├─ index.html
+├─ package.json
+├─ package-lock.json
+├─ README.md
+├─ tsconfig.app.json
+├─ tsconfig.json
+├─ tsconfig.node.json
+└─ vite.config.ts
 ```

@@ -1,11 +1,11 @@
-function App() {
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/router";
+import { AuthProvider } from "./contexts/AuthContext";
+
+export default function App() {
   return (
-    <>
-      <h1 className="flex justify-center m-10 text-6xl">
-        SUPLEMENTOS DEPORTIVOS
-      </h1>
-    </>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }
-
-export default App;
