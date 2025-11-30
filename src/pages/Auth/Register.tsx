@@ -9,6 +9,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 export function Register() {
   const form = useForm();
@@ -17,6 +18,7 @@ export function Register() {
     <div className="flex items-center justify-center min-h-fit p-5 ">
       <div className="flex flex-col gap-4 w-full max-w-sm ">
         <h2 className="w-auto text-center py-2 text-2xl font-bold">Register</h2>
+
         <Form {...form}>
           <FormField
             control={form.control}
@@ -30,6 +32,7 @@ export function Register() {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="email"
@@ -37,15 +40,12 @@ export function Register() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="email@gmail.com"
-                    {...field}
-                  />
+                  <Input type="email" placeholder="email@gmail.com" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="password"
@@ -58,6 +58,7 @@ export function Register() {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="address"
@@ -71,10 +72,18 @@ export function Register() {
             )}
           />
         </Form>
+
+        
         <Button type="submit" className="cursor-pointer">
           Register
         </Button>
-        <p className="underline cursor-pointer">¿Olvidaste tu contraseña?</p>
+
+        
+        <Link to="/login">
+          <p className="underline cursor-pointer text-center">
+            Volver al login
+          </p>
+        </Link>
       </div>
     </div>
   );

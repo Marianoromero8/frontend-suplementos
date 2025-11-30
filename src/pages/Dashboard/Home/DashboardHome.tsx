@@ -7,12 +7,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { mockOrders } from "@/data/orders.mock";
 import { mockProducts } from "@/data/products.mock";
 import { mockUsers } from "@/data/users.mock";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Separator } from "@radix-ui/react-select";
 
 export function DashboardHome() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   const completedOrders = mockOrders.filter((o) => o.status === "completed");
   const users = mockUsers.length;
   const orders = completedOrders.length;
@@ -55,8 +66,21 @@ export function DashboardHome() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground text-sm">
+            Bienvenido, {user?.name ?? "Administrador"}
+          </p>
+        </div>
+
+        <Button
+          onClick={handleLogout}
+          className="cursor-pointer"
+          variant="outline"
+        >
+          Cerrar sesión
+        </Button>
       </div>
 
       <Separator />
