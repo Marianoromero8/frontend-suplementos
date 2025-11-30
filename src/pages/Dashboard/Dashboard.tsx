@@ -1,6 +1,4 @@
 import { Link, Outlet } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import { Button } from "../../components/ui/button";
 import {
   FileChartColumn,
   HomeIcon,
@@ -13,8 +11,6 @@ import {
 } from "lucide-react";
 
 export function Dashboard() {
-  const { user, logout } = useAuth();
-
   return (
     <div className="flex min-h-screen bg-[#FCFCFC] text-[#30292F]">
       <aside className="w-64 bg-[#02111B] text-[#FCFCFC] flex flex-col">
@@ -77,18 +73,6 @@ export function Dashboard() {
             Store
           </Link>
         </nav>
-        <div className="flex flex-row justify-between items-center px-3 m-2">
-          Hi {user?.name}
-          <Button
-            onClick={logout}
-            variant="destructive"
-            className="border-0 bg-transparent"
-          >
-            LogOut
-          </Button>
-        </div>
-
-        {/* Hacer handle logout para el boton */}
       </aside>
 
       <main className="flex-1 p-6">

@@ -10,7 +10,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 
 export function NavBar() {
-  const { isAuthenticated, user, isAdmin, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -52,9 +52,6 @@ export function NavBar() {
               Profile
             </Link>
 
-            <span className="">Hi {user?.name}</span>
-
-            {/* 🔥 Botón Cerrar sesión */}
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 text-red-600 hover:text-red-800 transition"

@@ -11,7 +11,7 @@ import { Register } from "../pages/Auth/Register";
 import { ForgotPassword } from "../pages/Auth/ForgotPassword";
 import { ResetPassword } from "../pages/Auth/ResetPassword";
 import Notfound from "../pages/NotFound/Notfound";
-import { RequireAuth } from "./RequireAuth";
+import { RequireAdmin, RequireAuth } from "./RequireAuth";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
 import { Categorydetail } from "@/pages/Category/Categorydetail";
 import { DashboardHome } from "@/pages/Dashboard/Home/DashboardHome";
@@ -21,7 +21,6 @@ import { DashboardOrders } from "@/pages/Dashboard/components/Orders/DashboardOr
 import { DashboardReports } from "@/pages/Dashboard/components/Reports/DashboardReports";
 import { DashboardCategories } from "@/pages/Dashboard/components/Categories/DashboardCategories";
 import { DashboardReviews } from "@/pages/Dashboard/components/Reviews/DashboardReviews";
-
 
 export const router = createBrowserRouter([
   {
@@ -44,17 +43,17 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: (
-          // <RequireAuth>
-          <Profile />
-          // </RequireAuth>
+          <RequireAuth>
+            <Profile />
+          </RequireAuth>
         ),
       },
       {
         path: "/dashboard",
         element: (
-          // <RequireAdmin>
-          <Dashboard />
-          // </RequireAdmin>
+          <RequireAdmin>
+            <Dashboard />
+          </RequireAdmin>
         ),
         children: [
           { index: true, element: <DashboardHome /> },
