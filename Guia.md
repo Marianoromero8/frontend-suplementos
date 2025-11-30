@@ -21,6 +21,20 @@ https://frontend-suplementos-one.vercel.app/
 
 ---
 
+### Usuarios para ingresar
+
+> Admin
+
+    email: admin@example.com
+    password: 123456
+
+> User
+
+    email: julieta@example.com
+    password: 123456
+
+---
+
 ## Requisitos
 
 Asegurate de tener instalado:
@@ -218,7 +232,6 @@ npm run lint      # Corre ESLint
 ├─ docker-compose.yml
 ├─ Dockerfile
 ├─ ESLint.config.js
-├─ Guia.md
 ├─ index.html
 ├─ package.json
 ├─ package-lock.json
