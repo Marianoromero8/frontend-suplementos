@@ -40,7 +40,11 @@ export function Register() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="email@gmail.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="email@gmail.com"
+                    {...field}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -73,16 +77,12 @@ export function Register() {
           />
         </Form>
 
-        
         <Button type="submit" className="cursor-pointer">
           Register
         </Button>
 
-        
-        <Link to="/login">
-          <p className="underline cursor-pointer text-center">
-            Volver al login
-          </p>
+        <Link to="/login" className="underline">
+          Login
         </Link>
       </div>
     </div>

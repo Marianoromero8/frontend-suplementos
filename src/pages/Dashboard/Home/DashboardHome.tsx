@@ -70,7 +70,7 @@ export function DashboardHome() {
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground text-sm">
-            Bienvenido, {user?.name ?? "Administrador"}
+            Welcome, {user?.name ?? "Administrador"}
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export function DashboardHome() {
           className="cursor-pointer"
           variant="outline"
         >
-          Cerrar sesión
+          Logout
         </Button>
       </div>
 
