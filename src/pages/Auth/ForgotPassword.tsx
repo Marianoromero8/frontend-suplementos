@@ -54,7 +54,7 @@ export function ForgotPassword() {
           Recuperar contraseña
         </h2>
 
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[#30292F]">
           Ingresá tu correo y te ayudaremos a restablecer tu contraseña.
         </p>
 
@@ -75,7 +75,7 @@ export function ForgotPassword() {
                     />
                   </FormControl>
                   {fieldState.error && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-[#d11f1f] text-sm">
                       {fieldState.error.message}
                     </p>
                   )}
@@ -94,7 +94,7 @@ export function ForgotPassword() {
         </Form>
 
         <Link to="/login" className="underline text-sm">
-          Volver al login
+          Back to Login
         </Link>
       </div>
     </div>

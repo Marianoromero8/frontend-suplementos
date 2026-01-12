@@ -54,7 +54,7 @@ export function NavBar() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-red-600 hover:text-red-800 transition"
+              className="flex items-center gap-2 text-[#d11f1f] hover:text-[#9b3434] transition"
             >
               <LogOut size={18} />
               Logout

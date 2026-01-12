@@ -11,6 +11,7 @@ import { Button } from "../../components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { mockUsers } from "../../data/users.mock";
+import { HomeIcon } from "lucide-react";
 
 type LoginFormValues = {
   email: string;
@@ -90,13 +91,12 @@ export function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-fit p-5 ">
+    <div className="flex flex-col items-center justify-center min-h-fit p-5 ">
       <div className="flex flex-col gap-4 w-full max-w-sm ">
         <h2 className="w-auto text-center py-2 text-2xl font-bold">Login</h2>
 
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* EMAIL */}
             <FormField
               control={control}
               name="email"
@@ -115,7 +115,6 @@ export function Login() {
               )}
             />
 
-            {/* PASSWORD */}
             <FormField
               control={control}
               name="password"
@@ -131,7 +130,7 @@ export function Login() {
                     />
                   </FormControl>
                   {fieldState.error && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-[#d11f1f] text-sm">
                       {fieldState.error.message}
                     </p>
                   )}
@@ -139,28 +138,27 @@ export function Login() {
               )}
             />
 
-            {/* SUBMIT BUTTON */}
             <Button
               type="submit"
               className="w-full cursor-pointer"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Ingresando..." : "Log In"}
+              {isSubmitting ? "Loading..." : "Login"}
             </Button>
           </form>
         </Form>
 
-        {/* LINK A RECUPERO DE CONTRASEÑA */}
         <Link to="/forgot-password">
-          <p className="underline cursor-pointer">
-            ¿Olvidaste tu contraseña?
-          </p>
+          <p className="underline cursor-pointer">¿Forgot your password?</p>
         </Link>
 
         <Link to="/register">
           <p className="underline cursor-pointer">Register</p>
         </Link>
       </div>
+      <Link to="/">
+        <HomeIcon />
+      </Link>
     </div>
   );
 }
