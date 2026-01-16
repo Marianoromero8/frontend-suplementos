@@ -13,18 +13,22 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { mockProducts } from "@/data/products.mock";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, PlusCircle, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductForm } from "./ProductForm";
+import type { ProductSchema } from "@/schemas/product.schema";
+import { getProducts } from "@/services/product.service";
 
 export function DashboardProducts() {
   const [open, setOpen] = useState(false);
-  const products = mockProducts;
-
+  const [products, setProducts] = useState<ProductSchema[]>([]);
   const [page, setPage] = useState(1);
   const pageSize = 10;
+
+  useEffect(() => {
+    getProducts().then(setProducts);
+  }, []);
 
   const productsPaginate = products.slice(
     (page - 1) * pageSize,

@@ -8,27 +8,44 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { mockOrders } from "@/data/orders.mock";
-import { mockProducts } from "@/data/products.mock";
 import { mockUsers } from "@/data/users.mock";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@radix-ui/react-select";
+import { useEffect, useState } from "react";
+import type { User } from "@/schemas/user.schema";
+import type { OrderSchema } from "@/schemas/order.schema";
+import type { ProductSchema } from "@/schemas/product.schema";
+import { getUsers } from "@/services/user.service";
+import { getOrders } from "@/services/orders.service";
+import { getProducts } from "@/services/product.service";
 
 export function DashboardHome() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [orders, setOrders] = useState<OrderSchema[]>([]);
+  const [products, setProducts] = useState<ProductSchema[]>([]);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getUsers().then(setUsers);
+    getOrders().then(setOrders);
+    getProducts().then(setProducts);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  const completedOrders = mockOrders.filter((o) => o.status === "completed");
-  const users = mockUsers.length;
-  const orders = completedOrders.length;
-  const products = mockProducts.length;
-  const totalRevenue = completedOrders.reduce((acc, o) => acc + o.total, 0);
+  const completedOrders = orders.filter((o) => o.status === "paid");
+  const usersLength = users.length;
+  const ordersLength = completedOrders.length;
+  const productsLength = products.length;
+  const totalRevenue = completedOrders.reduce(
+    (acc, o) => acc + Number(o.total),
+    0
+  );
 
   // Grafico Ventas Mensuales
   const months = [
@@ -47,7 +64,7 @@ export function DashboardHome() {
   ];
   const salesByMonth = new Array(12).fill(0);
 
-  mockOrders.forEach((o) => {
+  orders.forEach((o) => {
     const m = new Date(o.order_date).getMonth();
     salesByMonth[m] += o.total;
   });
@@ -91,7 +108,7 @@ export function DashboardHome() {
             <CardTitle>Total Users</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{users}</p>
+            <p className="text-3xl font-bold">{usersLength}</p>
             <p className="text-muted-foreground text-sm">Registered Users</p>
           </CardContent>
         </Card>
@@ -101,7 +118,7 @@ export function DashboardHome() {
             <CardTitle>Total Products</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{products}</p>
+            <p className="text-3xl font-bold">{productsLength}</p>
             <p className="text-muted-foreground text-sm">Products in Catalog</p>
           </CardContent>
         </Card>
@@ -111,7 +128,7 @@ export function DashboardHome() {
             <CardTitle>Total Orders</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{orders}</p>
+            <p className="text-3xl font-bold">{ordersLength}</p>
             <p className="text-muted-foreground text-sm">Orders Completed</p>
           </CardContent>
         </Card>

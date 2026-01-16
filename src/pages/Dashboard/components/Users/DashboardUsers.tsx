@@ -13,17 +13,22 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { mockUsers } from "@/data/users.mock";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, Trash, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserForm } from "./UserForm";
+import type { User } from "@/schemas/user.schema";
+import { getUsers } from "@/services/user.service";
 
 export function DashboardUsers() {
-  const users = mockUsers;
+  const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 10;
+
+  useEffect(() => {
+    getUsers().then(setUsers);
+  }, []);
 
   const usersPagination = users.slice((page - 1) * pageSize, page * pageSize);
   return (
@@ -55,7 +60,7 @@ export function DashboardUsers() {
           </TableHeader>
           <TableBody>
             {usersPagination.map((user) => (
-              <TableRow key={user.id}>
+              <TableRow key={user.user_id}>
                 <TableCell className="font-semibold">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>

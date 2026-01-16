@@ -9,18 +9,26 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { StarIcon, Trash } from "lucide-react";
-import { mockReviews } from "@/data/reviews.mock";
-import { useState } from "react";
-import { mockProducts } from "@/data/products.mock";
-import { mockUsers } from "@/data/users.mock";
+import { useEffect, useState } from "react";
+import type { ReviewSchema } from "@/schemas/review.schema";
+import type { ProductSchema } from "@/schemas/product.schema";
+import { getReviews } from "@/services/review.service";
+import { getProducts } from "@/services/product.service";
+import { getUsers } from "@/services/user.service";
+import type { User } from "@/schemas/user.schema";
 
 export function DashboardReviews() {
-  const reviews = mockReviews;
-  const products = mockProducts;
-  const users = mockUsers;
   const [page, setPage] = useState(1);
+  const [reviews, setReviews] = useState<ReviewSchema[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [products, setProducts] = useState<ProductSchema[]>([]);
   const pageSize = 10;
 
+  useEffect(() => {
+    getReviews().then(setReviews);
+    getProducts().then(setProducts);
+    getUsers().then(setUsers);
+  }, []);
   const reviewsPagination = reviews.slice(
     (page - 1) * pageSize,
     page * pageSize
@@ -47,11 +55,13 @@ export function DashboardReviews() {
           <TableBody>
             {reviewsPagination.map((rev) => {
               const product = products.find(
-                (prod) => prod.product_id === rev.product_id
+                (prod) => Number(prod.product_id) === Number(rev.product_id)
               );
-              const user = users.find((user) => user.id === rev.user_id);
+              const user = users.find(
+                (user) => Number(user.user_id) === Number(rev.user_id)
+              );
               return (
-                <TableRow key={rev.user_id}>
+                <TableRow key={rev.review_id}>
                   <TableCell>{product?.name}</TableCell>
                   <TableCell>{rev.comment}</TableCell>
                   <TableCell>

@@ -1,4 +1,3 @@
-import { mockOrders } from "@/data/orders.mock";
 import {
   Table,
   TableHeader,
@@ -9,15 +8,17 @@ import {
 } from "@/components/ui/table";
 import { Check, Clock, File, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pagination } from "@/components/Pagination";
+import type { OrderSchema } from "@/schemas/order.schema";
+import { getOrders } from "@/services/orders.service";
 
 const statusOrder = (status: string) => {
-  if (status === "completed")
+  if (status === "paid")
     return (
       <div className="flex flex-row gap-2 font-bold">
         <Check className="text-[#167c12]" />
-        Completed
+        Paid
       </div>
     );
   if (status === "pending")
@@ -37,18 +38,20 @@ const statusOrder = (status: string) => {
 };
 
 export function DashboardOrders() {
-  const orders = mockOrders;
   const [page, setPage] = useState(1);
+  const [orders, setOrders] = useState<OrderSchema[]>([]);
   const pageSize = 10;
+
+  useEffect(() => {
+    getOrders().then(setOrders);
+  }, []);
 
   const ordersPagination = orders.slice((page - 1) * pageSize, page * pageSize);
   return (
     <div>
       <div>
         <h1 className="text-3xl font-bold">Orders</h1>
-        <p className="text-muted-foreground">
-          Orders - Completed/Pending/Cancelled
-        </p>
+        <p className="text-muted-foreground">Orders - Paid/Pending/Cancelled</p>
       </div>
       <div>
         <Table>
@@ -73,7 +76,7 @@ export function DashboardOrders() {
                 <TableCell>{order.order_date}</TableCell>
                 <TableCell>{statusOrder(order.status)}</TableCell>
                 <TableCell>
-                  {order.status === "completed" ? (
+                  {order.status === "paid" ? (
                     <Button variant="ghost">
                       <File />
                     </Button>

@@ -15,13 +15,18 @@ import {
 } from "@/components/ui/table";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, Trash } from "lucide-react";
-import { useState } from "react";
-import { mockCategories } from "@/data/categories.mock";
+import { useEffect, useState } from "react";
+import type { CategorySchema } from "@/schemas/category.schema";
+import { getCategories } from "@/services/categories.service";
 
 export function DashboardCategories() {
-  const categories = mockCategories;
   const [page, setPage] = useState(1);
+  const [categories, setCategories] = useState<CategorySchema[]>([]);
   const pageSize = 10;
+
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
 
   const categoriesPagination = categories.slice(
     (page - 1) * pageSize,
