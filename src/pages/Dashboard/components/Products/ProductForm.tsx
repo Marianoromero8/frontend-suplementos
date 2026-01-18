@@ -112,7 +112,20 @@ export function ProductForm({
             )}
           </div>
           <div>
-            <Input type="rating" placeholder="Rating" {...register("rating")} />
+            <Input
+              type="number"
+              min={1}
+              max={5}
+              placeholder="Rating"
+              {...register("rating", {
+                valueAsNumber: true,
+                onBlur: (e) => {
+                  const value = Number(e.target.value);
+                  if (value < 1) e.target.value = "1";
+                  if (value > 5) e.target.value = "5";
+                },
+              })}
+            />
             {errors.rating?.message && (
               <p className="text-[#d11f1f] text-sm">{errors.rating.message}</p>
             )}

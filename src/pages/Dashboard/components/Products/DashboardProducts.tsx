@@ -32,7 +32,7 @@ export function DashboardProducts() {
 
   const productsPaginate = products.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
   return (
     <div className="space-y-8">
@@ -96,13 +96,7 @@ export function DashboardProducts() {
         total={products.length}
         onChange={setPage}
       />
-      <ProductForm
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={() => {
-          setOpen(false);
-        }}
-      />
+      <ProductForm open={open} onClose={() => setOpen(false)} />
     </div>
   );
 }

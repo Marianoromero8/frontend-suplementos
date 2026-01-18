@@ -21,3 +21,23 @@ export async function getUsers(): Promise<User[]> {
   const data = await res.json();
   return userSchema.array().parse(data);
 }
+
+export async function getOrdersByUserId(userId: number) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/api/orders/user/${userId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message ?? "No se pudieron obtener las órdenes");
+  }
+
+  return data;
+}
