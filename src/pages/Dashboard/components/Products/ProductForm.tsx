@@ -53,7 +53,6 @@ export function ProductForm({
       rating: 0,
       description: "",
       category_id: 0,
-      image: "",
     },
   });
 
@@ -71,7 +70,6 @@ export function ProductForm({
 
       const payload: CreateProduct = {
         ...parsed,
-        image: `/images/products/${parsed.image}`,
       };
       const created = await createProduct(payload);
       await Swal.fire({
@@ -127,21 +125,6 @@ export function ProductForm({
             <Input type="number" placeholder="Stock" {...register("stock")} />
             {errors.stock?.message && (
               <p className="text-[#d11f1f] text-sm">{errors.stock.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Input
-              type="file"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  setValue("image", file.name, { shouldValidate: true });
-                }
-              }}
-            />
-            {errors.image?.message && (
-              <p className="text-[#d11f1f] text-sm">{errors.image.message}</p>
             )}
           </div>
           <div>

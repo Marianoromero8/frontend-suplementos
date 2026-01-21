@@ -24,7 +24,6 @@ export const createProductSchema = z.object({
   rating: z.coerce.number().min(0).max(5).optional(),
   description: z.string().min(5, "Descripcion obligatoria"),
   category_id: z.coerce.number().int().positive("Categoría obligatoria"),
-  image: z.string().min(1, "La imagen es requerida"),
 });
 export type CreateProductFormValues = z.input<typeof createProductSchema>;
 
