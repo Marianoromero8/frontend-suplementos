@@ -18,7 +18,8 @@ import { Edit2Icon, MoreVertical, PlusCircle, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ProductForm } from "./ProductForm";
 import type { ProductSchema } from "@/schemas/product.schema";
-import { getProducts } from "@/services/product.service";
+import { deleteProduct, getProducts } from "@/services/product.service";
+import Swal from "sweetalert2";
 
 export function DashboardProducts() {
   const [open, setOpen] = useState(false);
@@ -34,6 +35,29 @@ export function DashboardProducts() {
     (page - 1) * pageSize,
     page * pageSize,
   );
+
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: "¿Eliminar producto?",
+      text: "No podrás revertir esto",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteProduct(id);
+        Swal.fire("¡Eliminado!", "El producto ha sido borrado.", "success");
+        window.location.reload();
+      } catch (error) {
+        Swal.fire("Error", "error");
+      }
+    }
+  };
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -79,7 +103,9 @@ export function DashboardProducts() {
                       <DropdownMenuItem>
                         <Edit2Icon /> Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(prod.product_id)}
+                      >
                         <Trash /> Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>

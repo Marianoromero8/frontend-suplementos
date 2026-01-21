@@ -16,11 +16,16 @@ export async function getProducts(): Promise<ProductSchema[]> {
   }
 
   const data = await res.json();
-  return productSchema.array().parse(data);
+  const rawProducts = productSchema.array().parse(data);
+
+  return rawProducts.map((product) => ({
+    ...product,
+    image: `${API_URL}${product.image}`,
+  }));
 }
 
 export async function getProductById(
-  id: number
+  id: number,
 ): Promise<ProductSchema | null> {
   const res = await fetch(`${API_URL}/api/products/${id}`, {
     headers: {
@@ -29,11 +34,16 @@ export async function getProductById(
     },
   });
   const data = await res.json();
-  return productSchema.parse(data);
+  const product = productSchema.parse(data);
+
+  return {
+    ...product,
+    image: `${API_URL}${product.image}`,
+  };
 }
 
 export async function getProductsByCategory(
-  categoryId: number
+  categoryId: number,
 ): Promise<ProductSchema[]> {
   const res = await fetch(`${API_URL}/api/products`, {
     headers: {
@@ -49,7 +59,12 @@ export async function getProductsByCategory(
   const data = await res.json();
   const products = productSchema.array().parse(data);
 
-  return products.filter((p) => p.category_id === categoryId);
+  return products
+    .filter((p) => p.category_id === categoryId)
+    .map((product) => ({
+      ...product,
+      image: `${API_URL}${product.image}`,
+    }));
 }
 
 export async function createProduct(payload: CreateProduct) {
@@ -73,4 +88,22 @@ export async function createProduct(payload: CreateProduct) {
   }
 
   return data;
+}
+
+export async function deleteProduct(id: number): Promise<void> {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/api/products/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null);
+    throw new Error(errorData?.message ?? "No se pudo eliminar el producto");
+  }
 }

@@ -24,6 +24,7 @@ import {
   type CreateProduct,
   type CreateProductFormValues,
 } from "@/schemas/product.schema";
+import Swal from "sweetalert2";
 
 interface ProductFormSheetProps {
   open: boolean;
@@ -65,16 +66,33 @@ export function ProductForm({
   } = form;
 
   const onSubmit: SubmitHandler<CreateProductFormValues> = async (values) => {
-    const parsed: CreateProduct = createProductSchema.parse(values);
+    try {
+      const parsed: CreateProduct = createProductSchema.parse(values);
 
-    const payload: CreateProduct = {
-      ...parsed,
-      image: parsed.image?.trim() ? parsed.image.trim() : undefined,
-    };
-    const created = await createProduct(payload);
-    onCreated?.(created);
-    reset();
-    onClose(true);
+      const payload: CreateProduct = {
+        ...parsed,
+        image: `/images/products/${parsed.image}`,
+      };
+      const created = await createProduct(payload);
+      await Swal.fire({
+        title: "¡Producto Creado!",
+        text: `The product "${created.name}" was created successfully`,
+        icon: "success",
+        confirmButtonColor: "#000",
+        timer: 2000,
+        timerProgressBar: true,
+      });
+      onCreated?.(created);
+      reset();
+      onClose(true);
+      window.location.reload();
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error",
+        text: error.message || "No se pudo crear el producto",
+        icon: "error",
+      });
+    }
   };
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -111,23 +129,19 @@ export function ProductForm({
               <p className="text-[#d11f1f] text-sm">{errors.stock.message}</p>
             )}
           </div>
+
           <div>
             <Input
-              type="number"
-              min={1}
-              max={5}
-              placeholder="Rating"
-              {...register("rating", {
-                valueAsNumber: true,
-                onBlur: (e) => {
-                  const value = Number(e.target.value);
-                  if (value < 1) e.target.value = "1";
-                  if (value > 5) e.target.value = "5";
-                },
-              })}
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setValue("image", file.name, { shouldValidate: true });
+                }
+              }}
             />
-            {errors.rating?.message && (
-              <p className="text-[#d11f1f] text-sm">{errors.rating.message}</p>
+            {errors.image?.message && (
+              <p className="text-[#d11f1f] text-sm">{errors.image.message}</p>
             )}
           </div>
           <div>
@@ -171,7 +185,7 @@ export function ProductForm({
           </div>
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create Product"}
+            {isSubmitting ? "Creating..." : "Create"}
           </Button>
         </form>
       </SheetContent>

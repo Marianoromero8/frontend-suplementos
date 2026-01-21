@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { registerSchema, type RegisterSchema } from "@/schemas/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerRequest } from "@/services/auth.service";
+import Swal from "sweetalert2";
 interface UserFormProps {
   open: boolean;
   onClose: (open: boolean) => void;
@@ -41,7 +42,6 @@ export function UserForm({ open, onClose }: UserFormProps) {
   const {
     handleSubmit,
     control,
-    setError,
     reset,
     formState: { isSubmitting },
   } = form;
@@ -55,11 +55,22 @@ export function UserForm({ open, onClose }: UserFormProps) {
         password: "",
         address: "",
       });
+      await Swal.fire({
+        title: `¡User ${values.name} was created!`,
+        text: `The user "${values.name}" was created successfully`,
+        icon: "success",
+        confirmButtonColor: "#000",
+        timer: 2000,
+        timerProgressBar: true,
+      });
+      onClose(true);
+      window.location.reload();
       navigate("/dashboard/users", { replace: true });
-    } catch (e: any) {
-      setError("email", {
-        type: "manual",
-        message: e.message ?? "No se pudo registrar",
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error",
+        text: error.message || "User wasn´t create",
+        icon: "error",
       });
     }
   };

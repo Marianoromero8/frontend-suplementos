@@ -1,5 +1,4 @@
 import { Pagination } from "@/components/Pagination";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableHeader,
@@ -8,7 +7,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { StarIcon, Trash } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReviewSchema } from "@/schemas/review.schema";
 import type { ProductSchema } from "@/schemas/product.schema";
@@ -31,7 +30,7 @@ export function DashboardReviews() {
   }, []);
   const reviewsPagination = reviews.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
 
   return (
@@ -49,16 +48,15 @@ export function DashboardReviews() {
               <TableHead>Description</TableHead>
               <TableHead>User</TableHead>
               <TableHead>Rating</TableHead>
-              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {reviewsPagination.map((rev) => {
               const product = products.find(
-                (prod) => Number(prod.product_id) === Number(rev.product_id)
+                (prod) => Number(prod.product_id) === Number(rev.product_id),
               );
               const user = users.find(
-                (user) => Number(user.user_id) === Number(rev.user_id)
+                (user) => Number(user.user_id) === Number(rev.user_id),
               );
               return (
                 <TableRow key={rev.review_id}>
@@ -75,11 +73,6 @@ export function DashboardReviews() {
                   <TableCell className="flex flex-row items-center gap-2 ">
                     <StarIcon className="text-[#fcf811fa] fill-[#fcf811fa]" />
                     {rev.qualification}
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="destructive" className="cursor-pointer">
-                      <Trash />
-                    </Button>
                   </TableCell>
                 </TableRow>
               );
