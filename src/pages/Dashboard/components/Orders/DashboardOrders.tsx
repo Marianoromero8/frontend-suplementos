@@ -73,7 +73,7 @@ export function DashboardOrders() {
                 </TableCell>
                 <TableCell>{order.details.length}</TableCell>
                 <TableCell>${order.total}</TableCell>
-                <TableCell>{order.order_date}</TableCell>
+                <TableCell>{order.order_date.slice(0, 10)}</TableCell>
                 <TableCell>{statusOrder(order.status)}</TableCell>
                 <TableCell>
                   {order.status === "paid" ? (

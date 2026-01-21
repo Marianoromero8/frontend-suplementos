@@ -44,7 +44,7 @@ export function DashboardHome() {
   const productsLength = products.length;
   const totalRevenue = completedOrders.reduce(
     (acc, o) => acc + Number(o.total),
-    0
+    0,
   );
 
   // Grafico Ventas Mensuales
@@ -74,7 +74,7 @@ export function DashboardHome() {
   const latestOrders = completedOrders
     .sort(
       (a, b) =>
-        new Date(b.order_date).getTime() - new Date(a.order_date).getTime()
+        new Date(b.order_date).getTime() - new Date(a.order_date).getTime(),
     )
     .slice(0, 5);
 
@@ -189,7 +189,7 @@ export function DashboardHome() {
                     <TableCell className="font-semibold">
                       {findUser(o.user_id)}
                     </TableCell>
-                    <TableCell>{o.order_date}</TableCell>
+                    <TableCell>{o.order_date.slice(0, 10)}</TableCell>
                     <TableCell className="text-right font-bold">
                       ${o.total}
                     </TableCell>
