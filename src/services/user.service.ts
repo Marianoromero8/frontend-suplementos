@@ -22,6 +22,26 @@ export async function getUsers(): Promise<User[]> {
   return userSchema.array().parse(data);
 }
 
+export async function getUserById(userId: number) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/api/users/${userId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message ?? "No se pudieron obtener las órdenes");
+  }
+
+  return data;
+}
+
 export async function getOrdersByUserId(userId: number) {
   const token = localStorage.getItem("token");
 
@@ -37,6 +57,28 @@ export async function getOrdersByUserId(userId: number) {
 
   if (!res.ok) {
     throw new Error(data?.message ?? "No se pudieron obtener las órdenes");
+  }
+
+  return data;
+}
+
+export async function editUser(userId: number, body: object) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/api/users/${userId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message ?? "No se pudo editar");
   }
 
   return data;

@@ -9,7 +9,7 @@ export const userSchema = z.object({
     .string()
     .nonempty("El email es obligatorio")
     .email("Debe ser un email válido"),
-  address: z.string().min(5, "La dirección debe tener al menos 5 caracteres"),
+  address: z.string().min(1, "La dirección debe tener al menos 5 caracteres"),
   role: userRoleEnum,
 });
 

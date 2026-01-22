@@ -2,11 +2,13 @@ import { Link, Outlet } from "react-router-dom";
 import {
   FileChartColumn,
   HomeIcon,
+  InfoIcon,
   ListTreeIcon,
   ShoppingBag,
   ShoppingBasket,
   ShoppingCart,
   Star,
+  UserIcon,
   Users,
 } from "lucide-react";
 
@@ -71,6 +73,13 @@ export function Dashboard() {
           >
             <ShoppingBasket />
             Store
+          </Link>
+          <Link
+            to="/profile"
+            className="flex flex-row gap-2 p-2 rounded hover:bg-[#5D737E]"
+          >
+            <UserIcon />
+            Profile
           </Link>
         </nav>
       </aside>
