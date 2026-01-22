@@ -24,8 +24,6 @@ export default function Perfil() {
   const { user } = useAuth(); // Obtenemos el usuario logueado
   const [orders, setOrders] = useState<OrderSchema[]>([]);
   const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(true);
 
   // Estado para el formulario
   const [formData, setFormData] = useState({
@@ -40,8 +38,6 @@ export default function Perfil() {
       if (!user?.id) return;
 
       try {
-        setFetching(true);
-
         const userById = await getUserById(Number(user.id));
 
         setFormData({
@@ -59,8 +55,6 @@ export default function Perfil() {
         }
       } catch (error) {
         console.error("Error loading profile:", error);
-      } finally {
-        setFetching(false);
       }
     };
 
@@ -90,7 +84,6 @@ export default function Perfil() {
     });
 
     if (result.isConfirmed) {
-      setLoading(true);
       try {
         await editUser(Number(user?.id), formData);
 
@@ -104,8 +97,6 @@ export default function Perfil() {
         window.location.reload();
       } catch (error: any) {
         Swal.fire("Error", error.message || "No se pudo actualizar", "error");
-      } finally {
-        setLoading(false);
       }
     }
   };

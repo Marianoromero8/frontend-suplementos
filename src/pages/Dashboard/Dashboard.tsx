@@ -2,7 +2,6 @@ import { Link, Outlet } from "react-router-dom";
 import {
   FileChartColumn,
   HomeIcon,
-  InfoIcon,
   ListTreeIcon,
   ShoppingBag,
   ShoppingBasket,

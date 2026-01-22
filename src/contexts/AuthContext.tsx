@@ -4,7 +4,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  address: string;
+  address?: string;
   role: "USER" | "ADMIN";
 }
 
