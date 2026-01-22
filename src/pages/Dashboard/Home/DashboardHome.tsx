@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { mockUsers } from "@/data/users.mock";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@radix-ui/react-select";
@@ -79,7 +78,7 @@ export function DashboardHome() {
     .slice(0, 5);
 
   const findUser = (id: number) =>
-    mockUsers.find((u) => u.id === id)?.name ?? "Unknow";
+    users.find((u) => u.user_id === id)?.name ?? "Unknow";
 
   return (
     <div className="space-y-8">
