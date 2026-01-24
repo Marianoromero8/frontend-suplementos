@@ -13,23 +13,51 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { mockProducts } from "@/data/products.mock";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, PlusCircle, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductForm } from "./ProductForm";
+import type { ProductSchema } from "@/schemas/product.schema";
+import { deleteProduct, getProducts } from "@/services/product.service";
+import Swal from "sweetalert2";
 
 export function DashboardProducts() {
   const [open, setOpen] = useState(false);
-  const products = mockProducts;
-
+  const [products, setProducts] = useState<ProductSchema[]>([]);
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
+  useEffect(() => {
+    getProducts().then(setProducts);
+  }, []);
+
   const productsPaginate = products.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
+
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: "¿Eliminar producto?",
+      text: "No podrás revertir esto",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteProduct(id);
+        Swal.fire("¡Eliminado!", "El producto ha sido borrado.", "success");
+        window.location.reload();
+      } catch (error) {
+        Swal.fire("Error", "error");
+      }
+    }
+  };
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -75,7 +103,9 @@ export function DashboardProducts() {
                       <DropdownMenuItem>
                         <Edit2Icon /> Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(prod.product_id)}
+                      >
                         <Trash /> Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -92,13 +122,7 @@ export function DashboardProducts() {
         total={products.length}
         onChange={setPage}
       />
-      <ProductForm
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={() => {
-          setOpen(false);
-        }}
-      />
+      <ProductForm open={open} onClose={() => setOpen(false)} />
     </div>
   );
 }

@@ -16,9 +16,15 @@ export const productSchema = z.object({
 
 export type ProductSchema = z.infer<typeof productSchema>;
 
-export const createProductSchema = productSchema.omit({
-  product_id: true,
-  rating: true,
+export const createProductSchema = z.object({
+  name: z.string().min(2, "Nombre obligatorio"),
+  brand: z.string().min(2, "Marca obligatoria"),
+  price: z.coerce.number().positive("Precio inválido"),
+  stock: z.coerce.number().int().nonnegative("Stock inválido"),
+  rating: z.coerce.number().min(0).max(5).optional(),
+  description: z.string().min(5, "Descripcion obligatoria"),
+  category_id: z.coerce.number().int().positive("Categoría obligatoria"),
 });
+export type CreateProductFormValues = z.input<typeof createProductSchema>;
 
-export type CreateProductSchema = z.infer<typeof createProductSchema>;
+export type CreateProduct = z.infer<typeof createProductSchema>;

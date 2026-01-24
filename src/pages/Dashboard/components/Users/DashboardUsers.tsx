@@ -13,17 +13,62 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { mockUsers } from "@/data/users.mock";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, Trash, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserForm } from "./UserForm";
+import type { User } from "@/schemas/user.schema";
+import { editUser, getUsers } from "@/services/user.service";
+import Swal from "sweetalert2";
 
 export function DashboardUsers() {
-  const users = mockUsers;
+  const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 10;
+
+  useEffect(() => {
+    getUsers().then(setUsers);
+  }, []);
+
+  const handleEditRole = async (userId: number, currentRole: string) => {
+    const { value: newRole } = await Swal.fire({
+      title: "Change User Role",
+      input: "select",
+      inputOptions: {
+        USER: "User",
+        ADMIN: "Admin",
+      },
+      inputValue: currentRole,
+      showCancelButton: true,
+      confirmButtonText: "Update",
+      confirmButtonColor: "#3b82f6",
+    });
+
+    if (newRole && newRole !== currentRole) {
+      try {
+        await editUser(userId, { role: newRole });
+
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.user_id === userId
+              ? { ...u, role: newRole as "USER" | "ADMIN" }
+              : u,
+          ),
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: `New role:  ${newRole}`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      } catch (error: any) {
+        Swal.fire("Error", error.message || "Failed to update role", "error");
+      }
+    }
+  };
 
   const usersPagination = users.slice((page - 1) * pageSize, page * pageSize);
   return (
@@ -55,7 +100,7 @@ export function DashboardUsers() {
           </TableHeader>
           <TableBody>
             {usersPagination.map((user) => (
-              <TableRow key={user.id}>
+              <TableRow key={user.user_id}>
                 <TableCell className="font-semibold">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
@@ -67,7 +112,9 @@ export function DashboardUsers() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleEditRole(user.user_id, user.role)}
+                      >
                         <Edit2Icon /> Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem>

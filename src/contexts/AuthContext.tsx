@@ -4,7 +4,8 @@ interface User {
   id: number;
   name: string;
   email: string;
-  role: "user" | "admin";
+  address?: string;
+  role: "USER" | "ADMIN";
 }
 
 interface AuthState {
@@ -34,8 +35,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function getInitialUser(): User | null {
+  try {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? (JSON.parse(savedUser) as User) : null;
+  } catch {
+    return null;
+  }
+}
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [state, dispatch] = useReducer(authReducer, { user: getInitialUser() });
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -57,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const isAuthenticated = !!state.user;
-  const isAdmin = state.user?.role === "admin";
+  const isAdmin = state.user?.role === "ADMIN";
 
   return (
     <AuthContext.Provider

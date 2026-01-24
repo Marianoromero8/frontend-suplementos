@@ -8,14 +8,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { mockUsers } from "@/data/users.mock";
 import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import type { User } from "@/schemas/user.schema";
+import { getUsers } from "@/services/user.service";
 
 type ForgotFormValues = {
   email: string;
 };
 
 export function ForgotPassword() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    getUsers().then(setUsers);
+  }, []);
+
   const form = useForm<ForgotFormValues>({
     defaultValues: { email: "" },
   });
@@ -32,7 +40,7 @@ export function ForgotPassword() {
   const onSubmit = (values: ForgotFormValues) => {
     const { email } = values;
 
-    const user = mockUsers.find((u) => u.email === email);
+    const user = users.find((u) => u.email === email);
 
     if (!user) {
       setError("email", {
