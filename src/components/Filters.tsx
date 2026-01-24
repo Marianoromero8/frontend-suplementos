@@ -18,8 +18,10 @@ export function Filters({ products }: { products: ProductSchema[] }) {
   const category = params.get("category") ?? "";
   const brand = params.get("brand") ?? "";
   const rating = params.get("rating") ?? "";
+  const price = params.get("price") ?? "";
 
   const [categories, setCategories] = useState<CategorySchema[]>([]);
+
 
   useEffect(() => {
     getCategories().then(setCategories);
@@ -83,6 +85,20 @@ export function Filters({ products }: { products: ProductSchema[] }) {
           <SelectItem value="all">All Ratings</SelectItem>
           <SelectItem value="desc">+ rating</SelectItem>
           <SelectItem value="asc">- rating</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={price}
+        onValueChange={(val) => updateParam("price", val)}
+      >
+        <SelectTrigger className="w-48">
+          <SelectValue placeholder="Price" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All prices</SelectItem>
+          <SelectItem value="desc">more expensive</SelectItem>
+          <SelectItem value="asc">less expensive</SelectItem>
         </SelectContent>
       </Select>
 
