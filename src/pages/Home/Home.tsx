@@ -11,6 +11,7 @@ export function Home() {
   const category = params.get("category") ?? "";
   const brand = params.get("brand") ?? "";
   const rating = params.get("rating") ?? "";
+  const price = params.get("price") ?? "";
   const [products, setProducts] = useState<ProductSchema[]>([]);
 
   const filteredProducts = useMemo(() => {
@@ -31,8 +32,15 @@ export function Home() {
         if (rating === "desc") return br - ar;
         if (rating === "asc") return ar - br;
         return 0;
+      })
+      .sort((a, b) => {
+        const ap = a.price ?? 0;
+        const bp = b.price ?? 0;
+        if (price === "desc") return bp - ap;
+        if (price === "asc") return ap - bp;
+        return 0;
       });
-  }, [products, category, brand, rating]);
+  }, [products, category, brand, rating, price]);
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data));
