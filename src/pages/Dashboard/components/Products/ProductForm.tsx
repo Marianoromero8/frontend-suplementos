@@ -18,7 +18,7 @@ import { getCategories } from "@/services/categories.service";
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createProduct } from "@/services/product.service";
+import { createProduct, editProduct } from "@/services/product.service";
 import {
   createProductSchema,
   type CreateProduct,
@@ -29,15 +29,18 @@ import Swal from "sweetalert2";
 interface ProductFormSheetProps {
   open: boolean;
   onClose: (open: boolean) => void;
-  onCreated?: (product: any) => void; // opcional: para refrescar lista
+  onCreated?: (product: any) => void;
+  productToEdit?: any | null;
 }
 
 export function ProductForm({
   open,
   onClose,
   onCreated,
+  productToEdit,
 }: ProductFormSheetProps) {
   const [categories, setCategories] = useState<CategorySchema[]>([]);
+  const isEditing = !!productToEdit;
 
   useEffect(() => {
     getCategories().then(setCategories);
@@ -64,6 +67,29 @@ export function ProductForm({
     reset,
   } = form;
 
+  useEffect(() => {
+    if (productToEdit) {
+      reset({
+        name: productToEdit.name,
+        brand: productToEdit.brand,
+        price: productToEdit.price,
+        stock: productToEdit.stock,
+        description: productToEdit.description,
+        category_id: productToEdit.category_id,
+      });
+    } else {
+      reset({
+        name: "",
+        brand: "",
+        price: "",
+        stock: "",
+        description: "",
+        category_id: 0,
+        rating: 0,
+      });
+    }
+  }, [productToEdit, reset]);
+
   const onSubmit: SubmitHandler<CreateProductFormValues> = async (values) => {
     try {
       const parsed: CreateProduct = createProductSchema.parse(values);
@@ -71,16 +97,31 @@ export function ProductForm({
       const payload: CreateProduct = {
         ...parsed,
       };
-      const created = await createProduct(payload);
-      await Swal.fire({
-        title: "¡Producto Creado!",
-        text: `The product "${created.name}" was created successfully`,
-        icon: "success",
-        confirmButtonColor: "#000",
-        timer: 2000,
-        timerProgressBar: true,
-      });
-      onCreated?.(created);
+      if (productToEdit) {
+        // --- LÓGICA DE EDICIÓN (PATCH) ---
+        await editProduct(productToEdit.product_id, payload);
+
+        await Swal.fire({
+          title: "¡Producto Actualizado!",
+          text: `El producto "${payload.name}" se actualizó correctamente`,
+          icon: "success",
+          confirmButtonColor: "#000",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+      } else {
+        const created = await createProduct(payload);
+
+        await Swal.fire({
+          title: "¡Producto Creado!",
+          text: `El producto "${created.name}" fue creado con éxito`,
+          icon: "success",
+          confirmButtonColor: "#000",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+      }
+      onCreated?.(null);
       reset();
       onClose(true);
       window.location.reload();
@@ -96,26 +137,28 @@ export function ProductForm({
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent side="right" className="w-[400px] p-5">
         <SheetHeader>
-          <SheetTitle>Create Product</SheetTitle>
+          <SheetTitle>
+            {isEditing ? "Editar Producto" : "Crear Producto"}
+          </SheetTitle>
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-6">
           <div>
-            <Input placeholder="Name" {...register("name")} />
+            <Input placeholder="Nombre" {...register("name")} />
             {errors.name?.message && (
               <p className="text-[#d11f1f] text-sm">{errors.name.message}</p>
             )}
           </div>
 
           <div>
-            <Input placeholder="Brand" {...register("brand")} />
+            <Input placeholder="Marca" {...register("brand")} />
             {errors.brand?.message && (
               <p className="text-[#d11f1f] text-sm">{errors.brand.message}</p>
             )}
           </div>
 
           <div>
-            <Input type="number" placeholder="Price" {...register("price")} />
+            <Input type="number" placeholder="Precio" {...register("price")} />
             {errors.price?.message && (
               <p className="text-[#d11f1f] text-sm">{errors.price.message}</p>
             )}
@@ -130,7 +173,7 @@ export function ProductForm({
           <div>
             <Input
               type="text"
-              placeholder="Description"
+              placeholder="Descripcion"
               {...register("description")}
             />
             {errors.description?.message && (
@@ -168,7 +211,11 @@ export function ProductForm({
           </div>
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create"}
+            {isSubmitting
+              ? "Guardando cambios..."
+              : isEditing
+                ? "Editar Producto"
+                : "Crear Producto"}
           </Button>
         </form>
       </SheetContent>

@@ -24,6 +24,9 @@ import Swal from "sweetalert2";
 export function DashboardProducts() {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState<ProductSchema[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<ProductSchema | null>(
+    null,
+  ); // <-- Estado para el producto seleccionado
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -35,6 +38,11 @@ export function DashboardProducts() {
     (page - 1) * pageSize,
     page * pageSize,
   );
+
+  const handleEdit = (product: ProductSchema) => {
+    setSelectedProduct(product);
+    setOpen(true);
+  };
 
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
@@ -62,8 +70,8 @@ export function DashboardProducts() {
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Products</h1>
-          <p className="text-muted-foreground">Products available</p>
+          <h1 className="text-3xl font-bold">Productos</h1>
+          <p className="text-muted-foreground">Productos Disponibles</p>
         </div>
         <div className="flex justify-end">
           <Button
@@ -72,7 +80,7 @@ export function DashboardProducts() {
             className="cursor-pointer"
           >
             <PlusCircle />
-            Add Product
+            Agregar Producto
           </Button>
         </div>
       </div>
@@ -80,8 +88,8 @@ export function DashboardProducts() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead>Brand</TableHead>
+              <TableHead>Producto</TableHead>
+              <TableHead>Marca</TableHead>
               <TableHead>Stock</TableHead>
               <TableHead>Config</TableHead>
             </TableRow>
@@ -100,13 +108,13 @@ export function DashboardProducts() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>
-                        <Edit2Icon /> Edit
+                      <DropdownMenuItem onClick={() => handleEdit(prod)}>
+                        <Edit2Icon /> Editar
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => handleDelete(prod.product_id)}
                       >
-                        <Trash /> Delete
+                        <Trash /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -122,7 +130,19 @@ export function DashboardProducts() {
         total={products.length}
         onChange={setPage}
       />
-      <ProductForm open={open} onClose={() => setOpen(false)} />
+      <ProductForm
+        open={open}
+        onClose={(isOpen) => {
+          setOpen(isOpen);
+          if (!isOpen) {
+            setSelectedProduct(null);
+          }
+        }}
+        productToEdit={selectedProduct}
+        onCreated={() => {
+          getProducts().then(setProducts);
+        }}
+      />
     </div>
   );
 }
