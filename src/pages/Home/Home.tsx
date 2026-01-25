@@ -12,6 +12,8 @@ export function Home() {
   const brand = params.get("brand") ?? "";
   const rating = params.get("rating") ?? "";
   const price = params.get("price") ?? "";
+  const maxPrice = params.get("maxPrice") ?? "";
+  const minPrice = params.get("minPrice") ?? "";
   const [products, setProducts] = useState<ProductSchema[]>([]);
 
   const filteredProducts = useMemo(() => {
@@ -26,6 +28,15 @@ export function Home() {
           ? p.brand.toLowerCase() === brand.toLowerCase()
           : true
       )
+      .filter((p) => {
+        const pPrice = Number(p.price ?? 0);
+        const min = minPrice !== "" ? Number(minPrice) : null;
+        const max = maxPrice !== "" ? Number(maxPrice) : null;
+        if (min !== null && max !== null) return pPrice >= min && pPrice <= max;
+        if (min !== null) return pPrice >= min;
+        if (max !== null) return pPrice <= max;
+        return true;
+      })
       .sort((a, b) => {
         const ar = a.rating ?? 0;
         const br = b.rating ?? 0;
@@ -40,7 +51,7 @@ export function Home() {
         if (price === "asc") return ap - bp;
         return 0;
       });
-  }, [products, category, brand, rating, price]);
+  }, [products, category, brand, rating, price, minPrice, maxPrice]);
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data));
