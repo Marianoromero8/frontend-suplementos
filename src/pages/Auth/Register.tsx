@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerSchema, type RegisterSchema } from "@/schemas/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerRequest } from "@/services/auth.service";
+import { ArrowLeftIcon } from "lucide-react";
 
 export function Register() {
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ export function Register() {
         </Form>
 
         <Link to="/login" className="underline">
-          Login
+          <ArrowLeftIcon />
         </Link>
       </div>
     </div>
