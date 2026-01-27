@@ -7,6 +7,8 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReviewSchema } from "@/schemas/review.schema";
@@ -39,6 +41,23 @@ export function DashboardReviews() {
         <div>
           <h1 className="text-3xl font-bold">Reviews</h1>
         </div>
+      </div>
+      <div className="flex items-center justify-start gap-2">
+
+        <span className="">Order by:</span>
+        <Button
+          variant="ghost"
+          onAbort={() => {}}
+          className="cursor-pointer border-2 w-18"
+        >
+          Rating
+        </Button>
+
+        <span className="">Search:</span>
+        <Input className="w-75"placeholder="Search Product" />
+
+        <span className="">Show:</span>
+        <Input className="w-30" type="number" placeholder="Ej: 10"/>
       </div>
       <div>
         <Table>

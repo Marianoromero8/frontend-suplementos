@@ -1,5 +1,7 @@
 import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, PlusCircle, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ProductForm } from "./ProductForm";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { deleteProduct, getProducts } from "@/services/product.service";
@@ -25,16 +27,16 @@ export function DashboardProducts() {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState<ProductSchema[]>([]);
   const [page, setPage] = useState(1);
+  const [params, setParams] = useSearchParams()
   const pageSize = 10;
+
+  const stock = params.get("stock") ?? "";
+
 
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
 
-  const productsPaginate = products.slice(
-    (page - 1) * pageSize,
-    page * pageSize,
-  );
 
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
@@ -58,6 +60,36 @@ export function DashboardProducts() {
       }
     }
   };
+
+  const filteredProducts = useMemo(() => {
+      if (stock !== ""){
+        return [...products]
+        .sort((a, b) => {
+          const as = a.stock ?? 0;
+          const bs = b.stock ?? 0;
+          if (stock === "desc") return bs - as;
+          if (stock === "asc") return as - bs;
+          return 0;
+        });
+      }
+      else {
+        return[...products]
+      }
+    }, [products, stock]);
+
+  const productsPaginate = filteredProducts.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
+
+  const updateParam = (key: string, value: string) => {
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      value ? next.set(key, value) : next.delete(key);
+      return next;
+    });
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -76,15 +108,36 @@ export function DashboardProducts() {
           </Button>
         </div>
       </div>
+      <div className="flex items-center justify-start gap-2">
+
+        <span className="">Order by:</span>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            const next = stock === "" ? "asc" : stock === "asc" ? "desc" : "";
+            updateParam("stock", next);
+          }}
+          className="cursor-pointer border-2 w-18"
+        >
+          Stock
+          {stock === "asc" ? " ↑" : stock === "desc" ? " ↓" : ""}
+        </Button>
+
+        <span className="">Search:</span>
+        <Input className="w-75"placeholder="Search Product" />
+
+        <span className="">Show:</span>
+        <Input className="w-30" type="number" placeholder="Ej: 10"/>
+      </div>
       <div>
-        <Table>
+        <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead>Brand</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Config</TableHead>
-            </TableRow>
+             <TableHead>Product</TableHead>
+             <TableHead>Brand</TableHead>
+             <TableHead>Stock</TableHead>
+             <TableHead>Config</TableHead>
+           </TableRow>
           </TableHeader>
           <TableBody>
             {productsPaginate.map((prod) => (
@@ -116,12 +169,14 @@ export function DashboardProducts() {
           </TableBody>
         </Table>
       </div>
-      <Pagination
-        page={page}
-        pageSize={pageSize}
-        total={products.length}
-        onChange={setPage}
-      />
+      {filteredProducts.length > 0 && (
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          total={filteredProducts.length}
+          onChange={setPage}
+        />
+      )}
       <ProductForm open={open} onClose={() => setOpen(false)} />
     </div>
   );

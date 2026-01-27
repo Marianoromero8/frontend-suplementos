@@ -1,5 +1,6 @@
 import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -88,6 +89,23 @@ export function DashboardUsers() {
             Add User
           </Button>
         </div>
+      </div>
+      <div className="flex items-center justify-start gap-2">
+
+        <span className="">Order by:</span>
+        <Button
+          variant="ghost"
+          onClick={() => {}}
+          className="cursor-pointer border-2 w-18"
+        >
+          Users
+        </Button>
+
+        <span className="">Search:</span>
+        <Input className="w-75"placeholder="Search by either username or email" />
+
+        <span className="">Show:</span>
+        <Input className="w-30" type="number" placeholder="Ej: 10"/>
       </div>
       <div>
         <Table>

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { Pagination } from "@/components/Pagination";
 import type { OrderSchema } from "@/schemas/order.schema";
 import { getOrders } from "@/services/orders.service";
+import { Input } from "@/components/ui/input";
 
 const statusOrder = (status: string) => {
   if (status === "paid")
@@ -52,6 +53,28 @@ export function DashboardOrders() {
       <div>
         <h1 className="text-3xl font-bold">Orders</h1>
         <p className="text-muted-foreground">Orders - Paid/Pending/Cancelled</p>
+      </div>
+      <div className="flex items-center justify-start gap-2">
+
+        <span className="">Order by:</span>
+        <Button
+          variant="ghost"
+          onClick={() => {}}
+          className="cursor-pointer border-2 w-28"
+        >
+          Total Amount
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => {}}
+          className="cursor-pointer border-2 w-18"
+        >
+          Status
+        </Button>
+
+        <span className="">Show:</span>
+        <Input className="w-30" type="number" placeholder="Ej: 10"/>
+
       </div>
       <div>
         <Table>
