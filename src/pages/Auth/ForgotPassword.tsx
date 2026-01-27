@@ -11,13 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
 import { forgotPasswordRequest } from "@/services/auth.service";
 import Swal from "sweetalert2";
-import {
-  ArrowBigLeft,
-  ArrowBigLeftDash,
-  ArrowBigLeftIcon,
-  ArrowLeftIcon,
-  BackpackIcon,
-} from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 
 type ForgotFormValues = {
   email: string;
