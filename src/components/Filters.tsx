@@ -18,8 +18,14 @@ export function Filters({ products }: { products: ProductSchema[] }) {
   const category = params.get("category") ?? "";
   const brand = params.get("brand") ?? "";
   const rating = params.get("rating") ?? "";
+  const price = params.get("price") ?? "";
 
   const [categories, setCategories] = useState<CategorySchema[]>([]);
+  
+  const minPriceParam = params.get('minPrice') ?? "";
+  const maxPriceParam = params.get('maxPrice') ?? "";
+  const [minPrice, setMinPrice] = useState<string>(minPriceParam);
+  const [maxPrice, setMaxPrice] = useState<string>(maxPriceParam);
 
   useEffect(() => {
     getCategories().then(setCategories);
@@ -37,6 +43,8 @@ export function Filters({ products }: { products: ProductSchema[] }) {
 
   const clearFilters = () => {
     setParams(new URLSearchParams());
+    setMinPrice('')
+    setMaxPrice('')
   };
 
   return (
@@ -85,7 +93,44 @@ export function Filters({ products }: { products: ProductSchema[] }) {
           <SelectItem value="asc">- rating</SelectItem>
         </SelectContent>
       </Select>
-
+      <div>
+        <input 
+          type="number"
+          placeholder="Min Price"
+          value={minPrice}
+          onChange={(e) => {
+            const v = e.target.value
+            setMinPrice(v);
+            updateParam('minPrice', v || '')
+          }}
+          className="px-3 py-1 mr-2 border rounded-lg w-30"
+        />
+        <input
+          type="number"
+          placeholder="Max Price"
+          value={maxPrice}
+          onChange={(e) => {
+            const v = e.target.value
+            setMaxPrice(v);
+            updateParam('maxPrice', v || '')
+          }}
+          className="px-3 py-1 ml-2 border rounded-lg w-30"
+        />
+      </div>
+      <Select
+        value={price}
+        onValueChange={(val) => updateParam("price", val)}
+      >
+        <SelectTrigger className="w-48">
+          <SelectValue placeholder="Price" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All prices</SelectItem>
+          <SelectItem value="desc">more expensive</SelectItem>
+          <SelectItem value="asc">less expensive</SelectItem>
+        </SelectContent>
+      </Select>
+      
       <Button
         variant="outline"
         onClick={clearFilters}
