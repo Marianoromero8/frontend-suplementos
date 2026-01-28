@@ -8,9 +8,11 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 export function NavBar() {
   const { isAuthenticated, isAdmin, logout } = useAuth();
+  const { totalItems } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -38,9 +40,14 @@ export function NavBar() {
           Categoríes
         </Link>
 
-        <Link to="/cart" className="flex flex-row items-center gap-2">
+        <Link to="/cart" className="flex flex-row items-center gap-2 relative">
           <ShoppingCart />
-          Cart
+          <span>Cart</span>
+          {totalItems > 0 && (
+            <span className="ml-1 inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold bg-black/80 text-white">
+              {totalItems}
+            </span>
+          )}
         </Link>
       </div>
 
