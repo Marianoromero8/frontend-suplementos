@@ -1,6 +1,7 @@
 import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSearchParams } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +16,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Edit2Icon, MoreVertical, Trash, UserPlus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Edit2Icon, MoreVertical, Trash, UserPlus} from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
 import { UserForm } from "./UserForm";
 import type { User } from "@/schemas/user.schema";
 import { editUser, getUsers } from "@/services/user.service";
@@ -26,11 +27,24 @@ export function DashboardUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [params, setParams] = useSearchParams()
+  const [pageSize, setPageSize] = useState(10)
+  const name = params.get("name") ?? "";
+  const role = params.get("role") ?? "";
+  const [searchUser, setSearchUser] = useState<string>(name)
 
   useEffect(() => {
     getUsers().then(setUsers);
   }, []);
+
+  const updateParam = (key: string, value: string) => {
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value && value !== "") next.set(key, value);
+      else next.delete(key);
+      return next;
+    });
+  };
 
   const handleEditRole = async (userId: number, currentRole: string) => {
     const { value: newRole } = await Swal.fire({
@@ -71,7 +85,26 @@ export function DashboardUsers() {
     }
   };
 
-  const usersPagination = users.slice((page - 1) * pageSize, page * pageSize);
+  const filteredUsers = useMemo(() => {
+    const q = (searchUser ?? "").trim().toLowerCase();
+    let list = [...users];
+
+    if (role) {
+      const roleNorm = role.toLowerCase();
+      list = list.filter((u) => (u.role ?? "").toLowerCase() === roleNorm);
+    }
+
+    if (q) {
+      list = list.filter((u) => {
+        const hay = `${u.name ?? ""} ${u.email ?? ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    return list;
+  }, [users, role, searchUser]);
+
+  const usersPagination = filteredUsers.slice((page - 1) * pageSize, page * pageSize);
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -92,20 +125,35 @@ export function DashboardUsers() {
       </div>
       <div className="flex items-center justify-start gap-2">
 
-        <span className="">Order by:</span>
+        <span className="">Order by role:</span>
         <Button
           variant="ghost"
-          onClick={() => {}}
-          className="cursor-pointer border-2 w-18"
+          onClick={() => {
+            const next = role === "" ? "USER" : role === "USER" ? "ADMIN" : "";
+            updateParam("role", next);
+          }}
+          className="cursor-pointer border-2 w-25"
         >
-          Users
+          Role
+          {role === "USER" ? " User" : role === "ADMIN" ? " Admin" : ""}
         </Button>
 
         <span className="">Search:</span>
-        <Input className="w-75"placeholder="Search by either username or email" />
+        <Input className="w-75"placeholder="Search by either username or email" 
+          onChange={(e) => {
+            const v = e.target.value
+            setSearchUser(v);
+            updateParam("name", v || "")
+          }}
+        />
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10"/>
+        <Input className="w-30" type="number" placeholder="Ej: 10"
+          onChange={(e) => {
+            const v = e.target.value
+            setPageSize(Number(v));
+          }}
+        />
       </div>
       <div>
         <Table>
