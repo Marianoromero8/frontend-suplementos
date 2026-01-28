@@ -1,5 +1,7 @@
 import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Edit2Icon, MoreVertical, PlusCircle, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ProductForm } from "./ProductForm";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { deleteProduct, getProducts } from "@/services/product.service";
@@ -28,16 +30,18 @@ export function DashboardProducts() {
     null,
   ); // <-- Estado para el producto seleccionado
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [params, setParams] = useSearchParams()
+  const [pageSize, setPageSize] = useState(10)
+
+  const name = params.get("name") ?? "";
+  const [searchProduct, setSearchProduct] = useState<string>(name)
+  const stock = params.get("stock") ?? "";
+
 
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
 
-  const productsPaginate = products.slice(
-    (page - 1) * pageSize,
-    page * pageSize,
-  );
 
   const handleEdit = (product: ProductSchema) => {
     setSelectedProduct(product);
@@ -66,6 +70,41 @@ export function DashboardProducts() {
       }
     }
   };
+
+  const filteredProducts = useMemo(() => {
+    const q = (searchProduct ?? "").trim().toLowerCase();
+    let list = [...products];
+
+    if (q) {
+      list = list.filter((p) => {
+        const hay = `${p.name ?? ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    // sort by stock if requested (non-mutating)
+    if (stock === "asc") {
+      return list.sort((a, b) => (a.stock ?? 0) - (b.stock ?? 0));
+    }
+    if (stock === "desc") {
+      return list.sort((a, b) => (b.stock ?? 0) - (a.stock ?? 0));
+    }
+    return list;
+  }, [products, stock, searchProduct]);
+
+  const productsPaginate = filteredProducts.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
+
+  const updateParam = (key: string, value: string) => {
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      value ? next.set(key, value) : next.delete(key);
+      return next;
+    });
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -84,8 +123,42 @@ export function DashboardProducts() {
           </Button>
         </div>
       </div>
+      <div className="flex items-center justify-start gap-2">
+
+        <span className="">Order by:</span>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            const next = stock === "" ? "asc" : stock === "asc" ? "desc" : "";
+            updateParam("stock", next);
+          }}
+          className="cursor-pointer border-2 w-18"
+        >
+          Stock
+          {stock === "asc" ? " ↑" : stock === "desc" ? " ↓" : ""}
+        </Button>
+
+        <span className="">Search:</span>
+        <Input className="w-75"placeholder="Search Product" 
+          value={searchProduct}
+          onChange={(e) => {
+            const v = e.target.value
+            setSearchProduct(v);
+            updateParam("name", v || "")
+          }}
+          />
+
+        <span className="">Show:</span>
+        <Input className="w-30" type="number" placeholder="Ej: 10" 
+          value={pageSize}
+          onChange={(e) => {
+             const v = e.target.value
+            setPageSize(Number(v))
+          }}
+        />
+      </div>
       <div>
-        <Table>
+        <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
               <TableHead>Producto</TableHead>
