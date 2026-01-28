@@ -28,8 +28,10 @@ export function DashboardProducts() {
   const [products, setProducts] = useState<ProductSchema[]>([]);
   const [page, setPage] = useState(1);
   const [params, setParams] = useSearchParams()
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10)
 
+  const name = params.get("name") ?? "";
+  const [searchProduct, setSearchProduct] = useState<string>(name)
   const stock = params.get("stock") ?? "";
 
 
@@ -62,20 +64,25 @@ export function DashboardProducts() {
   };
 
   const filteredProducts = useMemo(() => {
-      if (stock !== ""){
-        return [...products]
-        .sort((a, b) => {
-          const as = a.stock ?? 0;
-          const bs = b.stock ?? 0;
-          if (stock === "desc") return bs - as;
-          if (stock === "asc") return as - bs;
-          return 0;
-        });
-      }
-      else {
-        return[...products]
-      }
-    }, [products, stock]);
+    const q = (searchProduct ?? "").trim().toLowerCase();
+    let list = [...products];
+
+    if (q) {
+      list = list.filter((p) => {
+        const hay = `${p.name ?? ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    // sort by stock if requested (non-mutating)
+    if (stock === "asc") {
+      return list.sort((a, b) => (a.stock ?? 0) - (b.stock ?? 0));
+    }
+    if (stock === "desc") {
+      return list.sort((a, b) => (b.stock ?? 0) - (a.stock ?? 0));
+    }
+    return list;
+  }, [products, stock, searchProduct]);
 
   const productsPaginate = filteredProducts.slice(
     (page - 1) * pageSize,
@@ -124,10 +131,23 @@ export function DashboardProducts() {
         </Button>
 
         <span className="">Search:</span>
-        <Input className="w-75"placeholder="Search Product" />
+        <Input className="w-75"placeholder="Search Product" 
+          value={searchProduct}
+          onChange={(e) => {
+            const v = e.target.value
+            setSearchProduct(v);
+            updateParam("name", v || "")
+          }}
+          />
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10"/>
+        <Input className="w-30" type="number" placeholder="Ej: 10" 
+          value={pageSize}
+          onChange={(e) => {
+             const v = e.target.value
+            setPageSize(Number(v))
+          }}
+        />
       </div>
       <div>
         <Table className="table-fixed w-full">
