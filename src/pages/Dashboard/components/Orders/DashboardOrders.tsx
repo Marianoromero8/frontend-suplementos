@@ -30,11 +30,11 @@ const statusOrder = (status: string) => {
         Pending
       </div>
     );
-  if (status === "cancelled")
+  if (status === "cancel")
     return (
       <div className="flex flex-row gap-2 font-bold">
         <X className="text-[#fa1818]" />
-        Cancelled
+        Cancel
       </div>
     );
 };
@@ -42,31 +42,33 @@ const statusOrder = (status: string) => {
 export function DashboardOrders() {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState<OrderSchema[]>([]);
-  const [pageSize, setPageSize] = useState(10)
-  const [params, setParams] = useSearchParams()
-  const totalAmount = params.get("total") ?? ""
-  const status = params.get("status") ?? ""
-
+  const [pageSize, setPageSize] = useState(10);
+  const [params, setParams] = useSearchParams();
+  const totalAmount = params.get("total") ?? "";
+  const status = params.get("status") ?? "";
 
   useEffect(() => {
     getOrders().then(setOrders);
   }, []);
 
   const filteredOrders = useMemo(() => {
-      return orders
-        .filter((o) => {
-          if(o.status === status) return true
-        })
-        .sort((a , b ) => {
-          const aa = a.total ?? 0;
-          const ba = b.total ?? 0;
-          if (totalAmount === "desc") return Number(ba) - Number(aa);
-          if (totalAmount === "asc") return Number(aa) - Number(ba);
-          return 0;
-        })
-    }, [orders, totalAmount, status, totalAmount]);
+    return orders
+      .filter((o) => {
+        if (o.status === status) return true;
+      })
+      .sort((a, b) => {
+        const aa = a.total ?? 0;
+        const ba = b.total ?? 0;
+        if (totalAmount === "desc") return Number(ba) - Number(aa);
+        if (totalAmount === "asc") return Number(aa) - Number(ba);
+        return 0;
+      });
+  }, [orders, totalAmount, status, totalAmount]);
 
-  const ordersPagination = filteredOrders.slice((page - 1) * pageSize, page * pageSize);
+  const ordersPagination = filteredOrders.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
 
   const updateParam = (key: string, value: string) => {
     setParams((prev) => {
@@ -76,20 +78,19 @@ export function DashboardOrders() {
     });
   };
 
-
   return (
     <div>
       <div>
         <h1 className="text-3xl font-bold">Orders</h1>
-        <p className="text-muted-foreground">Orders - Paid/Pending/Cancelled</p>
+        <p className="text-muted-foreground">Orders - Paid/Pending/Cancel</p>
       </div>
       <div className="flex items-center justify-start gap-2">
-
         <span className="">Order by:</span>
         <Button
           variant="ghost"
           onClick={() => {
-            const next = totalAmount === "" ? "asc" : totalAmount === "asc" ? "desc" : "";
+            const next =
+              totalAmount === "" ? "asc" : totalAmount === "asc" ? "desc" : "";
             updateParam("total", next);
           }}
           className="cursor-pointer border-2 w-25"
@@ -100,23 +101,38 @@ export function DashboardOrders() {
         <Button
           variant="ghost"
           onClick={() => {
-            const next = status === "" ? "pending" : status === "pending" ? "paid" : status === "cancelled" ? "cancelled" : "pending";
+            const next =
+              status === ""
+                ? "pending"
+                : status === "pending"
+                  ? "paid"
+                  : status === "cancel"
+                    ? "cancel"
+                    : "pending";
             updateParam("status", next);
           }}
           className="cursor-pointer border-2 w-25"
         >
           Status
-          {status === "pending" ? " pending" : status === "paid" ? " paid" : status === "cancelled" ? " cancelled" : " pending"}
+          {status === "pending"
+            ? " pending"
+            : status === "paid"
+              ? " paid"
+              : status === "cancel"
+                ? " cancel"
+                : " pending"}
         </Button>
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10"
+        <Input
+          className="w-30"
+          type="number"
+          placeholder="Ej: 10"
           onChange={(e) => {
-            const v = e.target.value
+            const v = e.target.value;
             setPageSize(Number(v));
           }}
         />
-
       </div>
       <div>
         <Table>

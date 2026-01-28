@@ -28,20 +28,18 @@ export function DashboardProducts() {
   const [products, setProducts] = useState<ProductSchema[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductSchema | null>(
     null,
-  ); // <-- Estado para el producto seleccionado
+  );
   const [page, setPage] = useState(1);
-  const [params, setParams] = useSearchParams()
-  const [pageSize, setPageSize] = useState(10)
+  const [params, setParams] = useSearchParams();
+  const [pageSize, setPageSize] = useState(10);
 
   const name = params.get("name") ?? "";
-  const [searchProduct, setSearchProduct] = useState<string>(name)
+  const [searchProduct, setSearchProduct] = useState<string>(name);
   const stock = params.get("stock") ?? "";
-
 
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
-
 
   const handleEdit = (product: ProductSchema) => {
     setSelectedProduct(product);
@@ -124,7 +122,6 @@ export function DashboardProducts() {
         </div>
       </div>
       <div className="flex items-center justify-start gap-2">
-
         <span className="">Order by:</span>
         <Button
           variant="ghost"
@@ -139,21 +136,26 @@ export function DashboardProducts() {
         </Button>
 
         <span className="">Search:</span>
-        <Input className="w-75"placeholder="Search Product" 
+        <Input
+          className="w-75"
+          placeholder="Search Product"
           value={searchProduct}
           onChange={(e) => {
-            const v = e.target.value
+            const v = e.target.value;
             setSearchProduct(v);
-            updateParam("name", v || "")
+            updateParam("name", v || "");
           }}
-          />
+        />
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10" 
+        <Input
+          className="w-30"
+          type="number"
+          placeholder="Ej: 10"
           value={pageSize}
           onChange={(e) => {
-             const v = e.target.value
-            setPageSize(Number(v))
+            const v = e.target.value;
+            setPageSize(Number(v));
           }}
         />
       </div>
