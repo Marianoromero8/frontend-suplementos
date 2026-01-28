@@ -25,7 +25,7 @@ export function Categorydetail() {
 
   const productsPagination = products.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
 
   useEffect(() => {

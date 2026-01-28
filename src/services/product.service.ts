@@ -90,6 +90,30 @@ export async function createProduct(payload: CreateProduct) {
   return data;
 }
 
+export async function editProduct(
+  id: number,
+  body: CreateProduct,
+): Promise<ProductSchema> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_URL}/api/products/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Error al actualizar el producto");
+  }
+
+  return await response.json();
+}
+
 export async function deleteProduct(id: number): Promise<void> {
   const token = localStorage.getItem("token");
 

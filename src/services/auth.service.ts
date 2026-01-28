@@ -41,3 +41,22 @@ export async function registerRequest(payload: RegisterSchema) {
 
   return data;
 }
+
+export async function forgotPasswordRequest(email: string) {
+  const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message || "Error al procesar la solicitud");
+  }
+
+  return data;
+}

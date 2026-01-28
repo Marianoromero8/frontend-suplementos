@@ -9,20 +9,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import type { User } from "@/schemas/user.schema";
-import { getUsers } from "@/services/user.service";
+import { forgotPasswordRequest } from "@/services/auth.service";
+import Swal from "sweetalert2";
+import { ArrowLeftIcon } from "lucide-react";
 
 type ForgotFormValues = {
   email: string;
 };
 
 export function ForgotPassword() {
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    getUsers().then(setUsers);
-  }, []);
+  const navigate = useNavigate();
 
   const form = useForm<ForgotFormValues>({
     defaultValues: { email: "" },
@@ -35,24 +31,33 @@ export function ForgotPassword() {
     formState: { isSubmitting },
   } = form;
 
-  const navigate = useNavigate();
+  const onSubmit = async (values: ForgotFormValues) => {
+    try {
+      await forgotPasswordRequest(values.email);
 
-  const onSubmit = (values: ForgotFormValues) => {
-    const { email } = values;
+      await Swal.fire({
+        title: "¡Correo Enviado!",
+        text: `Se enviaron instrucciones a su correo electrónico`,
+        icon: "success",
+        confirmButtonColor: "#000",
+        timer: 2000,
+        timerProgressBar: true,
+      });
 
-    const user = users.find((u) => u.email === email);
-
-    if (!user) {
+      navigate("/login");
+    } catch (error: any) {
       setError("email", {
         type: "manual",
-        message: "No existe un usuario con ese email",
+        message: error.message,
       });
-      return;
-    }
 
-    // En un backend real acá llamarías a /auth/forgot-password
-    // Por ahora, lo mandamos a resetear contraseña directamente
-    navigate(`/reset-password/${encodeURIComponent(user.email)}`);
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Ocurrió un problema inesperado",
+        icon: "error",
+        confirmButtonColor: "#000",
+      });
+    }
   };
 
   return (
@@ -102,7 +107,7 @@ export function ForgotPassword() {
         </Form>
 
         <Link to="/login" className="underline text-sm">
-          Back to Login
+          <ArrowLeftIcon />
         </Link>
       </div>
     </div>
