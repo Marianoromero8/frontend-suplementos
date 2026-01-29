@@ -53,18 +53,19 @@ export function DashboardOrders() {
   }, []);
 
   const filteredOrders = useMemo(() => {
-      return orders
-        .filter((o) => {
-          if(o.status === status) return true
-        })
-        .sort((a , b ) => {
-          const aa = a.total ?? 0;
-          const ba = b.total ?? 0;
-          if (totalAmount === "desc") return Number(ba) - Number(aa);
-          if (totalAmount === "asc") return Number(aa) - Number(ba);
-          return 0;
-        })
-    }, [orders, totalAmount, status, totalAmount]);
+    return orders
+      .filter((o) => {
+        if (status === "") return true;
+        return o.status === status;
+      })
+      .sort((a, b) => {
+        const aa = a.total ?? 0;
+        const bb = b.total ?? 0;
+        if (totalAmount === "desc") return Number(bb) - Number(aa);
+        if (totalAmount === "asc") return Number(aa) - Number(bb);
+        return 0;
+      });
+  }, [orders, status, totalAmount]);
 
   const ordersPagination = filteredOrders.slice((page - 1) * pageSize, page * pageSize);
 
@@ -76,6 +77,12 @@ export function DashboardOrders() {
     });
   };
 
+  // Control de paginado ( En orders cancelados como no hay ninguna queda page 1 / 0 y te dejaba cambiar de pagina hasta el infinito )
+  useEffect(() => {
+     const maxPage = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
+     if (page > maxPage) setPage(maxPage);
+     if (page < 1) setPage(1);
+   }, [filteredOrders.length, pageSize, page, setPage]);
 
   return (
     <div>
@@ -100,20 +107,31 @@ export function DashboardOrders() {
         <Button
           variant="ghost"
           onClick={() => {
-            const next = status === "" ? "pending" : status === "pending" ? "paid" : status === "cancelled" ? "cancelled" : "pending";
+            const next =
+              status === ""
+                ? "pending"
+                : status === "pending"
+                ? "paid"
+                : status === "paid"
+                ? "cancel"
+                : "";
             updateParam("status", next);
           }}
           className="cursor-pointer border-2 w-25"
         >
           Status
-          {status === "pending" ? " pending" : status === "paid" ? " paid" : status === "cancelled" ? " cancelled" : " pending"}
+          {status && ` ${status}`}
         </Button>
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10"
+        <Input className="w-30" value={pageSize} type="number" placeholder="Ej: 10" min={1} max={filteredOrders.length} 
           onChange={(e) => {
-            const v = e.target.value
-            setPageSize(Number(v));
+            const v = Number(e.target.value)
+            if (v < 1){
+              setPageSize(1)
+            } else {
+              setPageSize(Number(v));
+            } 
           }}
         />
 
@@ -157,7 +175,7 @@ export function DashboardOrders() {
       <Pagination
         page={page}
         pageSize={pageSize}
-        total={orders.length}
+        total={filteredOrders.length}
         onChange={setPage}
       />
     </div>
