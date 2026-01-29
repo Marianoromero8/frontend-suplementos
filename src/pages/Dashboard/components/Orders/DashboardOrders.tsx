@@ -14,6 +14,8 @@ import type { OrderSchema } from "@/schemas/order.schema";
 import { getOrders } from "@/services/orders.service";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
+import { OrderPDF } from "./OrderPdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 const statusOrder = (status: string) => {
   if (status === "paid")
@@ -152,15 +154,24 @@ export function DashboardOrders() {
                 <TableCell className="font-semibold">
                   {order.order_id}
                 </TableCell>
-                <TableCell>{order.details.length}</TableCell>
+                <TableCell>
+                  {order.details.reduce((acc, item) => acc + item.quantity, 0)}
+                </TableCell>
                 <TableCell>${order.total}</TableCell>
                 <TableCell>{order.order_date.slice(0, 10)}</TableCell>
                 <TableCell>{statusOrder(order.status)}</TableCell>
                 <TableCell>
                   {order.status === "paid" ? (
-                    <Button variant="ghost">
-                      <File />
-                    </Button>
+                    <PDFDownloadLink
+                      document={<OrderPDF order={order} />}
+                      fileName={`orden_${order.order_id}.pdf`}
+                    >
+                      {({ loading }) => (
+                        <Button variant="ghost" disabled={loading}>
+                          {loading ? "..." : <File />}
+                        </Button>
+                      )}
+                    </PDFDownloadLink>
                   ) : (
                     ""
                   )}
