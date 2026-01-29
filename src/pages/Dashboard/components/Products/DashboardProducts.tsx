@@ -82,7 +82,6 @@ export function DashboardProducts() {
       });
     }
 
-    // sort by stock if requested (non-mutating)
     if (stock === "asc") {
       return list.sort((a, b) => (a.stock ?? 0) - (b.stock ?? 0));
     }
