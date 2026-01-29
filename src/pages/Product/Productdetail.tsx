@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { getProductById } from "@/services/product.service";
+import { useCart } from "@/contexts/CartContext";
 import {
   ArrowLeftIcon,
   ShoppingBasket,
@@ -12,6 +13,7 @@ import { Link, useParams } from "react-router-dom";
 
 export function Productdetail() {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<ProductSchema | null>(null);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export function Productdetail() {
           <Star className="text-[#fae843] fill-[#fae843]" />
           <p>{product?.rating}</p>
         </div>
-        <Button className="w-fit">
+        <Button className="w-fit" onClick={() => product && addToCart(product, 1)} disabled={!product || product.stock === 0}>
           <ShoppingBasket />
         </Button>
       </div>
