@@ -105,6 +105,14 @@ export function DashboardUsers() {
   }, [users, role, searchUser]);
 
   const usersPagination = filteredUsers.slice((page - 1) * pageSize, page * pageSize);
+
+  // Control de paginado
+  useEffect(() => {
+     const maxPage = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
+     if (page > maxPage) setPage(maxPage);
+     if (page < 1) setPage(1);
+   }, [filteredUsers.length, pageSize, page, setPage]);
+   
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -148,10 +156,14 @@ export function DashboardUsers() {
         />
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10"
+        <Input className="w-30" value={pageSize} type="number" placeholder="Ej: 10" min={1} max={filteredUsers.length}
           onChange={(e) => {
-            const v = e.target.value
-            setPageSize(Number(v));
+            const v = Number(e.target.value)
+            if (v < 1){
+              setPageSize(1)
+            } else {
+              setPageSize(Number(v));
+            } 
           }}
         />
       </div>
@@ -197,7 +209,7 @@ export function DashboardUsers() {
       <Pagination
         page={page}
         pageSize={pageSize}
-        total={users.length}
+        total={filteredUsers.length}
         onChange={setPage}
       />
       <UserForm

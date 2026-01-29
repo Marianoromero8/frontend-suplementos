@@ -105,6 +105,13 @@ export function DashboardProducts() {
     });
   };
 
+  // Control de paginado
+  useEffect(() => {
+     const maxPage = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+     if (page > maxPage) setPage(maxPage);
+     if (page < 1) setPage(1);
+   }, [filteredProducts.length, pageSize, page, setPage]);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -149,11 +156,15 @@ export function DashboardProducts() {
           />
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10" 
+        <Input className="w-30" type="number" placeholder="Ej: 10" min={1} max={filteredProducts.length}
           value={pageSize}
           onChange={(e) => {
-             const v = e.target.value
-            setPageSize(Number(v))
+            const v = Number(e.target.value)
+            if (v < 1){
+              setPageSize(1)
+            } else {
+              setPageSize(Number(v));
+            } 
           }}
         />
       </div>
@@ -200,7 +211,7 @@ export function DashboardProducts() {
       <Pagination
         page={page}
         pageSize={pageSize}
-        total={products.length}
+        total={filteredProducts.length}
         onChange={setPage}
       />
       <ProductForm
