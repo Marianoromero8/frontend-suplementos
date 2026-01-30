@@ -81,6 +81,13 @@ export function DashboardReviews() {
     page * pageSize,
   );
 
+  // Control de paginado
+  useEffect(() => {
+     const maxPage = Math.max(1, Math.ceil(filteredReviews.length / pageSize));
+     if (page > maxPage) setPage(maxPage);
+     if (page < 1) setPage(1);
+   }, [filteredReviews.length, pageSize, page, setPage]);
+   
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -119,10 +126,14 @@ export function DashboardReviews() {
         <Input
           className="w-30"
           type="number"
-          placeholder="Ej: 10"
+          placeholder="Ej: 10" min={1} max={filteredReviews.length}
           onChange={(e) => {
-            const v = e.target.value;
-            setPageSize(Number(v) || 10);
+            const v = Number(e.target.value)
+            if (v < 1){
+              setPageSize(1)
+            } else {
+              setPageSize(Number(v));
+            } 
           }}
         />
       </div>

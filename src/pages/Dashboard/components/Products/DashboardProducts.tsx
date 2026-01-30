@@ -80,7 +80,6 @@ export function DashboardProducts() {
       });
     }
 
-    // sort by stock if requested (non-mutating)
     if (stock === "asc") {
       return list.sort((a, b) => (a.stock ?? 0) - (b.stock ?? 0));
     }
@@ -102,6 +101,13 @@ export function DashboardProducts() {
       return next;
     });
   };
+
+  // Control de paginado
+  useEffect(() => {
+    const maxPage = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+    if (page > maxPage) setPage(maxPage);
+    if (page < 1) setPage(1);
+  }, [filteredProducts.length, pageSize, page, setPage]);
 
   return (
     <div className="space-y-8">
@@ -152,10 +158,16 @@ export function DashboardProducts() {
           className="w-30"
           type="number"
           placeholder="Ej: 10"
+          min={1}
+          max={filteredProducts.length}
           value={pageSize}
           onChange={(e) => {
-            const v = e.target.value;
-            setPageSize(Number(v));
+            const v = Number(e.target.value);
+            if (v < 1) {
+              setPageSize(1);
+            } else {
+              setPageSize(Number(v));
+            }
           }}
         />
       </div>
@@ -202,7 +214,7 @@ export function DashboardProducts() {
       <Pagination
         page={page}
         pageSize={pageSize}
-        total={products.length}
+        total={filteredProducts.length}
         onChange={setPage}
       />
       <ProductForm
