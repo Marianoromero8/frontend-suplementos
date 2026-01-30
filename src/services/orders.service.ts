@@ -14,7 +14,6 @@ export async function getOrders(): Promise<OrderSchema[]> {
   if (!res.ok) {
     throw new Error("Error al obtener ordenes");
   }
-  console.log(res);
   const data = await res.json();
   return orderSchema.array().parse(data);
 }
@@ -29,32 +28,49 @@ export async function createOrder(orderData: any): Promise<OrderSchema> {
     body: JSON.stringify(orderData),
   });
 
-  if (!res.ok) throw new Error("Error al crear la orden");
+  if (!res.ok) {
+    const serverError = await res.json();
+    console.log(serverError);
+    throw new Error("Error al crear la orden");
+  }
   const data = await res.json();
   return orderSchema.parse(data);
 }
 
-export async function checkoutOrder(userId: number): Promise<void> {
+export async function checkoutOrder(
+  userId: number,
+  token: string,
+): Promise<OrderSchema> {
   const res = await fetch(`${API_URL}/api/orders/checkout/${userId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
     },
   });
 
-  if (!res.ok) throw new Error("Error en el checkout");
+  if (!res.ok) {
+    if (res.status === 401)
+      throw new Error("Sesión expirada. Por favor, vuelve a loguearte.");
+    throw new Error("Error en el checkout.");
+  }
+
+  const data = await res.json();
+  return orderSchema.parse(data);
 }
 
 export async function updateOrderStatus(
   orderId: number,
-  status: string,
+  status: "paid" | "pending" | "cancel",
+  token: string,
 ): Promise<OrderSchema> {
   const res = await fetch(`${API_URL}/api/orders/${orderId}/status`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ status }),
   });
