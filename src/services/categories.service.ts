@@ -29,4 +29,41 @@ export async function getCategoryById(id: number): Promise<CategorySchema> {
   return categorySchema.parse(data);
 }
 
-// export async function deleteCategory(id: number): Promise<CategorySchema> {}
+export async function createCategory(
+  category: Omit<CategorySchema, "category_id">,
+): Promise<CategorySchema> {
+  const res = await fetch(`${API_URL}/api/categories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify(category),
+  });
+  if (!res.ok) throw new Error("Error al crear categoría");
+  return res.json();
+}
+
+export async function updateCategory(
+  id: number,
+  category: Partial<CategorySchema>,
+): Promise<CategorySchema> {
+  const res = await fetch(`${API_URL}/api/categories/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify(category),
+  });
+  if (!res.ok) throw new Error("Error al actualizar categoría");
+  return res.json();
+}
+
+export async function deleteCategory(id: number): Promise<void> {
+  const res = await fetch(`${API_URL}/api/categories/${id}`, {
+    method: "DELETE",
+    headers: { "x-api-key": API_KEY },
+  });
+  if (!res.ok) throw new Error("Error al eliminar categoría");
+}

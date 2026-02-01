@@ -1,8 +1,105 @@
+import Swal from "sweetalert2";
+import { useCart } from "@/contexts/CartContext";
+import {
+  checkoutOrder,
+  updateOrderStatus,
+} from "../../services/orders.service";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function Checkout() {
+  const { items, subtotal, clearCart } = useCart();
+  const { user } = useAuth(); //
+  const navigate = useNavigate();
+
+  const handlePayment = async () => {
+    if (!user) {
+      Swal.fire("Error", "Debes iniciar sesión para comprar", "error");
+      return;
+    }
+
+    if (items.length === 0) return;
+
+    const confirm = await Swal.fire({
+      title: "¿Confirmar pedido?",
+      text: `Total: $${subtotal.toLocaleString("es-AR")}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Pagar ahora",
+      cancelButtonColor: "#d33",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    Swal.fire({
+      title: "Procesando pago...",
+      text: "No cierres la ventana",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Sesión no válida.");
+
+      console.log("Iniciando checkout para usuario ID:", user.id);
+      const orderCreated = await checkoutOrder(user.id, token);
+
+      const orderId = orderCreated.order_id;
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      await updateOrderStatus(orderId, "paid", token);
+
+      clearCart();
+      await Swal.fire({
+        icon: "success",
+        title: "¡Pago Exitoso!",
+        text: `Orden #${orderId} confirmada.`,
+      });
+
+      navigate("/");
+    } catch (error) {
+      console.error("Error en el proceso:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un fallo al procesar el carrito. Asegúrate de tener items guardados.",
+      });
+    }
+  };
+
   return (
-    <section className="space-y-2">
-      <h1 className="text-2xl font-semibold">Checkout</h1>
-      <p className="opacity-80">Dirección, envío, método de pago y confirmación.</p>
+    <section className="max-w-md mx-auto p-6 space-y-4 border rounded-xl shadow-sm mt-10">
+      <h1 className="text-2xl font-bold">Resumen de Compra</h1>
+
+      <div className="space-y-2 border-b pb-4">
+        {items.map((item) => (
+          <div
+            key={item.product.product_id}
+            className="flex justify-between text-sm"
+          >
+            <span>
+              {item.product.name} x{item.quantity}
+            </span>
+            <span>
+              ${(item.product.price * item.quantity).toLocaleString("es-AR")}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between font-bold text-xl py-2">
+        <span>Total</span>
+        <span>${subtotal.toLocaleString("es-AR")}</span>
+      </div>
+
+      <button
+        onClick={handlePayment}
+        className="w-full bg-[#0b2deb] text-[#ffff] py-3 rounded-lg font-bold hover:bg-[#435df1] transition-all"
+      >
+        Confirmar y Pagar
+      </button>
     </section>
   );
 }

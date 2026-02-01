@@ -14,7 +14,68 @@ export async function getOrders(): Promise<OrderSchema[]> {
   if (!res.ok) {
     throw new Error("Error al obtener ordenes");
   }
-  console.log(res);
   const data = await res.json();
   return orderSchema.array().parse(data);
+}
+
+export async function createOrder(orderData: any): Promise<OrderSchema> {
+  const res = await fetch(`${API_URL}/api/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify(orderData),
+  });
+
+  if (!res.ok) {
+    const serverError = await res.json();
+    console.log(serverError);
+    throw new Error("Error al crear la orden");
+  }
+  const data = await res.json();
+  return orderSchema.parse(data);
+}
+
+export async function checkoutOrder(
+  userId: number,
+  token: string,
+): Promise<OrderSchema> {
+  const res = await fetch(`${API_URL}/api/orders/checkout/${userId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    if (res.status === 401)
+      throw new Error("Sesión expirada. Por favor, vuelve a loguearte.");
+    throw new Error("Error en el checkout.");
+  }
+
+  const data = await res.json();
+  return orderSchema.parse(data);
+}
+
+export async function updateOrderStatus(
+  orderId: number,
+  status: "paid" | "pending" | "cancel",
+  token: string,
+): Promise<OrderSchema> {
+  const res = await fetch(`${API_URL}/api/orders/${orderId}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!res.ok) throw new Error("Error al actualizar estado");
+  const data = await res.json();
+  return orderSchema.parse(data);
 }

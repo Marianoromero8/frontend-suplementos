@@ -28,20 +28,18 @@ export function DashboardProducts() {
   const [products, setProducts] = useState<ProductSchema[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductSchema | null>(
     null,
-  ); // <-- Estado para el producto seleccionado
+  );
   const [page, setPage] = useState(1);
-  const [params, setParams] = useSearchParams()
-  const [pageSize, setPageSize] = useState(10)
+  const [params, setParams] = useSearchParams();
+  const [pageSize, setPageSize] = useState(10);
 
   const name = params.get("name") ?? "";
-  const [searchProduct, setSearchProduct] = useState<string>(name)
+  const [searchProduct, setSearchProduct] = useState<string>(name);
   const stock = params.get("stock") ?? "";
-
 
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
-
 
   const handleEdit = (product: ProductSchema) => {
     setSelectedProduct(product);
@@ -106,10 +104,10 @@ export function DashboardProducts() {
 
   // Control de paginado
   useEffect(() => {
-     const maxPage = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
-     if (page > maxPage) setPage(maxPage);
-     if (page < 1) setPage(1);
-   }, [filteredProducts.length, pageSize, page, setPage]);
+    const maxPage = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+    if (page > maxPage) setPage(maxPage);
+    if (page < 1) setPage(1);
+  }, [filteredProducts.length, pageSize, page, setPage]);
 
   return (
     <div className="space-y-8">
@@ -130,7 +128,6 @@ export function DashboardProducts() {
         </div>
       </div>
       <div className="flex items-center justify-start gap-2">
-
         <span className="">Order by:</span>
         <Button
           variant="ghost"
@@ -145,25 +142,32 @@ export function DashboardProducts() {
         </Button>
 
         <span className="">Search:</span>
-        <Input className="w-75"placeholder="Search Product" 
+        <Input
+          className="w-75"
+          placeholder="Search Product"
           value={searchProduct}
           onChange={(e) => {
-            const v = e.target.value
+            const v = e.target.value;
             setSearchProduct(v);
-            updateParam("name", v || "")
+            updateParam("name", v || "");
           }}
-          />
+        />
 
         <span className="">Show:</span>
-        <Input className="w-30" type="number" placeholder="Ej: 10" min={1} max={filteredProducts.length}
+        <Input
+          className="w-30"
+          type="number"
+          placeholder="Ej: 10"
+          min={1}
+          max={filteredProducts.length}
           value={pageSize}
           onChange={(e) => {
-            const v = Number(e.target.value)
-            if (v < 1){
-              setPageSize(1)
+            const v = Number(e.target.value);
+            if (v < 1) {
+              setPageSize(1);
             } else {
               setPageSize(Number(v));
-            } 
+            }
           }}
         />
       </div>

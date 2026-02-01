@@ -14,6 +14,8 @@ import type { OrderSchema } from "@/schemas/order.schema";
 import { getOrders } from "@/services/orders.service";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
+import { OrderPDF } from "./OrderPdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 const statusOrder = (status: string) => {
   if (status === "paid")
@@ -30,11 +32,11 @@ const statusOrder = (status: string) => {
         Pending
       </div>
     );
-  if (status === "cancelled")
+  if (status === "cancel")
     return (
       <div className="flex flex-row gap-2 font-bold">
         <X className="text-[#fa1818]" />
-        Cancelled
+        Cancel
       </div>
     );
 };
@@ -42,11 +44,10 @@ const statusOrder = (status: string) => {
 export function DashboardOrders() {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState<OrderSchema[]>([]);
-  const [pageSize, setPageSize] = useState(10)
-  const [params, setParams] = useSearchParams()
-  const totalAmount = params.get("total") ?? ""
-  const status = params.get("status") ?? ""
-
+  const [pageSize, setPageSize] = useState(10);
+  const [params, setParams] = useSearchParams();
+  const totalAmount = params.get("total") ?? "";
+  const status = params.get("status") ?? "";
 
   useEffect(() => {
     getOrders().then(setOrders);
@@ -67,7 +68,10 @@ export function DashboardOrders() {
       });
   }, [orders, status, totalAmount]);
 
-  const ordersPagination = filteredOrders.slice((page - 1) * pageSize, page * pageSize);
+  const ordersPagination = filteredOrders.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
 
   const updateParam = (key: string, value: string) => {
     setParams((prev) => {
@@ -79,24 +83,24 @@ export function DashboardOrders() {
 
   // Control de paginado ( En orders cancelados como no hay ninguna queda page 1 / 0 y te dejaba cambiar de pagina hasta el infinito )
   useEffect(() => {
-     const maxPage = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
-     if (page > maxPage) setPage(maxPage);
-     if (page < 1) setPage(1);
-   }, [filteredOrders.length, pageSize, page, setPage]);
+    const maxPage = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
+    if (page > maxPage) setPage(maxPage);
+    if (page < 1) setPage(1);
+  }, [filteredOrders.length, pageSize, page, setPage]);
 
   return (
     <div>
       <div>
         <h1 className="text-3xl font-bold">Orders</h1>
-        <p className="text-muted-foreground">Orders - Paid/Pending/Cancelled</p>
+        <p className="text-muted-foreground">Orders - Paid/Pending/Cancel</p>
       </div>
       <div className="flex items-center justify-start gap-2">
-
         <span className="">Order by:</span>
         <Button
           variant="ghost"
           onClick={() => {
-            const next = totalAmount === "" ? "asc" : totalAmount === "asc" ? "desc" : "";
+            const next =
+              totalAmount === "" ? "asc" : totalAmount === "asc" ? "desc" : "";
             updateParam("total", next);
           }}
           className="cursor-pointer border-2 w-25"
@@ -111,10 +115,10 @@ export function DashboardOrders() {
               status === ""
                 ? "pending"
                 : status === "pending"
-                ? "paid"
-                : status === "paid"
-                ? "cancel"
-                : "";
+                  ? "paid"
+                  : status === "paid"
+                    ? "cancel"
+                    : "";
             updateParam("status", next);
           }}
           className="cursor-pointer border-2 w-25"
@@ -124,17 +128,22 @@ export function DashboardOrders() {
         </Button>
 
         <span className="">Show:</span>
-        <Input className="w-30" value={pageSize} type="number" placeholder="Ej: 10" min={1} max={filteredOrders.length} 
+        <Input
+          className="w-30"
+          value={pageSize}
+          type="number"
+          placeholder="Ej: 10"
+          min={1}
+          max={filteredOrders.length}
           onChange={(e) => {
-            const v = Number(e.target.value)
-            if (v < 1){
-              setPageSize(1)
+            const v = Number(e.target.value);
+            if (v < 1) {
+              setPageSize(1);
             } else {
               setPageSize(Number(v));
-            } 
+            }
           }}
         />
-
       </div>
       <div>
         <Table>
@@ -154,15 +163,24 @@ export function DashboardOrders() {
                 <TableCell className="font-semibold">
                   {order.order_id}
                 </TableCell>
-                <TableCell>{order.details.length}</TableCell>
+                <TableCell>
+                  {order.details.reduce((acc, item) => acc + item.quantity, 0)}
+                </TableCell>
                 <TableCell>${order.total}</TableCell>
                 <TableCell>{order.order_date.slice(0, 10)}</TableCell>
                 <TableCell>{statusOrder(order.status)}</TableCell>
                 <TableCell>
                   {order.status === "paid" ? (
-                    <Button variant="ghost">
-                      <File />
-                    </Button>
+                    <PDFDownloadLink
+                      document={<OrderPDF order={order} />}
+                      fileName={`orden_${order.order_id}.pdf`}
+                    >
+                      {({ loading }) => (
+                        <Button variant="ghost" disabled={loading}>
+                          {loading ? "..." : <File />}
+                        </Button>
+                      )}
+                    </PDFDownloadLink>
                   ) : (
                     ""
                   )}

@@ -4,7 +4,7 @@ import { orderDetailSchema } from "./orderDetail.schema";
 export const orderSchema = z.object({
   order_id: z.number().int().nonnegative(),
   user_id: z.number().int().nonnegative(),
-  status: z.enum(["paid", "pending", "cancelled"]),
+  status: z.enum(["paid", "pending", "cancel"]),
   total: z.string(),
   order_date: z.string().datetime(),
   createdAt: z.string().datetime(),
