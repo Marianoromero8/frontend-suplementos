@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { CardProducts } from "../../components/CardProducts";
 import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "@/services/product.service";
@@ -21,12 +21,12 @@ export function Home() {
       .filter((p) =>
         category !== "all" && category !== ""
           ? p.category_id === Number(category)
-          : true
+          : true,
       )
       .filter((p) =>
         brand !== "all" && brand !== ""
           ? p.brand.toLowerCase() === brand.toLowerCase()
-          : true
+          : true,
       )
       .filter((p) => {
         const pPrice = Number(p.price ?? 0);
@@ -66,7 +66,7 @@ export function Home() {
 
   const productsHome = filteredProducts.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
 
   return (
@@ -80,15 +80,12 @@ export function Home() {
       <div className="grid md:grid-cols-4 justify-center gap-8">
         {productsHome.length > 0 ? (
           productsHome.map((product) => (
-            <Link
-              key={product.product_id}
-              to={`/product/${product.product_id}`}
-            >
-              <CardProducts product={product} />
-            </Link>
+            <CardProducts key={product.product_id} product={product} />
           ))
         ) : (
-          <p>Product, Brand or Category Not Found</p>
+          <p className="flex flex-row justify-center">
+            Product, Brand or Category Not Found
+          </p>
         )}
       </div>
       {filteredProducts.length > 0 && (
