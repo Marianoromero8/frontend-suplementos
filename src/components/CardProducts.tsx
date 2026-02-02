@@ -12,7 +12,6 @@ interface CardProps {
 export function CardProducts({ product }: CardProps) {
   const { addToCart } = useCart();
   const { isAdmin } = useAuth();
-
   const disabled = product.stock === 0;
   return (
     <div className="w-72 flex flex-col p-4 justify-between h-full backdrop-blur-lg rounded-2xl gap-4 transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl">
