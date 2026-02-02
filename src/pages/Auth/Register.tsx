@@ -50,7 +50,9 @@ export function Register() {
   return (
     <div className="flex items-center justify-center min-h-fit p-5 ">
       <div className="flex flex-col gap-4 w-full max-w-sm ">
-        <h2 className="w-auto text-center py-2 text-2xl font-bold">Register</h2>
+        <h2 className="w-auto text-center py-2 text-2xl font-bold">
+          Registrarse
+        </h2>
 
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -59,7 +61,7 @@ export function Register() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Nombre</FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="Name" {...field} />
                   </FormControl>
@@ -89,7 +91,7 @@ export function Register() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Contraseña</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="*******" {...field} />
                   </FormControl>
@@ -102,7 +104,7 @@ export function Register() {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Direccion</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
@@ -118,7 +120,7 @@ export function Register() {
               className="cursor-pointer"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Registering..." : "Register"}
+              {isSubmitting ? "Registrandose..." : "Registrarse"}
             </Button>
           </form>
         </Form>

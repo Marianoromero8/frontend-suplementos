@@ -103,18 +103,18 @@ export default function Perfil() {
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
-      <h1 className="flex text-5xl font-bold justify-center">Profile</h1>
+      <h1 className="flex text-5xl font-bold justify-center">Perfil</h1>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex flex-row items-center justify-center gap-2 font-bold">
             <SquareUser />
-            Profile Data
+            Informacion Pefil
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           <div>
-            <label className="font-semibold">Name</label>
+            <label className="font-semibold">Nombre</label>
             {edit ? (
               <Input
                 name="name"
@@ -144,7 +144,7 @@ export default function Perfil() {
           </div>
 
           <div>
-            <label className="font-semibold">Address</label>
+            <label className="font-semibold">Direccion</label>
             {edit ? (
               <Input
                 name="address"
@@ -161,7 +161,7 @@ export default function Perfil() {
           {edit && (
             <div>
               <label className="font-semibold flex items-center gap-2">
-                Confirm Password
+                Confirmar Contraseña
               </label>
               <Input
                 type="password"
@@ -177,14 +177,14 @@ export default function Perfil() {
           )}
 
           <div>
-            <label className="font-semibold">Role</label>
+            <label className="font-semibold">Rol</label>
             <p className="opacity-80">{user?.role}</p>
           </div>
 
           {edit ? (
             <div className="flex flex-col gap-3">
               <Button className="w-full" onClick={handleSave}>
-                Save Changes
+                Guardar Cambios
               </Button>
               <Button
                 variant="secondary"
@@ -193,7 +193,7 @@ export default function Perfil() {
                   setEdit(false);
                 }}
               >
-                Cancel
+                Cancelar
               </Button>
             </div>
           ) : (
@@ -203,7 +203,7 @@ export default function Perfil() {
                 setEdit(true);
               }}
             >
-              Edit Profile
+              Editar Perfil
             </Button>
           )}
         </CardContent>

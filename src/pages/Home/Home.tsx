@@ -84,7 +84,7 @@ export function Home() {
           ))
         ) : (
           <p className="flex flex-row justify-center">
-            Product, Brand or Category Not Found
+            Producto, Categoria o Marca no encontrado
           </p>
         )}
       </div>

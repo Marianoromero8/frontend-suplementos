@@ -16,7 +16,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Edit2Icon, MoreVertical, Trash, UserPlus} from "lucide-react";
+import { Edit, Edit2Icon, MoreVertical, Trash, UserPlus } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { UserForm } from "./UserForm";
 import type { User } from "@/schemas/user.schema";
@@ -27,11 +27,11 @@ export function DashboardUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const [params, setParams] = useSearchParams()
-  const [pageSize, setPageSize] = useState(10)
+  const [params, setParams] = useSearchParams();
+  const [pageSize, setPageSize] = useState(10);
   const name = params.get("name") ?? "";
   const role = params.get("role") ?? "";
-  const [searchUser, setSearchUser] = useState<string>(name)
+  const [searchUser, setSearchUser] = useState<string>(name);
 
   useEffect(() => {
     getUsers().then(setUsers);
@@ -104,21 +104,24 @@ export function DashboardUsers() {
     return list;
   }, [users, role, searchUser]);
 
-  const usersPagination = filteredUsers.slice((page - 1) * pageSize, page * pageSize);
+  const usersPagination = filteredUsers.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
 
   // Control de paginado
   useEffect(() => {
-     const maxPage = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
-     if (page > maxPage) setPage(maxPage);
-     if (page < 1) setPage(1);
-   }, [filteredUsers.length, pageSize, page, setPage]);
-   
+    const maxPage = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
+    if (page > maxPage) setPage(maxPage);
+    if (page < 1) setPage(1);
+  }, [filteredUsers.length, pageSize, page, setPage]);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Users</h1>
-          <p className="text-muted-foreground">Users Register</p>
+          <h1 className="text-3xl font-bold">Usuarios</h1>
+          <p className="text-muted-foreground">Usuarios Registrados</p>
         </div>
         <div>
           <Button
@@ -127,13 +130,12 @@ export function DashboardUsers() {
             className="cursor-pointer"
           >
             <UserPlus />
-            Add User
+            Agregar Usuario
           </Button>
         </div>
       </div>
       <div className="flex items-center justify-start gap-2">
-
-        <span className="">Order by role:</span>
+        <span className="">Ordenar por Rol:</span>
         <Button
           variant="ghost"
           onClick={() => {
@@ -146,24 +148,32 @@ export function DashboardUsers() {
           {role === "USER" ? " User" : role === "ADMIN" ? " Admin" : ""}
         </Button>
 
-        <span className="">Search:</span>
-        <Input className="w-75"placeholder="Search by either username or email" 
+        <span className="">Buscar:</span>
+        <Input
+          className="w-75"
+          placeholder="Search by either username or email"
           onChange={(e) => {
-            const v = e.target.value
+            const v = e.target.value;
             setSearchUser(v);
-            updateParam("name", v || "")
+            updateParam("name", v || "");
           }}
         />
 
-        <span className="">Show:</span>
-        <Input className="w-30" value={pageSize} type="number" placeholder="Ej: 10" min={1} max={filteredUsers.length}
+        <span className="">Mostrar:</span>
+        <Input
+          className="w-30"
+          value={pageSize}
+          type="number"
+          placeholder="Ej: 10"
+          min={1}
+          max={filteredUsers.length}
           onChange={(e) => {
-            const v = Number(e.target.value)
-            if (v < 1){
-              setPageSize(1)
+            const v = Number(e.target.value);
+            if (v < 1) {
+              setPageSize(1);
             } else {
               setPageSize(Number(v));
-            } 
+            }
           }}
         />
       </div>
@@ -171,9 +181,9 @@ export function DashboardUsers() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Nombre</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
+              <TableHead>Rol</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -183,23 +193,24 @@ export function DashboardUsers() {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>
-                  <DropdownMenu>
+                  {/* <DropdownMenu>
                     <DropdownMenuTrigger>
                       <Button variant="ghost">
                         <MoreVertical />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem
-                        onClick={() => handleEditRole(user.user_id, user.role)}
-                      >
-                        <Edit2Icon /> Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Trash /> Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    <DropdownMenuContent> */}
+                  {/* <DropdownMenuItem */}
+                  {/* > */}
+                  <Edit
+                    onClick={() => handleEditRole(user.user_id, user.role)}
+                  />{" "}
+                  {/* </DropdownMenuItem> */}
+                  {/* <DropdownMenuItem>
+                        <Trash /> Eliminar
+                      </DropdownMenuItem> */}
+                  {/* </DropdownMenuContent>
+                  </DropdownMenu> */}
                 </TableCell>
               </TableRow>
             ))}

@@ -83,11 +83,11 @@ export function DashboardReviews() {
 
   // Control de paginado
   useEffect(() => {
-     const maxPage = Math.max(1, Math.ceil(filteredReviews.length / pageSize));
-     if (page > maxPage) setPage(maxPage);
-     if (page < 1) setPage(1);
-   }, [filteredReviews.length, pageSize, page, setPage]);
-   
+    const maxPage = Math.max(1, Math.ceil(filteredReviews.length / pageSize));
+    if (page > maxPage) setPage(maxPage);
+    if (page < 1) setPage(1);
+  }, [filteredReviews.length, pageSize, page, setPage]);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center justify-between">
@@ -96,20 +96,29 @@ export function DashboardReviews() {
         </div>
       </div>
       <div className="flex items-center justify-start gap-2">
-        <span className="">Order by:</span>
+        <span className="">Ordenado por:</span>
         <Button
           variant="ghost"
           onClick={() => {
-            const next = qualification === "" ? "asc" : qualification === "asc" ? "desc" : "";
+            const next =
+              qualification === ""
+                ? "asc"
+                : qualification === "asc"
+                  ? "desc"
+                  : "";
             updateParam("qualification", next);
           }}
           className="cursor-pointer border-2 w-18"
         >
-          Rating
-          {qualification === "asc" ? " ↑" : qualification === "desc" ? " ↓" : ""}
+          Puntaje
+          {qualification === "asc"
+            ? " ↑"
+            : qualification === "desc"
+              ? " ↓"
+              : ""}
         </Button>
 
-        <span className="">Search product:</span>
+        <span className="">Buscar Producto:</span>
         <Input
           className="w-75"
           placeholder="Search Product"
@@ -121,19 +130,21 @@ export function DashboardReviews() {
             setPage(1);
           }}
         />
-        
-        <span className="">Show:</span>
+
+        <span className="">Mostrar:</span>
         <Input
           className="w-30"
           type="number"
-          placeholder="Ej: 10" min={1} max={filteredReviews.length}
+          placeholder="Ej: 10"
+          min={1}
+          max={filteredReviews.length}
           onChange={(e) => {
-            const v = Number(e.target.value)
-            if (v < 1){
-              setPageSize(1)
+            const v = Number(e.target.value);
+            if (v < 1) {
+              setPageSize(1);
             } else {
               setPageSize(Number(v));
-            } 
+            }
           }}
         />
       </div>
@@ -142,10 +153,10 @@ export function DashboardReviews() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Rating</TableHead>
+              <TableHead>Producto</TableHead>
+              <TableHead>Descripcion</TableHead>
+              <TableHead>Usuario</TableHead>
+              <TableHead>Puntaje</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
