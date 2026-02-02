@@ -5,27 +5,30 @@ export type CartItem = {
   quantity: number;
 };
 
-const STORAGE_KEY = "cart";
-
-export function loadCart(): CartItem[] {
+export function loadCart(key: string): CartItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return [];
+
     const parsed = JSON.parse(raw) as CartItem[];
     if (!Array.isArray(parsed)) return [];
-    // Basic sanity: quantity >= 1 and product_id exists
+
+    // Sanity check
     return parsed
       .filter((i) => i?.product?.product_id != null && Number(i.quantity) > 0)
-      .map((i) => ({ ...i, quantity: Math.max(1, Math.floor(Number(i.quantity))) }));
+      .map((i) => ({
+        ...i,
+        quantity: Math.max(1, Math.floor(Number(i.quantity))),
+      }));
   } catch {
     return [];
   }
 }
 
-export function saveCart(items: CartItem[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+export function saveCart(key: string, items: CartItem[]) {
+  localStorage.setItem(key, JSON.stringify(items));
 }
 
-export function clearCartStorage() {
-  localStorage.removeItem(STORAGE_KEY);
+export function clearCartStorage(key: string) {
+  localStorage.removeItem(key);
 }

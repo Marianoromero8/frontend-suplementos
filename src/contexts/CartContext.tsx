@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { clearCartStorage, loadCart, saveCart, type CartItem } from "@/services/cart.service";
+import { useAuth } from "@/contexts/AuthContext";
 
 type CartState = {
   items: CartItem[];
@@ -88,17 +89,22 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth(); // 👈 obtenemos el usuario logueado
+
+  // Key por usuario (evita mismo carrito para todos)
+  const cartKey = user?.id ? `cart_items_user_${user.id}` : "cart_items_guest";
+
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
 
-  // Hydrate once
+  // Hydrate cada vez que cambia el usuario
   useEffect(() => {
-    dispatch({ type: "HYDRATE", payload: loadCart() });
-  }, []);
+    dispatch({ type: "HYDRATE", payload: loadCart(cartKey) });
+  }, [cartKey]);
 
-  // Persist on change
+  //  Persistir usando la key del usuario actual
   useEffect(() => {
-    saveCart(state.items);
-  }, [state.items]);
+    saveCart(cartKey, state.items);
+  }, [cartKey, state.items]);
 
   const totalItems = useMemo(
     () => state.items.reduce((acc, i) => acc + i.quantity, 0),
@@ -130,7 +136,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const clearCart = () => {
-    clearCartStorage();
+    clearCartStorage(cartKey);
     dispatch({ type: "CLEAR" });
   };
 
