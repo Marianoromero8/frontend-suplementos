@@ -3,11 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import {
   Table,
   TableHeader,
   TableRow,
@@ -15,8 +10,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Edit, Edit2Icon, MoreVertical, Trash, UserPlus } from "lucide-react";
+import { Edit, UserPlus } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { UserForm } from "./UserForm";
 import type { User } from "@/schemas/user.schema";
