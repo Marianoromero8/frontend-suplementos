@@ -1,9 +1,6 @@
 import Swal from "sweetalert2";
 import { useCart } from "@/contexts/CartContext";
-import {
-  checkoutOrder,
-  updateOrderStatus,
-} from "../../services/orders.service";
+import { checkoutOrder, postItemCart } from "../../services/orders.service";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -42,20 +39,19 @@ export default function Checkout() {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Sesión no válida.");
 
-      console.log("Iniciando checkout para usuario ID:", user.id);
+      for (const item of items) {
+        await postItemCart(user.id, item.product.product_id, item.quantity); //
+      }
+
+      // console.log("Iniciando checkout para usuario ID:", user.id);
+      Swal.update({ title: "Generando orden..." });
       const orderCreated = await checkoutOrder(user.id, token);
-
-      const orderId = orderCreated.order_id;
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      await updateOrderStatus(orderId, "paid", token);
 
       clearCart();
       await Swal.fire({
         icon: "success",
         title: "¡Pago Exitoso!",
-        text: `Orden #${orderId} confirmada.`,
+        text: `Orden #${orderCreated.order_id} confirmada.`,
       });
 
       navigate("/");
