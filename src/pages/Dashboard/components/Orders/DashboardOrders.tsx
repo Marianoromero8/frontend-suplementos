@@ -11,11 +11,12 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState, useMemo } from "react";
 import { Pagination } from "@/components/Pagination";
 import type { OrderSchema } from "@/schemas/order.schema";
-import { getOrders } from "@/services/orders.service";
+import { getOrders, updateOrderStatus } from "@/services/orders.service";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
 import { OrderPDF } from "./OrderPdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import Swal from "sweetalert2";
 
 const statusOrder = (status: string) => {
   if (status === "paid")
@@ -53,6 +54,54 @@ export function DashboardOrders() {
     getOrders().then(setOrders);
   }, []);
 
+  const handleStatusChange = async (orderId: number, currentStatus: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const { value: newStatus } = await Swal.fire({
+      title: "Actualizar estado",
+      input: "select",
+      inputOptions: {
+        pending: "Pending",
+        paid: "Paid",
+        cancel: "Cancel",
+      },
+      inputValue: currentStatus,
+      showCancelButton: true,
+      confirmButtonText: "Actualizar",
+      confirmButtonColor: "#0b2deb",
+    });
+
+    if (newStatus && newStatus !== currentStatus) {
+      try {
+        Swal.showLoading();
+        await updateOrderStatus(
+          orderId,
+          newStatus as "paid" | "pending" | "cancel",
+          token,
+        );
+
+        setOrders((prev) =>
+          prev.map((o) =>
+            o.order_id === orderId ? { ...o, status: newStatus } : o,
+          ),
+        );
+
+        Swal.fire(
+          "¡Actualizado!",
+          `La orden #${orderId} ahora está ${newStatus}`,
+          "success",
+        );
+      } catch (error) {
+        Swal.fire(
+          "Error",
+          "Una vez cancelada la orden, no se puede volver a editar",
+          "error",
+        );
+      }
+    }
+  };
+
   const filteredOrders = useMemo(() => {
     return orders
       .filter((o) => {
@@ -81,7 +130,6 @@ export function DashboardOrders() {
     });
   };
 
-  // Control de paginado ( En orders cancelados como no hay ninguna queda page 1 / 0 y te dejaba cambiar de pagina hasta el infinito )
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
     if (page > maxPage) setPage(maxPage);
@@ -168,7 +216,16 @@ export function DashboardOrders() {
                 </TableCell>
                 <TableCell>${order.total}</TableCell>
                 <TableCell>{order.order_date.slice(0, 10)}</TableCell>
-                <TableCell>{statusOrder(order.status)}</TableCell>
+                <TableCell>
+                  <button
+                    onClick={() =>
+                      handleStatusChange(order.order_id, order.status)
+                    }
+                    className="hover:bg-slate-100 p-2 rounded-lg transition-colors cursor-pointer"
+                  >
+                    {statusOrder(order.status)}
+                  </button>
+                </TableCell>
                 <TableCell>
                   {order.status === "paid" ? (
                     <PDFDownloadLink
