@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import type { ProductSchema } from "@/schemas/product.schema";
-import { clearCartStorage, loadCart, saveCart, type CartItem } from "@/services/cart.service";
+import {
+  clearCartStorage,
+  loadCart,
+  saveCart,
+  type CartItem,
+  ensureCartAndAddItem,
+  getCartByUserId,
+  getItemsByCartId,
+  deleteItemCart,
+} from "@/services/cart.service";
 import { useAuth } from "@/contexts/AuthContext";
 
 type CartState = {
@@ -75,12 +84,12 @@ type CartContextType = {
   totalItems: number;
   subtotal: number;
 
-  addToCart: (product: ProductSchema, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  setQuantity: (productId: number, quantity: number) => void;
+  addToCart: (product: ProductSchema, quantity?: number) => Promise<void>;
+  removeFromCart: (productId: number) => Promise<void>;
+  setQuantity: (productId: number, quantity: number) => void; // por ahora local (no hay PUT en backend)
   increment: (productId: number) => void;
   decrement: (productId: number) => void;
-  clearCart: () => void;
+  clearCart: () => Promise<void>;
 
   isInCart: (productId: number) => boolean;
   getQuantity: (productId: number) => number;
@@ -89,39 +98,92 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth(); // 👈 obtenemos el usuario logueado
+  const { user } = useAuth();
+
+  // ✅ ajustá al campo real de tu user (lo más probable: user.user_id)
+  const userId = user?.user_id;
 
   // Key por usuario (evita mismo carrito para todos)
-  const cartKey = user?.id ? `cart_items_user_${user.id}` : "cart_items_guest";
+  const cartKey = userId ? `cart_items_user_${userId}` : "cart_items_guest";
 
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
 
-  // Hydrate cada vez que cambia el usuario
+  // ✅ Hydrate: invitado => localStorage | logueado => backend (fallback localStorage)
   useEffect(() => {
-    dispatch({ type: "HYDRATE", payload: loadCart(cartKey) });
-  }, [cartKey]);
+    const run = async () => {
+      if (!userId) {
+        dispatch({ type: "HYDRATE", payload: loadCart(cartKey) });
+        return;
+      }
 
-  //  Persistir usando la key del usuario actual
+      try {
+        const cartRes = await getCartByUserId(userId);
+        const cart = cartRes.data; // debe tener cart_id
+
+        const itemsRes = await getItemsByCartId(cart.cart_id);
+        const apiItems = itemsRes.data;
+
+        /**
+         * Esperado:
+         * apiItems = [{ item_id, quantity, product: {...} }, ...]
+         * Si NO viene product embebido, decime el JSON y lo adaptamos.
+         */
+        const mapped: CartItem[] = Array.isArray(apiItems)
+          ? apiItems
+              .filter((it: any) => it?.product && Number(it.quantity) > 0)
+              .map((it: any) => ({
+                // si tu CartItem no tiene itemId, podés borrar esta línea
+                itemId: it.item_id,
+                product: it.product,
+                quantity: Math.max(1, Math.floor(Number(it.quantity))),
+              }))
+          : [];
+
+        dispatch({ type: "HYDRATE", payload: mapped });
+      } catch {
+        // fallback: algo falló (CORS / auth / endpoint), al menos que no quede vacío
+        dispatch({ type: "HYDRATE", payload: loadCart(cartKey) });
+      }
+    };
+
+    run();
+  }, [cartKey, userId]);
+
+  // ✅ Persistir SOLO si es invitado
   useEffect(() => {
-    saveCart(cartKey, state.items);
-  }, [cartKey, state.items]);
+    if (!userId) saveCart(cartKey, state.items);
+  }, [cartKey, state.items, userId]);
 
-  const totalItems = useMemo(
-    () => state.items.reduce((acc, i) => acc + i.quantity, 0),
-    [state.items],
-  );
+  const totalItems = useMemo(() => state.items.reduce((acc, i) => acc + i.quantity, 0), [state.items]);
 
   const subtotal = useMemo(
     () => state.items.reduce((acc, i) => acc + i.quantity * i.product.price, 0),
     [state.items],
   );
 
-  const addToCart = (product: ProductSchema, quantity = 1) =>
+  // ✅ addToCart: logueado => backend + update optimista | invitado => local
+  const addToCart = async (product: ProductSchema, quantity = 1) => {
+    if (userId) {
+      await ensureCartAndAddItem(userId, product.product_id, quantity);
+      dispatch({ type: "ADD", payload: { product, quantity } });
+      return;
+    }
     dispatch({ type: "ADD", payload: { product, quantity } });
+  };
 
-  const removeFromCart = (productId: number) =>
+  // ✅ removeFromCart: logueado => backend si tenemos itemId | invitado => local
+  const removeFromCart = async (productId: number) => {
+    if (userId) {
+      const item = state.items.find((i: any) => i.product.product_id === productId);
+      const itemId = (item as any)?.itemId;
+      if (itemId) {
+        await deleteItemCart(itemId);
+      }
+    }
     dispatch({ type: "REMOVE", payload: { productId } });
+  };
 
+  // ⚠️ Por ahora queda local. Para backend hace falta endpoint PUT/PATCH para itemCart
   const setQuantity = (productId: number, quantity: number) =>
     dispatch({ type: "SET_QTY", payload: { productId, quantity } });
 
@@ -135,12 +197,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setQuantity(productId, current - 1);
   };
 
-  const clearCart = () => {
+  // ✅ clearCart: logueado => borra items por itemId | invitado => localStorage
+  const clearCart = async () => {
+    if (userId) {
+      const ids = state.items.map((i: any) => i.itemId).filter(Boolean) as number[];
+      await Promise.all(ids.map((id) => deleteItemCart(id)));
+      dispatch({ type: "CLEAR" });
+      return;
+    }
+
     clearCartStorage(cartKey);
     dispatch({ type: "CLEAR" });
   };
 
   const isInCart = (productId: number) => state.items.some((i) => i.product.product_id === productId);
+
   const getQuantity = (productId: number) =>
     state.items.find((i) => i.product.product_id === productId)?.quantity ?? 0;
 

@@ -20,6 +20,8 @@ export async function loginRequest(name: string, password: string) {
     throw new Error(data?.message ?? "Credenciales inválidas");
   }
 
+  localStorage.setItem("token", data.token);
+  
   return loginResponseSchema.parse(data);
 }
 

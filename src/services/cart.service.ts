@@ -1,10 +1,13 @@
+import axios from "axios";
 import type { ProductSchema } from "@/schemas/product.schema";
 
 export type CartItem = {
+  itemId?: number; // ✅ para poder borrar en backend (DELETE itemCart/:itemId)
   product: ProductSchema;
   quantity: number;
 };
 
+// aca lo que conecta con el localstorage ( no backend)
 export function loadCart(key: string): CartItem[] {
   try {
     const raw = localStorage.getItem(key);
@@ -13,7 +16,6 @@ export function loadCart(key: string): CartItem[] {
     const parsed = JSON.parse(raw) as CartItem[];
     if (!Array.isArray(parsed)) return [];
 
-    // Sanity check
     return parsed
       .filter((i) => i?.product?.product_id != null && Number(i.quantity) > 0)
       .map((i) => ({
@@ -32,3 +34,55 @@ export function saveCart(key: string, items: CartItem[]) {
 export function clearCartStorage(key: string) {
   localStorage.removeItem(key);
 }
+
+// aca lo que conecta con el backend
+
+const API_URL = import.meta.env.VITE_API_URL;
+const API_KEY = import.meta.env.VITE_API_KEY;
+
+const authHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    "x-api-key": API_KEY,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
+// Obtiene el carrito por usuario
+export const getCartByUserId = (userId: number) =>
+  axios.get(`${API_URL}/api/carts/user/${userId}`, { headers: authHeaders() });
+
+// Crea el carrito  (OJO user_id)
+export const createCart = (userId: number) =>
+  axios.post(`${API_URL}/api/carts`, { user_id: userId }, { headers: authHeaders() });
+
+// Items por carrito
+export const getItemsByCartId = (cartId: number) =>
+  axios.get(`${API_URL}/api/itemCarts/cart/${cartId}`, { headers: authHeaders() });
+
+// Agregar item (OJO cart_id y product_id)
+export const addItemToCart = (cartId: number, productId: number, quantity: number) =>
+  axios.post(
+    `${API_URL}/api/itemCarts`,
+    { cart_id: cartId, product_id: productId, quantity },
+    { headers: authHeaders() }
+  );
+
+// Eliminar item (en backend el id es item_id)
+export const deleteItemCart = (itemId: number) =>
+  axios.delete(`${API_URL}/api/itemCarts/${itemId}`, { headers: authHeaders() });
+
+export const ensureCartAndAddItem = async (userId: number, productId: number, quantity: number) => {
+  let cart;
+  try {
+    const res = await getCartByUserId(userId);
+    cart = res.data;
+  } catch {
+    const res = await createCart(userId);
+    cart = res.data;
+  }
+
+  // OJO: cart.cart_id
+  return addItemToCart(cart.cart_id, productId, quantity);
+};
