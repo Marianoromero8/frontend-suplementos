@@ -35,7 +35,6 @@ export function UserForm({ open, onClose }: UserFormProps) {
       email: "",
       password: "",
       address: "",
-      role: "USER",
     },
   });
 
