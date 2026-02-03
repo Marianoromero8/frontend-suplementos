@@ -37,12 +37,12 @@ export function NavBar() {
 
         <Link to="/categories" className="flex flex-row items-center gap-2">
           <ListTreeIcon />
-          Categoríes
+          Categorias
         </Link>
 
         <Link to="/cart" className="flex flex-row items-center gap-2 relative">
           <ShoppingCart />
-          <span>Cart</span>
+          <span>Carrito</span>
           {totalItems > 0 && (
             <span className="ml-1 inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold bg-black/80 text-white">
               {totalItems}
@@ -56,7 +56,7 @@ export function NavBar() {
           <>
             <Link to="/profile" className="flex flex-row items-center gap-2">
               <UserCheck />
-              Profile
+              Perfil
             </Link>
 
             <button
@@ -64,12 +64,12 @@ export function NavBar() {
               className="flex items-center gap-2 text-[#d11f1f] hover:text-[#9b3434] transition"
             >
               <LogOut size={18} />
-              Logout
+              Cerrar Sesion
             </button>
           </>
         ) : (
           <Link to="/login" className="hover:underline">
-            LogIn
+            Iniciar Sesion
           </Link>
         )}
       </div>

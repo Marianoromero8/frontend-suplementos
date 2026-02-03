@@ -91,11 +91,11 @@ export function DashboardOrders() {
   return (
     <div>
       <div>
-        <h1 className="text-3xl font-bold">Orders</h1>
-        <p className="text-muted-foreground">Orders - Paid/Pending/Cancel</p>
+        <h1 className="text-3xl font-bold">Ordenes</h1>
+        <p className="text-muted-foreground">Ordenes - Paid/Pending/Cancel</p>
       </div>
       <div className="flex items-center justify-start gap-2">
-        <span className="">Order by:</span>
+        <span className="">Ordenado por:</span>
         <Button
           variant="ghost"
           onClick={() => {
@@ -105,7 +105,7 @@ export function DashboardOrders() {
           }}
           className="cursor-pointer border-2 w-25"
         >
-          Total Amount
+          Monto total
           {totalAmount === "asc" ? " ↑" : totalAmount === "desc" ? " ↓" : ""}
         </Button>
         <Button
@@ -123,11 +123,11 @@ export function DashboardOrders() {
           }}
           className="cursor-pointer border-2 w-25"
         >
-          Status
+          Estado
           {status && ` ${status}`}
         </Button>
 
-        <span className="">Show:</span>
+        <span className="">Mostrar:</span>
         <Input
           className="w-30"
           value={pageSize}
@@ -149,11 +149,11 @@ export function DashboardOrders() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID order</TableHead>
+              <TableHead>ID orden</TableHead>
               <TableHead>Items</TableHead>
-              <TableHead>Total Amount</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Monto Total</TableHead>
+              <TableHead>Fecha</TableHead>
+              <TableHead>Estado</TableHead>
               <TableHead>PDF</TableHead>
             </TableRow>
           </TableHeader>

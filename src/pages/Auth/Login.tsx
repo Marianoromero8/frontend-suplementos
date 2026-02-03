@@ -48,7 +48,7 @@ export function Login() {
           email: user.email,
           role: user.role as "USER" | "ADMIN",
         },
-        token
+        token,
       );
       const from =
         location.state?.from?.pathname ??
@@ -66,7 +66,9 @@ export function Login() {
   return (
     <div className="flex flex-col items-center justify-center min-h-fit p-5 ">
       <div className="flex flex-col gap-4 w-full max-w-sm ">
-        <h2 className="w-auto text-center py-2 text-2xl font-bold">Login</h2>
+        <h2 className="w-auto text-center py-2 text-2xl font-bold">
+          Iniciar Sesion
+        </h2>
 
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -75,7 +77,7 @@ export function Login() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Nombre</FormLabel>
                   <FormControl>
                     <Input
                       type="name"
@@ -93,7 +95,7 @@ export function Login() {
               name="password"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Constraseña</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -116,17 +118,17 @@ export function Login() {
               className="w-full cursor-pointer"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Loading..." : "Login"}
+              {isSubmitting ? "Cargando..." : "Iniciar Sesion"}
             </Button>
           </form>
         </Form>
 
         <Link to="/forgot-password">
-          <p className="underline cursor-pointer">¿Forgot your password?</p>
+          <p className="underline cursor-pointer">¿Olvidaste tu contraseña?</p>
         </Link>
 
         <Link to="/register">
-          <p className="underline cursor-pointer">Register</p>
+          <p className="underline cursor-pointer">Registrarse</p>
         </Link>
       </div>
       <Link to="/">

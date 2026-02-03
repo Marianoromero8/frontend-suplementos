@@ -86,7 +86,7 @@ export function DashboardHome() {
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground text-sm">
-            Welcome, {user?.name ?? "Administrador"}
+            Bienvenido, {user?.name ?? "Administrador"}
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export function DashboardHome() {
           className="cursor-pointer"
           variant="outline"
         >
-          Logout
+          Cerrar Sesion
         </Button>
       </div>
 
@@ -104,27 +104,31 @@ export function DashboardHome() {
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardTitle>Total Users</CardTitle>
+            <CardTitle>Usuarios Totales</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{usersLength}</p>
-            <p className="text-muted-foreground text-sm">Registered Users</p>
+            <p className="text-muted-foreground text-sm">
+              Usuarios Registrados
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Total Products</CardTitle>
+            <CardTitle>Productos Totales</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{productsLength}</p>
-            <p className="text-muted-foreground text-sm">Products in Catalog</p>
+            <p className="text-muted-foreground text-sm">
+              Productos en el Catálogo
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Total Orders</CardTitle>
+            <CardTitle>Ordenes Totales</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{ordersLength}</p>
@@ -134,12 +138,12 @@ export function DashboardHome() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Total Revenue</CardTitle>
+            <CardTitle>Total Recaudado</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">${totalRevenue}</p>
             <p className="text-muted-foreground text-sm">
-              Based on completed orders
+              En Base a Ordenes Completadas
             </p>
           </CardContent>
         </Card>
@@ -148,7 +152,7 @@ export function DashboardHome() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Monthly Sales</CardTitle>
+            <CardTitle>Ventas Mensuales</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-end gap-2 h-48">
@@ -171,14 +175,14 @@ export function DashboardHome() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Latest Orders</CardTitle>
+            <CardTitle>Ultimas Ordenes</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead>Usuario</TableHead>
+                  <TableHead>Fecha</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                 </TableRow>
               </TableHeader>
