@@ -79,3 +79,24 @@ export async function updateOrderStatus(
   const data = await res.json();
   return orderSchema.parse(data);
 }
+
+export async function postItemCart(
+  cartId: number,
+  productId: number,
+  quantity: number,
+): Promise<void> {
+  const res = await fetch(`${API_URL}/api/itemcart`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify({
+      cart_id: cartId,
+      product_id: productId,
+      quantity: quantity,
+    }),
+  });
+
+  if (!res.ok) throw new Error("Error al sincronizar producto en el carrito");
+}
