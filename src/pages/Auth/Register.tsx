@@ -4,6 +4,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../../components/ui/form";
 
 import { Input } from "../../components/ui/input";
@@ -14,10 +15,11 @@ import { registerSchema, type RegisterSchema } from "@/schemas/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerRequest } from "@/services/auth.service";
 import { ArrowLeftIcon } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Register() {
   const navigate = useNavigate();
-
+  const { login } = useAuth();
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -32,13 +34,23 @@ export function Register() {
     handleSubmit,
     control,
     setError,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = form;
+
+  if (Object.keys(errors).length > 0) {
+    console.log("Error", errors);
+  }
 
   const onSubmit = async (values: RegisterSchema) => {
     try {
-      await registerRequest(values);
-      navigate("/login", { replace: true });
+      const response = await registerRequest(values);
+
+      if (response.user && response.token) {
+        login(response.user, response.token);
+        navigate("/", { replace: true });
+      } else {
+        navigate("/login", { replace: true });
+      }
     } catch (e: any) {
       setError("email", {
         type: "manual",
@@ -65,6 +77,7 @@ export function Register() {
                   <FormControl>
                     <Input type="text" placeholder="Name" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -82,6 +95,7 @@ export function Register() {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -95,6 +109,7 @@ export function Register() {
                   <FormControl>
                     <Input type="password" placeholder="*******" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -112,6 +127,7 @@ export function Register() {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

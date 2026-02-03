@@ -23,7 +23,6 @@ export const registerSchema = z.object({
     .email("Debe ser un email válido"),
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
   address: z.string().min(5, "La dirección debe tener al menos 5 caracteres"),
-  role: userRoleEnum,
 });
 
 export type RegisterSchema = z.infer<typeof registerSchema>;
