@@ -187,7 +187,7 @@ export function Productdetail() {
       <div className="flex gap-4 pt-10">
         <Link
           to="/"
-          className="text-[#000] hover:text-[#25252555] flex items-center gap-1 transition-colors"
+          className="text-black hover:text-[#25252555] flex items-center gap-1 transition-colors"
         >
           <ArrowLeftIcon size={16} /> Volver a la tienda
         </Link>
