@@ -2,12 +2,7 @@ import { Button } from "@/components/ui/button";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { getProductById } from "@/services/product.service";
 import { useCart } from "@/contexts/CartContext";
-import {
-  ArrowLeftIcon,
-  ShoppingBasket,
-  ShoppingCart,
-  Star,
-} from "lucide-react";
+import { ArrowLeftIcon, ShoppingBasket, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { ReviewSchema } from "@/schemas/review.schema";
