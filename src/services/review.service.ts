@@ -42,7 +42,6 @@ export async function getReviewsByProductId(
     },
   });
 
-  // Si no hay reviews, devolvemos array vacío en lugar de romper la app
   if (!res.ok) return [];
 
   const data = await res.json();
@@ -52,17 +51,20 @@ export async function getReviewsByProductId(
 export async function createReview(
   newReview: Omit<ReviewSchema, "review_id" | "createdAt" | "updatedAt">,
 ): Promise<ReviewSchema> {
+  const token = localStorage.getItem("token");
   const res = await fetch(`${API_URL}/api/reviews`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": API_KEY,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(newReview),
   });
 
   if (!res.ok) {
     const errorData = await res.json();
+    console.error("Detalle del error 422:", errorData);
     throw new Error(errorData.message || "Error al crear la reseña");
   }
 

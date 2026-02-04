@@ -16,7 +16,6 @@ export function Productdetail() {
   const { user } = useAuth();
   const [product, setProduct] = useState<ProductSchema | null>(null);
   const [reviews, setReviews] = useState<ReviewSchema[]>([]);
-
   const [comment, setComment] = useState("");
   const [qualification, setQualification] = useState("5");
   const hasReviewed = reviews.some((r) => r.user_id === user?.id);
@@ -46,9 +45,9 @@ export function Productdetail() {
 
     try {
       const newReview = await createReview({
-        user_id: user.id,
+        user_id: Number(user.id),
         product_id: Number(id),
-        qualification: qualification,
+        qualification: Number(qualification),
         comment: comment,
         date: new Date().toISOString(),
       });
@@ -118,7 +117,7 @@ export function Productdetail() {
                   type="number"
                   min="1"
                   max="5"
-                  step="0.1"
+                  step="1"
                   className="p-2 border rounded w-24 text-center font-bold"
                   value={qualification}
                   onChange={(e) => setQualification(e.target.value)}
