@@ -52,7 +52,7 @@ export default function Checkout() {
         text: `Orden #${orderCreated.order_id} confirmada.`,
       });
 
-      navigate("/");
+      navigate("/checkout/paid");
     } catch (error) {
       console.error("Error en el proceso:", error);
       Swal.fire({
@@ -87,7 +87,6 @@ export default function Checkout() {
         <span>Total</span>
         <span>${subtotal.toLocaleString("es-AR")}</span>
       </div>
-
       <button
         onClick={handlePayment}
         className="w-full bg-[#0b2deb] text-[#ffff] py-3 rounded-lg font-bold hover:bg-[#435df1] transition-all"
