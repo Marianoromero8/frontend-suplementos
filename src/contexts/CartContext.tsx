@@ -123,8 +123,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const itemsRes = await getItemsByCartId(cart.cart_id);
         const apiItems = itemsRes.data;
 
+
         /**
-         * Esperado:
+         *   Esperado :
          * apiItems = [{ item_id, quantity, product: {...} }, ...]
          * Si NO viene product embebido, decime el JSON y lo adaptamos.
          */
