@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import { useCart } from "@/contexts/CartContext";
-import { checkoutOrder, } from "../../services/orders.service";
+import { checkoutOrder } from "../../services/orders.service";
 import { syncCartToBackend } from "@/services/cart.service";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,14 +23,14 @@ export default function Checkout() {
       text: `Total: $${subtotal.toLocaleString("es-AR")}`,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "confirmar ahora",
+      confirmButtonText: "Confirmar ahora",
       cancelButtonColor: "#d33",
     });
 
     if (!confirm.isConfirmed) return;
 
     Swal.fire({
-      title: "confirmando orden...",
+      title: "Confirmando orden...",
       text: "No cierres la ventana",
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
@@ -38,19 +38,17 @@ export default function Checkout() {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Sesión no válida.");
+      if (!token) throw new Error("Sesión no valida.");
 
-      // 1) sincroniza el carrito local -> backend (crea Cart si no existe)
       await syncCartToBackend(user.id, items);
 
-      // console.log("Iniciando checkout para usuario ID:", user.id);
       Swal.update({ title: "Generando orden..." });
       const orderCreated = await checkoutOrder(user.id, token);
 
       clearCart();
       await Swal.fire({
         icon: "success",
-        title: "¡confirmacion Exitosa!",
+        title: "¡Confirmacion Exitosa!",
         text: `Orden #${orderCreated.order_id} confirmada.`,
       });
 
@@ -60,7 +58,7 @@ export default function Checkout() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Hubo un fallo al procesar el carrito. Asegúrate de tener items guardados.",
+        text: "Hubo un fallo al procesar el carrito. Asegurate de tener items guardados.",
       });
     }
   };
