@@ -9,6 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useAuth } from "@/contexts/AuthContext";
 import type { OrderSchema } from "@/schemas/order.schema";
 import {
@@ -16,7 +22,7 @@ import {
   getOrdersByUserId,
   getUserById,
 } from "@/services/user.service";
-import { SquareUser } from "lucide-react";
+import { Check, Clock, SquareUser, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -209,44 +215,65 @@ export default function Perfil() {
         </CardContent>
       </Card>
 
-      {/* ORDERS */}
       <Card>
         <CardHeader>
           <CardTitle className="flex justify-center font-bold">
-            Orders
+            Ordenes
           </CardTitle>
           <CardContent>
             {orders.length > 0 ? (
-              orders.map((or) => (
-                <div key={or.order_id} className="mb-6 space-y-2">
-                  {orders.length === 0 && (
-                    <p className="text-center text-muted-foreground">
-                      No tenés órdenes todavía.
-                    </p>
-                  )}
-                  <p className="font-semibold">Orden #{or.order_id}</p>
+              <Accordion type="single" collapsible className="w-full">
+                {orders.map((or) => (
+                  <AccordionItem key={or.order_id} value={`${or.order_id}`}>
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="flex flex-row justify-between w-full pr-4">
+                        <p className="font-semibold flex flex-row gap-2">
+                          Orden #{or.order_id}
+                        </p>
+                        <div className="flex flex-row items-center justify-start min-w-[110px] gap-2">
+                          {or.status === "pending" ? (
+                            <p className="font-semibold flex flex-row gap-2 items-center">
+                              <Clock size={18} className="text-[#ee7c0a44]" />{" "}
+                              {or.status}
+                            </p>
+                          ) : or.status === "paid" ? (
+                            <p className="font-semibold flex flex-row gap-2 items-center">
+                              <Check size={18} className="text-[#28e71799]" />{" "}
+                              {or.status}
+                            </p>
+                          ) : or.status === "cancel" ? (
+                            <p className="font-semibold flex flex-row gap-2 items-center">
+                              <X size={18} className="text-[#e61a1a]" />{" "}
+                              {or.status}
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+                    </AccordionTrigger>
 
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>ID Detalle</TableHead>
-                        <TableHead>Cantidad</TableHead>
-                        <TableHead>Subtotal</TableHead>
-                      </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                      {or.details?.map((detail) => (
-                        <TableRow key={detail.order_detail_id}>
-                          <TableCell>{detail.order_detail_id}</TableCell>
-                          <TableCell>{detail.quantity}</TableCell>
-                          <TableCell>${detail.subtotal}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              ))
+                    <AccordionContent>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>ID Detalle</TableHead>
+                            <TableHead>Cantidad</TableHead>
+                            <TableHead>Subtotal</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {or.details?.map((detail) => (
+                            <TableRow key={detail.order_detail_id}>
+                              <TableCell>{detail.order_detail_id}</TableCell>
+                              <TableCell>{detail.quantity}</TableCell>
+                              <TableCell>${detail.subtotal}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             ) : (
               <p className="text-center text-muted-foreground py-4">
                 No tenés órdenes registradas todavía.
