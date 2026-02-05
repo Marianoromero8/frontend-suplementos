@@ -101,7 +101,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
 
   // ✅ ajustá al campo real de tu user (lo más probable: user.user_id)
-  const userId = user?.user_id;
+  const userId = user?.id;
 
   // Key por usuario (evita mismo carrito para todos)
   const cartKey = userId ? `cart_items_user_${userId}` : "cart_items_guest";
