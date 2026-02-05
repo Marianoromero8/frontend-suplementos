@@ -106,12 +106,12 @@ export function Productdetail() {
             className="border p-6 rounded-lg bg-[#b3acac] shadow-sm"
           >
             <h4 className="font-medium mb-4 text-center">
-              Cuéntanos tu experiencia
+              Contanos tu experiencia
             </h4>
             <div className="space-y-3">
               <div className="flex flex-col items-center gap-2 mb-2">
                 <label className="text-sm text-[#555]">
-                  Calificación (1 al 5)
+                  Calificacion (1 al 5)
                 </label>
                 <input
                   type="number"
@@ -144,7 +144,7 @@ export function Productdetail() {
           </div>
         ) : (
           <div className="p-4 bg-[#dfdddd] text-[#1a1b20] rounded-md text-center">
-            Logueate para dejar una opinión.
+            Inicia sesion para dejar una opinion.
           </div>
         )}
 
@@ -177,7 +177,7 @@ export function Productdetail() {
             ))
           ) : (
             <p className="text-center text-[#0e0d0d] italic">
-              No hay reseñas todavia.
+              No hay reseñas todavia
             </p>
           )}
         </div>

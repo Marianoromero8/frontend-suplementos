@@ -48,7 +48,7 @@ export function Categorydetail() {
           ))}
         </div>
       ) : (
-        <h1>----- Not products in this category -----</h1>
+        <h1>----- No hay productos en esta categoria -----</h1>
       )}
       {products.length > 0 && (
         <Pagination
