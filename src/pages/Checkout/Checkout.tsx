@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import { useCart } from "@/contexts/CartContext";
-import { checkoutOrder, postItemCart } from "../../services/orders.service";
+import { checkoutOrder, } from "../../services/orders.service";
+import { syncCartToBackend } from "@/services/cart.service";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -22,14 +23,14 @@ export default function Checkout() {
       text: `Total: $${subtotal.toLocaleString("es-AR")}`,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Pagar ahora",
+      confirmButtonText: "confirmar ahora",
       cancelButtonColor: "#d33",
     });
 
     if (!confirm.isConfirmed) return;
 
     Swal.fire({
-      title: "Procesando pago...",
+      title: "confirmando orden...",
       text: "No cierres la ventana",
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
@@ -39,9 +40,8 @@ export default function Checkout() {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Sesión no válida.");
 
-      for (const item of items) {
-        await postItemCart(user.id, item.product.product_id, item.quantity); //
-      }
+      // 1) sincroniza el carrito local -> backend (crea Cart si no existe)
+      await syncCartToBackend(user.id, items);
 
       // console.log("Iniciando checkout para usuario ID:", user.id);
       Swal.update({ title: "Generando orden..." });
@@ -50,11 +50,11 @@ export default function Checkout() {
       clearCart();
       await Swal.fire({
         icon: "success",
-        title: "¡Pago Exitoso!",
+        title: "¡confirmacion Exitosa!",
         text: `Orden #${orderCreated.order_id} confirmada.`,
       });
 
-      navigate("/");
+      navigate("/checkout/pago");
     } catch (error) {
       console.error("Error en el proceso:", error);
       Swal.fire({
@@ -67,7 +67,7 @@ export default function Checkout() {
 
   return (
     <section className="max-w-md mx-auto p-6 space-y-4 border rounded-xl shadow-sm mt-10">
-      <h1 className="text-2xl font-bold">Resumen de Compra</h1>
+      <h1 className="text-2xl font-bold">Resumen del pedido</h1>
 
       <div className="space-y-2 border-b pb-4">
         {items.map((item) => (
@@ -89,12 +89,11 @@ export default function Checkout() {
         <span>Total</span>
         <span>${subtotal.toLocaleString("es-AR")}</span>
       </div>
-
       <button
         onClick={handlePayment}
         className="w-full bg-[#0b2deb] text-[#ffff] py-3 rounded-lg font-bold hover:bg-[#435df1] transition-all"
       >
-        Confirmar y Pagar
+        Confirmar
       </button>
     </section>
   );
