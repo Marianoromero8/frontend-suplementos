@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
       { path: "/product/:id", element: <Productdetail /> },
       { path: "/cart", element: <Cart /> },
       {
-        path: "/checkout/pago",
+        path: "/checkout/paid",
         element: (
           <RequireAuth>
             <CheckoutPago />

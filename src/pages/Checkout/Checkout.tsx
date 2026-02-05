@@ -54,7 +54,7 @@ export default function Checkout() {
         text: `Orden #${orderCreated.order_id} confirmada.`,
       });
 
-      navigate("/checkout/pago");
+      navigate("/checkout/paid");
     } catch (error) {
       console.error("Error en el proceso:", error);
       Swal.fire({
