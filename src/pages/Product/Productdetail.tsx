@@ -117,7 +117,7 @@ export function Productdetail() {
                   type="number"
                   min="1"
                   max="5"
-                  step="1"
+                  step="0.1"
                   className="p-2 border rounded w-24 text-center font-bold"
                   value={qualification}
                   onChange={(e) => setQualification(e.target.value)}

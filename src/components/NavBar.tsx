@@ -61,14 +61,14 @@ export function NavBar() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-[#d11f1f] hover:text-[#9b3434] transition"
+              className="flex items-center gap-2 text-[#d11f1f] hover:text-[#9b3434] transition whitespace-nowrap"
             >
               <LogOut size={18} />
               Cerrar Sesion
             </button>
           </>
         ) : (
-          <Link to="/login" className="hover:underline">
+          <Link to="/login" className="hover:underline whitespace-nowrap">
             Iniciar Sesion
           </Link>
         )}
