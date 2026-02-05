@@ -84,5 +84,6 @@ export function useAuth() {
     throw new Error("useAuth dentro de AuthProvider");
   }
 
+  
   return context;
 }

@@ -120,7 +120,7 @@ export default function Cart() {
           </Link>
 
           <Link to="/checkout">
-            <Button>Continuar al pago</Button>
+            <Button>Confirmar carrito</Button>
           </Link>
         </div>
       </div>
