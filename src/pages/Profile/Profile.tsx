@@ -22,9 +22,11 @@ import {
   getOrdersByUserId,
   getUserById,
 } from "@/services/user.service";
-import { Check, Clock, SquareUser, X } from "lucide-react";
+import { Check, Clock, DownloadIcon, SquareUser, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { OrderPDF } from "../Dashboard/components/Orders/OrderPdf";
 
 export default function Perfil() {
   const { user } = useAuth();
@@ -239,6 +241,16 @@ export default function Perfil() {
                             <p className="font-semibold flex flex-row gap-2 items-center">
                               <Check size={18} className="text-[#28e71799]" />{" "}
                               {or.status}
+                              <PDFDownloadLink
+                                document={<OrderPDF order={or} />}
+                                fileName={`orden_${or.order_id}.pdf`}
+                              >
+                                {({ loading }) => (
+                                  <Button variant="ghost" disabled={loading}>
+                                    {loading ? "..." : <DownloadIcon />}
+                                  </Button>
+                                )}
+                              </PDFDownloadLink>
                             </p>
                           ) : or.status === "cancel" ? (
                             <p className="font-semibold flex flex-row gap-2 items-center">
