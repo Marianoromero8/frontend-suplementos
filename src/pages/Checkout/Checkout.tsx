@@ -33,32 +33,39 @@ export default function Checkout() {
       title: "Confirmando orden...",
       text: "No cierres la ventana",
       allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
     });
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Sesión no valida.");
+      if (!token) throw new Error("Sesión no válida.");
 
       await syncCartToBackend(user.id, items);
 
-      Swal.update({ title: "Generando orden..." });
       const orderCreated = await checkoutOrder(user.id, token);
 
+      Swal.close();
+
       clearCart();
+
       await Swal.fire({
         icon: "success",
-        title: "¡Confirmacion Exitosa!",
-        text: `Orden #${orderCreated.order_id} confirmada.`,
+        title: "¡Confirmación exitosa!",
+        text: `Tu orden N°${orderCreated.order_id} fue generada correctamente`,
+        confirmButtonText: "Continuar",
       });
 
       navigate("/checkout/paid");
     } catch (error) {
-      console.error("Error en el proceso:", error);
+      Swal.close();
+
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Hubo un fallo al procesar el carrito. Asegurate de tener items guardados.",
+        text: "Hubo un fallo al procesar el pedido.",
       });
     }
   };
