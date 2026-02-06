@@ -27,11 +27,10 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function Perfil() {
-  const { user } = useAuth(); // Obtenemos el usuario logueado
+  const { user } = useAuth();
   const [orders, setOrders] = useState<OrderSchema[]>([]);
   const [edit, setEdit] = useState(false);
 
-  // Estado para el formulario
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -69,22 +68,22 @@ export default function Perfil() {
 
   const handleSave = async () => {
     if (!formData.password || formData.password.length < 6) {
-      return Swal.fire("Attention!", "Require password", "warning");
+      return Swal.fire("Atencion!", "Contraseña requerida", "warning");
     }
 
     if (formData.address.length < 5) {
       return Swal.fire(
-        "Attention",
-        "Address must have at least 5 characters",
+        "Atencion!",
+        "La direccion debe tener al menos 5 caractertes",
         "warning",
       );
     }
 
     const result = await Swal.fire({
-      title: "¿Save Changes?",
+      title: "¿Guardar Cambios?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Yes, save",
+      confirmButtonText: "Si, Guardar",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
     });
@@ -95,7 +94,7 @@ export default function Perfil() {
 
         setEdit(false);
         await Swal.fire(
-          "¡Éxito!",
+          "¡Exito!",
           "Perfil actualizado correctamente",
           "success",
         );
@@ -276,7 +275,7 @@ export default function Perfil() {
               </Accordion>
             ) : (
               <p className="text-center text-muted-foreground py-4">
-                No tenés órdenes registradas todavía.
+                No tenes ordenes registradas todavia
               </p>
             )}
           </CardContent>

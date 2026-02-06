@@ -56,11 +56,10 @@ export function ResetPassword() {
       return;
     }
 
-    //la nueva contraseña se guarda en localStorage mientras solo tengamos el front
     localStorage.setItem(`resetPassword:${decodedEmail}`, password);
 
     alert(
-      "Contraseña actualizada correctamente. Iniciá sesión con la nueva contraseña."
+      "Contraseña actualizada correctamente. Iniciá sesión con la nueva contraseña.",
     );
     navigate("/login");
   };

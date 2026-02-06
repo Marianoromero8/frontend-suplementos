@@ -1,9 +1,8 @@
-
 import axios from "axios";
 import type { ProductSchema } from "@/schemas/product.schema";
 
 export type CartItem = {
-  itemId?: number; // ✅ para poder borrar en backend (DELETE itemCart/:itemId)
+  itemId?: number;
   product: ProductSchema;
   quantity: number;
 };
@@ -36,8 +35,6 @@ export function clearCartStorage(key: string) {
   localStorage.removeItem(key);
 }
 
-// aca lo que conecta con el backend
-
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -56,25 +53,41 @@ export const getCartByUserId = (userId: number) =>
 
 // Crea el carrito  (OJO user_id)
 export const createCart = (userId: number) =>
-  axios.post(`${API_URL}/api/carts`, { user_id: userId }, { headers: authHeaders() });
+  axios.post(
+    `${API_URL}/api/carts`,
+    { user_id: userId },
+    { headers: authHeaders() },
+  );
 
 // Items por carrito
 export const getItemsByCartId = (cartId: number) =>
-  axios.get(`${API_URL}/api/itemCarts/cart/${cartId}`, { headers: authHeaders() });
+  axios.get(`${API_URL}/api/itemCarts/cart/${cartId}`, {
+    headers: authHeaders(),
+  });
 
 // Agregar item (OJO cart_id y product_id)
-export const addItemToCart = (cartId: number, productId: number, quantity: number) =>
+export const addItemToCart = (
+  cartId: number,
+  productId: number,
+  quantity: number,
+) =>
   axios.post(
     `${API_URL}/api/itemCarts`,
     { cart_id: cartId, product_id: productId, quantity },
-    { headers: authHeaders() }
+    { headers: authHeaders() },
   );
 
 // Eliminar item (en backend el id es item_id)
 export const deleteItemCart = (itemId: number) =>
-  axios.delete(`${API_URL}/api/itemCarts/${itemId}`, { headers: authHeaders() });
+  axios.delete(`${API_URL}/api/itemCarts/${itemId}`, {
+    headers: authHeaders(),
+  });
 
-export const ensureCartAndAddItem = async (userId: number, productId: number, quantity: number) => {
+export const ensureCartAndAddItem = async (
+  userId: number,
+  productId: number,
+  quantity: number,
+) => {
   let cart;
   try {
     const res = await getCartByUserId(userId);
@@ -83,7 +96,6 @@ export const ensureCartAndAddItem = async (userId: number, productId: number, qu
     const res = await createCart(userId);
     cart = res.data;
   }
-
 
   // OJO: cart.cart_id
   return addItemToCart(cart.cart_id, productId, quantity);
@@ -115,7 +127,7 @@ export const syncCartToBackend = async (userId: number, items: CartItem[]) => {
     await Promise.all(
       existingItems
         .filter((i: any) => i?.item_id != null)
-        .map((i: any) => deleteItemCart(Number(i.item_id)))
+        .map((i: any) => deleteItemCart(Number(i.item_id))),
     );
   } catch {
     // si falla el GET, igual intentamos crear los items

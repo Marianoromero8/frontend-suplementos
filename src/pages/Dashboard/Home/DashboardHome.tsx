@@ -132,7 +132,7 @@ export function DashboardHome() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{ordersLength}</p>
-            <p className="text-muted-foreground text-sm">Orders Completed</p>
+            <p className="text-muted-foreground text-sm">Ordenes Completadas</p>
           </CardContent>
         </Card>
 

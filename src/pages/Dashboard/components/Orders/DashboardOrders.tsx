@@ -221,7 +221,7 @@ export function DashboardOrders() {
                     onClick={() =>
                       handleStatusChange(order.order_id, order.status)
                     }
-                    className="hover:bg-slate-100 p-2 rounded-lg transition-colors cursor-pointer"
+                    className="hover:bg-[#f5f0f0] p-2 rounded-lg transition-colors cursor-pointer"
                   >
                     {statusOrder(order.status)}
                   </button>
