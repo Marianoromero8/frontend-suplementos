@@ -37,7 +37,7 @@ export function ForgotPassword() {
 
       await Swal.fire({
         title: "¡Correo Enviado!",
-        text: `Se enviaron instrucciones a su correo electrónico`,
+        text: `Se enviaron instrucciones a su correo electronico`,
         icon: "success",
         confirmButtonColor: "#000",
         timer: 2000,
@@ -53,7 +53,7 @@ export function ForgotPassword() {
 
       Swal.fire({
         title: "Error",
-        text: error.message || "Ocurrió un problema inesperado",
+        text: error.message || "Ocurrio un problema inesperado",
         icon: "error",
         confirmButtonColor: "#000",
       });
@@ -68,7 +68,7 @@ export function ForgotPassword() {
         </h2>
 
         <p className="text-sm text-[#30292F]">
-          Ingresá tu correo y te ayudaremos a restablecer tu contraseña.
+          Ingresa tu correo y te ayudaremos a restablecer tu contraseña.
         </p>
 
         <Form {...form}>

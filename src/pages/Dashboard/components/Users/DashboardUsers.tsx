@@ -42,7 +42,7 @@ export function DashboardUsers() {
 
   const handleEditRole = async (userId: number, currentRole: string) => {
     const { value: newRole } = await Swal.fire({
-      title: "Change User Role",
+      title: "Cambiar Rol del usuario",
       input: "select",
       inputOptions: {
         USER: "User",
@@ -50,7 +50,7 @@ export function DashboardUsers() {
       },
       inputValue: currentRole,
       showCancelButton: true,
-      confirmButtonText: "Update",
+      confirmButtonText: "Actualizar",
       confirmButtonColor: "#3b82f6",
     });
 
@@ -68,13 +68,17 @@ export function DashboardUsers() {
 
         Swal.fire({
           icon: "success",
-          title: "Updated!",
-          text: `New role:  ${newRole}`,
+          title: "Actualizado!",
+          text: `Nuevo Rol:  ${newRole}`,
           timer: 1500,
           showConfirmButton: false,
         });
       } catch (error: any) {
-        Swal.fire("Error", error.message || "Failed to update role", "error");
+        Swal.fire(
+          "Error",
+          error.message || "Error al actualizar el Rol",
+          "error",
+        );
       }
     }
   };
@@ -103,7 +107,6 @@ export function DashboardUsers() {
     page * pageSize,
   );
 
-  // Control de paginado
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
     if (page > maxPage) setPage(maxPage);
@@ -187,24 +190,9 @@ export function DashboardUsers() {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>
-                  {/* <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button variant="ghost">
-                        <MoreVertical />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent> */}
-                  {/* <DropdownMenuItem */}
-                  {/* > */}
                   <Edit
                     onClick={() => handleEditRole(user.user_id, user.role)}
                   />{" "}
-                  {/* </DropdownMenuItem> */}
-                  {/* <DropdownMenuItem>
-                        <Trash /> Eliminar
-                      </DropdownMenuItem> */}
-                  {/* </DropdownMenuContent>
-                  </DropdownMenu> */}
                 </TableCell>
               </TableRow>
             ))}

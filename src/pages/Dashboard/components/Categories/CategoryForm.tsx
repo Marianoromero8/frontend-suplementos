@@ -68,7 +68,7 @@ export function CategoryForm({
 
         await Swal.fire({
           title: "¡Categoria Actualizada!",
-          text: `La categoria se actualizó correctamente`,
+          text: `La categoria se actualizo correctamente`,
           icon: "success",
           confirmButtonColor: "#000",
           timer: 2000,
@@ -103,7 +103,7 @@ export function CategoryForm({
       <SheetContent side="right" className="w-[400px] p-5">
         <SheetHeader>
           <SheetTitle>
-            {isEditing ? "Editar Categoría" : "Nueva Categoría"}
+            {isEditing ? "Editar Categoria" : "Nueva Categoria"}
           </SheetTitle>
         </SheetHeader>
 
@@ -139,7 +139,7 @@ export function CategoryForm({
               ? "Cargando..."
               : isEditing
                 ? "Guardar Cambios"
-                : "Crear Categoría"}
+                : "Crear Categoria"}
           </Button>
         </form>
       </SheetContent>

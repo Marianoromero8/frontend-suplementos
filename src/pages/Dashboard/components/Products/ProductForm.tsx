@@ -98,12 +98,11 @@ export function ProductForm({
         ...parsed,
       };
       if (productToEdit) {
-        // --- LÓGICA DE EDICIÓN (PATCH) ---
         await editProduct(productToEdit.product_id, payload);
 
         await Swal.fire({
           title: "¡Producto Actualizado!",
-          text: `El producto "${payload.name}" se actualizó correctamente`,
+          text: `El producto "${payload.name}" se actualizo correctamente`,
           icon: "success",
           confirmButtonColor: "#000",
           timer: 2000,
@@ -114,7 +113,7 @@ export function ProductForm({
 
         await Swal.fire({
           title: "¡Producto Creado!",
-          text: `El producto "${created.name}" fue creado con éxito`,
+          text: `El producto "${created.name}" fue creado con exito`,
           icon: "success",
           confirmButtonColor: "#000",
           timer: 2000,

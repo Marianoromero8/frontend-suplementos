@@ -43,7 +43,7 @@ export function Login() {
 
       login(
         {
-          id: user.user_id, // adaptás a tu AuthContext
+          id: user.user_id,
           name: user.name,
           email: user.email,
           role: user.role as "USER" | "ADMIN",

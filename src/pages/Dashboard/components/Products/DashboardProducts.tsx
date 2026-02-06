@@ -49,12 +49,12 @@ export function DashboardProducts() {
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
       title: "¿Eliminar producto?",
-      text: "No podrás revertir esto",
+      text: "No podras revertir esto",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, eliminar",
+      confirmButtonText: "Si, eliminar",
       cancelButtonText: "Cancelar",
     });
 
@@ -102,7 +102,6 @@ export function DashboardProducts() {
     });
   };
 
-  // Control de paginado
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
     if (page > maxPage) setPage(maxPage);
@@ -128,7 +127,7 @@ export function DashboardProducts() {
         </div>
       </div>
       <div className="flex items-center justify-start gap-2">
-        <span className="">Order by:</span>
+        <span className="">Ordenado por:</span>
         <Button
           variant="ghost"
           onClick={() => {
@@ -141,7 +140,7 @@ export function DashboardProducts() {
           {stock === "asc" ? " ↑" : stock === "desc" ? " ↓" : ""}
         </Button>
 
-        <span className="">Search:</span>
+        <span className="">Buscar:</span>
         <Input
           className="w-75"
           placeholder="Search Product"
@@ -153,7 +152,7 @@ export function DashboardProducts() {
           }}
         />
 
-        <span className="">Show:</span>
+        <span className="">Mostrar:</span>
         <Input
           className="w-30"
           type="number"

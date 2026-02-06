@@ -77,7 +77,7 @@ export function UserForm({ open, onClose }: UserFormProps) {
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent side="right" className="w-[400px] p-5">
         <SheetHeader>
-          <SheetTitle>Create User</SheetTitle>
+          <SheetTitle>Crear Usuario</SheetTitle>
         </SheetHeader>
 
         <div className="space-y-4 mt-6">
@@ -88,9 +88,9 @@ export function UserForm({ open, onClose }: UserFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Nombre</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Name" {...field} />
+                      <Input type="text" placeholder="Nombre" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -118,7 +118,7 @@ export function UserForm({ open, onClose }: UserFormProps) {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Contraseña</FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="*******" {...field} />
                     </FormControl>
@@ -131,7 +131,7 @@ export function UserForm({ open, onClose }: UserFormProps) {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel>Direccion</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
@@ -147,7 +147,7 @@ export function UserForm({ open, onClose }: UserFormProps) {
                 className="cursor-pointer"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Creating..." : "Create"}
+                {isSubmitting ? "Creando..." : "Crear"}
               </Button>
             </form>
           </Form>

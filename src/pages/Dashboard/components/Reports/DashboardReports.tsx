@@ -27,7 +27,6 @@ import {
   Cell,
 } from "recharts";
 
-// Colores para categorías
 const COLORS = ["#5D737E", "#02111B", "#30292F", "#FCFCFC", "#A3A3A3"];
 
 export function DashboardReports() {
@@ -46,7 +45,7 @@ export function DashboardReports() {
     order.details.forEach((item) => {
       productSalesMap.set(
         item.product_id,
-        (productSalesMap.get(item.product_id) || 0) + item.quantity
+        (productSalesMap.get(item.product_id) || 0) + item.quantity,
       );
     });
   });
@@ -82,14 +81,14 @@ export function DashboardReports() {
         name: category ? category.name : `Categoría ${categoryId}`,
         value: qty,
       };
-    }
+    },
   );
 
   const stock = products.filter((p) => p.stock < 15);
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Reports</h1>
+      <h1 className="text-3xl font-bold">Reportes</h1>
       <p className="text-muted-foreground">Análisis e-commerce</p>
 
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
