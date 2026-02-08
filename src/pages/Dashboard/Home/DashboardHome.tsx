@@ -18,6 +18,35 @@ import type { ProductSchema } from "@/schemas/product.schema";
 import { getUsers } from "@/services/user.service";
 import { getOrders } from "@/services/orders.service";
 import { getProducts } from "@/services/product.service";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+
+const chartConfig = {
+  total: {
+    label: "Ventas",
+    color: "#5D737E",
+  },
+} satisfies ChartConfig;
+
+const months = [
+  "Ene",
+  "Feb",
+  "Mar",
+  "Abr",
+  "May",
+  "Jun",
+  "Jul",
+  "Ago",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dic",
+];
 
 export function DashboardHome() {
   const [users, setUsers] = useState<User[]>([]);
@@ -46,29 +75,13 @@ export function DashboardHome() {
     0,
   );
 
-  // Grafico Ventas Mensuales
-  const months = [
-    "Ene",
-    "Feb",
-    "Mar",
-    "Abr",
-    "May",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dic",
-  ];
-  const salesByMonth = new Array(12).fill(0);
+  const chartData = months.map((month, index) => {
+    const monthlyTotal = completedOrders
+      .filter((o) => new Date(o.order_date).getMonth() === index)
+      .reduce((sum, o) => sum + Number(o.total), 0);
 
-  orders.forEach((o) => {
-    const m = new Date(o.order_date).getMonth();
-    salesByMonth[m] += o.total;
+    return { month, total: monthlyTotal };
   });
-
-  const maxValue = Math.max(...salesByMonth, 1);
 
   const latestOrders = completedOrders
     .sort(
@@ -154,22 +167,34 @@ export function DashboardHome() {
           <CardHeader>
             <CardTitle>Ventas Mensuales</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-end gap-2 h-48">
-              {salesByMonth.map((value, i) => (
-                <div key={i} className="flex flex-col items-center flex-1">
-                  <div
-                    className="w-full bg-[#5D737E] rounded-t-md"
-                    style={{
-                      height: `${(value / maxValue) * 100}%`,
-                    }}
-                  ></div>
-                  <span className="text-xs text-muted-foreground mt-1">
-                    {months[i]}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+              <BarChart
+                data={chartData}
+                margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+              >
+                <CartesianGrid vertical={false} strokeOpacity={0.2} />
+
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  fontSize={12}
+                />
+
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={12}
+                  tickFormatter={(value) => `$${value}`}
+                />
+
+                <ChartTooltip content={<ChartTooltipContent />} />
+
+                <Bar dataKey="total" fill="var(--color-total)" radius={6} />
+              </BarChart>
+            </ChartContainer>
           </CardContent>
         </Card>
 
