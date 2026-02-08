@@ -7,9 +7,13 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { mockCategories } from "@/data/categories.mock";
-import { mockOrders } from "@/data/orders.mock";
-import { mockProducts } from "@/data/products.mock";
+import type { CategorySchema } from "@/schemas/category.schema";
+import type { OrderSchema } from "@/schemas/order.schema";
+import type { ProductSchema } from "@/schemas/product.schema";
+import { getCategories } from "@/services/categories.service";
+import { getOrders } from "@/services/orders.service";
+import { getProducts } from "@/services/product.service";
+import { useEffect, useState } from "react";
 
 import {
   BarChart,
@@ -23,24 +27,32 @@ import {
   Cell,
 } from "recharts";
 
-// Colores para categorías
 const COLORS = ["#5D737E", "#02111B", "#30292F", "#FCFCFC", "#A3A3A3"];
 
 export function DashboardReports() {
+  const [categories, setCategories] = useState<CategorySchema[]>([]);
+  const [orders, setOrders] = useState<OrderSchema[]>([]);
+  const [products, setProducts] = useState<ProductSchema[]>([]);
   const productSalesMap = new Map<number, number>();
 
-  mockOrders.forEach((order) => {
+  useEffect(() => {
+    getCategories().then(setCategories);
+    getOrders().then(setOrders);
+    getProducts().then(setProducts);
+  }, []);
+
+  orders.forEach((order) => {
     order.details.forEach((item) => {
       productSalesMap.set(
         item.product_id,
-        (productSalesMap.get(item.product_id) || 0) + item.quantity
+        (productSalesMap.get(item.product_id) || 0) + item.quantity,
       );
     });
   });
 
   const productSales = Array.from(productSalesMap.entries())
     .map(([productId, qty]) => {
-      const prod = mockProducts.find((p) => p.product_id === productId);
+      const prod = products.find((p) => p.product_id === productId);
       return {
         name: prod?.name || "Unknown",
         qty,
@@ -51,9 +63,9 @@ export function DashboardReports() {
 
   const categorySalesMap = new Map<number, number>();
 
-  mockOrders.forEach((order) => {
+  orders.forEach((order) => {
     order.details.forEach((item) => {
-      const prod = mockProducts.find((p) => p.product_id === item.product_id);
+      const prod = products.find((p) => p.product_id === item.product_id);
       if (!prod) return;
 
       const prev = categorySalesMap.get(prod.category_id) || 0;
@@ -63,20 +75,20 @@ export function DashboardReports() {
 
   const categoriesData = Array.from(categorySalesMap.entries()).map(
     ([categoryId, qty]) => {
-      const category = mockCategories.find((c) => c.category_id === categoryId);
+      const category = categories.find((c) => c.category_id === categoryId);
 
       return {
         name: category ? category.name : `Categoría ${categoryId}`,
         value: qty,
       };
-    }
+    },
   );
 
-  const stock = mockProducts.filter((p) => p.stock < 15);
+  const stock = products.filter((p) => p.stock < 15);
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Reports</h1>
+      <h1 className="text-3xl font-bold">Reportes</h1>
       <p className="text-muted-foreground">Análisis e-commerce</p>
 
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">

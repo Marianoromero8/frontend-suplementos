@@ -8,14 +8,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { mockUsers } from "@/data/users.mock";
 import { useNavigate, Link } from "react-router-dom";
+import { forgotPasswordRequest } from "@/services/auth.service";
+import Swal from "sweetalert2";
+import { ArrowLeftIcon } from "lucide-react";
 
 type ForgotFormValues = {
   email: string;
 };
 
 export function ForgotPassword() {
+  const navigate = useNavigate();
+
   const form = useForm<ForgotFormValues>({
     defaultValues: { email: "" },
   });
@@ -27,24 +31,33 @@ export function ForgotPassword() {
     formState: { isSubmitting },
   } = form;
 
-  const navigate = useNavigate();
+  const onSubmit = async (values: ForgotFormValues) => {
+    try {
+      await forgotPasswordRequest(values.email);
 
-  const onSubmit = (values: ForgotFormValues) => {
-    const { email } = values;
+      await Swal.fire({
+        title: "¡Correo Enviado!",
+        text: `Se enviaron instrucciones a su correo electronico`,
+        icon: "success",
+        confirmButtonColor: "#000",
+        timer: 2000,
+        timerProgressBar: true,
+      });
 
-    const user = mockUsers.find((u) => u.email === email);
-
-    if (!user) {
+      navigate("/login");
+    } catch (error: any) {
       setError("email", {
         type: "manual",
-        message: "No existe un usuario con ese email",
+        message: error.message,
       });
-      return;
-    }
 
-    // En un backend real acá llamarías a /auth/forgot-password
-    // Por ahora, lo mandamos a resetear contraseña directamente
-    navigate(`/reset-password/${encodeURIComponent(user.email)}`);
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Ocurrio un problema inesperado",
+        icon: "error",
+        confirmButtonColor: "#000",
+      });
+    }
   };
 
   return (
@@ -54,8 +67,8 @@ export function ForgotPassword() {
           Recuperar contraseña
         </h2>
 
-        <p className="text-sm text-muted-foreground">
-          Ingresá tu correo y te ayudaremos a restablecer tu contraseña.
+        <p className="text-sm text-[#30292F]">
+          Ingresa tu correo y te ayudaremos a restablecer tu contraseña.
         </p>
 
         <Form {...form}>
@@ -75,7 +88,7 @@ export function ForgotPassword() {
                     />
                   </FormControl>
                   {fieldState.error && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-[#d11f1f] text-sm">
                       {fieldState.error.message}
                     </p>
                   )}
@@ -94,7 +107,7 @@ export function ForgotPassword() {
         </Form>
 
         <Link to="/login" className="underline text-sm">
-          Volver al login
+          <ArrowLeftIcon />
         </Link>
       </div>
     </div>

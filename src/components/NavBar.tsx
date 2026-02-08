@@ -8,9 +8,11 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 export function NavBar() {
   const { isAuthenticated, isAdmin, logout } = useAuth();
+  const { totalItems } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -35,12 +37,17 @@ export function NavBar() {
 
         <Link to="/categories" className="flex flex-row items-center gap-2">
           <ListTreeIcon />
-          Categoríes
+          Categorias
         </Link>
 
-        <Link to="/cart" className="flex flex-row items-center gap-2">
+        <Link to="/cart" className="flex flex-row items-center gap-2 relative">
           <ShoppingCart />
-          Cart
+          <span>Carrito</span>
+          {totalItems > 0 && (
+            <span className="ml-1 inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold bg-black/80 text-white">
+              {totalItems}
+            </span>
+          )}
         </Link>
       </div>
 
@@ -49,20 +56,20 @@ export function NavBar() {
           <>
             <Link to="/profile" className="flex flex-row items-center gap-2">
               <UserCheck />
-              Profile
+              Perfil
             </Link>
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-red-600 hover:text-red-800 transition"
+              className="flex items-center gap-2 text-[#d11f1f] hover:text-[#9b3434] transition whitespace-nowrap"
             >
               <LogOut size={18} />
-              Logout
+              Cerrar Sesion
             </button>
           </>
         ) : (
-          <Link to="/login" className="hover:underline">
-            LogIn
+          <Link to="/login" className="hover:underline whitespace-nowrap">
+            Iniciar Sesion
           </Link>
         )}
       </div>

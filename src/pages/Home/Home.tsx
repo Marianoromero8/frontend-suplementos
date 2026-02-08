@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { CardProducts } from "../../components/CardProducts";
 import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "@/services/product.service";
@@ -11,6 +11,9 @@ export function Home() {
   const category = params.get("category") ?? "";
   const brand = params.get("brand") ?? "";
   const rating = params.get("rating") ?? "";
+  const price = params.get("price") ?? "";
+  const maxPrice = params.get("maxPrice") ?? "";
+  const minPrice = params.get("minPrice") ?? "";
   const [products, setProducts] = useState<ProductSchema[]>([]);
 
   const filteredProducts = useMemo(() => {
@@ -18,21 +21,37 @@ export function Home() {
       .filter((p) =>
         category !== "all" && category !== ""
           ? p.category_id === Number(category)
-          : true
+          : true,
       )
       .filter((p) =>
         brand !== "all" && brand !== ""
           ? p.brand.toLowerCase() === brand.toLowerCase()
-          : true
+          : true,
       )
+      .filter((p) => {
+        const pPrice = Number(p.price ?? 0);
+        const min = minPrice !== "" ? Number(minPrice) : null;
+        const max = maxPrice !== "" ? Number(maxPrice) : null;
+        if (min !== null && max !== null) return pPrice >= min && pPrice <= max;
+        if (min !== null) return pPrice >= min;
+        if (max !== null) return pPrice <= max;
+        return true;
+      })
       .sort((a, b) => {
         const ar = a.rating ?? 0;
         const br = b.rating ?? 0;
         if (rating === "desc") return br - ar;
         if (rating === "asc") return ar - br;
         return 0;
+      })
+      .sort((a, b) => {
+        const ap = a.price ?? 0;
+        const bp = b.price ?? 0;
+        if (price === "desc") return bp - ap;
+        if (price === "asc") return ap - bp;
+        return 0;
       });
-  }, [products, category, brand, rating]);
+  }, [products, category, brand, rating, price, minPrice, maxPrice]);
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data));
@@ -47,7 +66,7 @@ export function Home() {
 
   const productsHome = filteredProducts.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
 
   return (
@@ -58,18 +77,15 @@ export function Home() {
 
       <Filters products={products} />
 
-      <div className="grid md:grid-cols-4 justify-center gap-8">
+      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2  justify-center gap-8">
         {productsHome.length > 0 ? (
           productsHome.map((product) => (
-            <Link
-              key={product.product_id}
-              to={`/product/${product.product_id}`}
-            >
-              <CardProducts product={product} />
-            </Link>
+            <CardProducts key={product.product_id} product={product} />
           ))
         ) : (
-          <p>Product, Brand or Category Not Found</p>
+          <p className="flex flex-row justify-center">
+            Producto, Categoria o Marca no encontrado
+          </p>
         )}
       </div>
       {filteredProducts.length > 0 && (

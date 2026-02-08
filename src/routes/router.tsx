@@ -5,6 +5,7 @@ import { Category } from "../pages/Category/Category";
 import { Productdetail } from "../pages/Product/Productdetail";
 import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Checkout/Checkout";
+import CheckoutPago from "../pages/Checkout/CheckoutPago";
 import Profile from "../pages/Profile/Profile";
 import { Login } from "../pages/Auth/Login";
 import { Register } from "../pages/Auth/Register";
@@ -32,6 +33,14 @@ export const router = createBrowserRouter([
       { path: "/categories/:id", element: <Categorydetail /> },
       { path: "/product/:id", element: <Productdetail /> },
       { path: "/cart", element: <Cart /> },
+      {
+        path: "/checkout/paid",
+        element: (
+          <RequireAuth>
+            <CheckoutPago />
+          </RequireAuth>
+        ),
+      },
       {
         path: "/checkout",
         element: (

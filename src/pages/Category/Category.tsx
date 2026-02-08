@@ -13,7 +13,7 @@ export function Category() {
 
   return (
     <section className="flex flex-col justify-center items-center gap-8">
-      <h1 className="text-5xl font-bold">Categories</h1>
+      <h1 className="text-5xl font-bold">Categorias</h1>
 
       <div className="grid md:grid-cols-3 gap-6 w-full">
         {categories.map((cat) => (
