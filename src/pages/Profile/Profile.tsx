@@ -42,34 +42,34 @@ export default function Perfil() {
     address: "",
   });
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (!user?.id) return;
-      setLoading(true);
+  const loadUserData = async () => {
+    if (!user?.id) return;
+    setLoading(true);
+
+    try {
+      const userById = await getUserById(Number(user.id));
+
+      setFormData({
+        name: userById.name || "",
+        email: userById.email || "",
+        address: userById.address || "",
+        password: "",
+      });
 
       try {
-        const userById = await getUserById(Number(user.id));
-
-        setFormData({
-          name: userById.name || "",
-          email: userById.email || "",
-          address: userById.address || "",
-          password: "",
-        });
-
-        try {
-          const ordersUser = await getOrdersByUserId(Number(user.id));
-          setOrders(ordersUser || []);
-        } catch (error) {
-          setOrders([]);
-        }
+        const ordersUser = await getOrdersByUserId(Number(user.id));
+        setOrders(ordersUser || []);
       } catch (error) {
-        console.error("Error loading profile:", error);
-      } finally {
-        setLoading(false);
+        setOrders([]);
       }
-    };
+    } catch (error) {
+      console.error("Error loading profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadUserData();
   }, [user?.id]);
 
@@ -106,7 +106,7 @@ export default function Perfil() {
           "success",
         );
 
-        window.location.reload();
+        await loadUserData();
       } catch (error: any) {
         Swal.fire("Error", error.message || "No se pudo actualizar", "error");
       }

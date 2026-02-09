@@ -27,8 +27,12 @@ export function DashboardUsers() {
   const role = params.get("role") ?? "";
   const [searchUser, setSearchUser] = useState<string>(name);
 
-  useEffect(() => {
+  const fetchUsers = () => {
     getUsers().then(setUsers);
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
   const updateParam = (key: string, value: string) => {
@@ -208,9 +212,7 @@ export function DashboardUsers() {
       <UserForm
         open={open}
         onClose={() => setOpen(false)}
-        onSubmit={() => {
-          setOpen(false);
-        }}
+        onSuccess={fetchUsers}
       />
     </div>
   );

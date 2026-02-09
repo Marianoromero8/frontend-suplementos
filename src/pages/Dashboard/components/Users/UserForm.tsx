@@ -14,7 +14,6 @@ import {
   FormLabel,
 } from "../../../../components/ui/form";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { registerSchema, type RegisterSchema } from "@/schemas/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerRequest } from "@/services/auth.service";
@@ -22,12 +21,10 @@ import Swal from "sweetalert2";
 interface UserFormProps {
   open: boolean;
   onClose: (open: boolean) => void;
-  onSubmit: (data: any) => void;
+  onSuccess?: () => void;
 }
 
-export function UserForm({ open, onClose }: UserFormProps) {
-  const navigate = useNavigate();
-
+export function UserForm({ open, onClose, onSuccess }: UserFormProps) {
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -62,9 +59,9 @@ export function UserForm({ open, onClose }: UserFormProps) {
         timer: 2000,
         timerProgressBar: true,
       });
-      onClose(true);
-      window.location.reload();
-      navigate("/dashboard/users", { replace: true });
+      reset();
+      onSuccess?.();
+      onClose(false);
     } catch (error: any) {
       Swal.fire({
         title: "Error",
