@@ -128,7 +128,6 @@ export default function Perfil() {
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           {loading ? (
-            // Skeletons para los campos del perfil
             <div className="space-y-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="space-y-2">
