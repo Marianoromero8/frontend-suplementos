@@ -21,20 +21,6 @@ https://frontend-suplementos-one.vercel.app/
 
 ---
 
-### Usuarios para ingresar
-
-> Admin
-
-    email: admin@example.com
-    password: 123456
-
-> User
-
-    email: julieta@example.com
-    password: 123456
-
----
-
 ## Requisitos
 
 Asegurate de tener instalado:
@@ -46,8 +32,6 @@ Asegurate de tener instalado:
 ---
 
 # Modo Desarrollo (npm run dev)
-
-Este modo NO usa Docker. Usado para trabajar día a día.
 
 ### 1️- Instalar dependencias
 
@@ -124,6 +108,7 @@ npm run lint      # Corre ESLint
 │ │
 │ ├─ components/
 │ │ ├─ ui/ #Componentes de shadcn
+│ │ │ ├─ accordion.tsx
 │ │ │ ├─ button.tsx
 │ │ │ ├─ card.tsx
 │ │ │ ├─ chart.tsx
@@ -135,6 +120,7 @@ npm run lint      # Corre ESLint
 │ │ │ ├─ select.tsx
 │ │ │ ├─ separator.tsx
 │ │ │ ├─ sheet.tsx
+│ │ │ ├─ skeleton.tsx
 │ │ │ └─ table.tsx
 │ │ │
 │ │ ├─ CardProducts.tsx
@@ -147,20 +133,16 @@ npm run lint      # Corre ESLint
 │ │ ├─ AuthContext.tsx
 │ │ └─ CartContext.tsx
 │ │
-│ ├─ data/
-│ │ ├─ categories.mock.ts
-│ │ ├─ orders.mock.ts
-│ │ ├─ products.mock.ts
-│ │ ├─ reviews.mock.ts
-│ │ └─ users.mock.ts
 │ │
 │ ├─ lib/
 │ │ └─ utils.ts
 │ │
 │ ├─ pages/
 │ │ ├─ Auth/
+│ │ │ ├─ ForgotPassword.tsx
 │ │ │ ├─ Login.tsx
-│ │ │ └─ Register.tsx
+│ │ │ ├─ Register.tsx
+│ │ │ └─ ResetPassword.tsx
 │ │ │
 │ │ ├─ Cart/
 │ │ │ └─ Cart.tsx
@@ -170,13 +152,16 @@ npm run lint      # Corre ESLint
 │ │ │ └─ CategoryDetail.tsx
 │ │ │
 │ │ ├─ Checkout/
+│ │ │ ├─ CheckoutPago.tsx/
 │ │ │ └─ Checkout.tsx
 │ │ │
 │ │ ├─ Dashboard/
 │ │ │ ├─ components/
 │ │ │ │ ├─ Categories/
+│ │ │ │ │ ├─ CategoryForm.tsx
 │ │ │ │ │ └─ DashboardCategories.tsx
 │ │ │ │ ├─ Orders/
+│ │ │ │ │ ├─ OrderPdf.tsx
 │ │ │ │ │ └─ DashboardOrders.tsx
 │ │ │ │ ├─ Products/
 │ │ │ │ │ ├─ DashboardProducts.tsx
@@ -190,8 +175,9 @@ npm run lint      # Corre ESLint
 │ │ │ │ ├─ DashboardUsers.tsx
 │ │ │ │ └─ UserForm.tsx
 │ │ │ │
+│ │ │ ├─ Home/
+│ │ │ │ └─ DashboardHome.tsx
 │ │ │ └─ Dashboard.tsx
-│ │ │
 │ │ ├─ Home/
 │ │ │ └─ Home.tsx
 │ │ │
@@ -211,14 +197,20 @@ npm run lint      # Corre ESLint
 │ ├─ schemas/
 │ │ ├─ category.schema.ts
 │ │ ├─ login.schema.ts
+│ │ ├─ order.schema.ts
+│ │ ├─ orderDeatil.schema.ts
 │ │ ├─ product.schema.ts
+│ │ ├─ review.schema.ts
 │ │ └─ user.schema.ts
 │ │
 │ ├─ services/
 │ │ ├─ auth.service.ts
 │ │ ├─ cart.service.ts
 │ │ ├─ categories.service.ts
-│ │ └─ product.service.ts
+│ │ ├─ orders.service.ts
+│ │ ├─ product.service.ts
+│ │ ├─ review.service.ts
+│ │ └─ user.service.ts
 │ │
 │ ├─ App.tsx
 │ ├─ AppLayout.tsx
