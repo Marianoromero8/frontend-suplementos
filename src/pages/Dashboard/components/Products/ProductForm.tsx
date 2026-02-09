@@ -122,8 +122,7 @@ export function ProductForm({
       }
       onCreated?.(null);
       reset();
-      onClose(true);
-      window.location.reload();
+      onClose(false);
     } catch (error: any) {
       Swal.fire({
         title: "Error",
