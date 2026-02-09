@@ -5,6 +5,7 @@ import { getProducts } from "@/services/product.service";
 import type { ProductSchema } from "@/schemas/product.schema";
 import { Filters } from "../../components/Filters";
 import { Pagination } from "@/components/Pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function Home() {
   const [params] = useSearchParams();
@@ -15,6 +16,7 @@ export function Home() {
   const maxPrice = params.get("maxPrice") ?? "";
   const minPrice = params.get("minPrice") ?? "";
   const [products, setProducts] = useState<ProductSchema[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const filteredProducts = useMemo(() => {
     return products
@@ -54,7 +56,10 @@ export function Home() {
   }, [products, category, brand, rating, price, minPrice, maxPrice]);
 
   useEffect(() => {
-    getProducts().then((data) => setProducts(data));
+    setLoading(true);
+    getProducts()
+      .then((data) => setProducts(data))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -71,14 +76,41 @@ export function Home() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-5xl font-bold flex justify-center">
-        Suplementos Deportivos
-      </h1>
+      {loading ? (
+        <div className="flex justify-center">
+          <Skeleton className="h-12 w-2/3 md:w-1/2" />
+        </div>
+      ) : (
+        <h1 className="text-5xl font-bold flex justify-center text-center">
+          Suplementos Deportivos
+        </h1>
+      )}
 
-      <Filters products={products} />
+      {loading ? (
+        <div className="flex flex-wrap gap-4 justify-center">
+          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+      ) : (
+        <Filters products={products} />
+      )}
 
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2  justify-center gap-8">
-        {productsHome.length > 0 ? (
+        {loading ? (
+          // Generamos 8 cuadros de carga
+          Array.from({ length: pageSize }).map((_, i) => (
+            <div
+              key={i}
+              className="flex flex-col space-y-3 p-4 border rounded-xl"
+            >
+              <Skeleton className="h-[250px] w-full rounded-xl" />
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ))
+        ) : productsHome.length > 0 ? (
           productsHome.map((product) => (
             <CardProducts key={product.product_id} product={product} />
           ))
@@ -88,13 +120,21 @@ export function Home() {
           </p>
         )}
       </div>
-      {filteredProducts.length > 0 && (
-        <Pagination
-          page={page}
-          pageSize={pageSize}
-          total={filteredProducts.length}
-          onChange={setPage}
-        />
+      {loading ? (
+        <div className="flex justify-center gap-2">
+          <Skeleton className="h-10 w-10" />
+          <Skeleton className="h-10 w-10" />
+          <Skeleton className="h-10 w-10" />
+        </div>
+      ) : (
+        filteredProducts.length > 0 && (
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            total={filteredProducts.length}
+            onChange={setPage}
+          />
+        )
       )}
     </section>
   );

@@ -9,6 +9,7 @@ import type { ReviewSchema } from "@/schemas/review.schema";
 import { useAuth } from "@/contexts/AuthContext";
 import { createReview, getReviewsByProductId } from "@/services/review.service";
 import Swal from "sweetalert2";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function Productdetail() {
   const { id } = useParams();
@@ -17,15 +18,20 @@ export function Productdetail() {
   const [product, setProduct] = useState<ProductSchema | null>(null);
   const [reviews, setReviews] = useState<ReviewSchema[]>([]);
   const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(true);
   const [qualification, setQualification] = useState("5");
   const hasReviewed = reviews.some((r) => r.user_id === user?.id);
 
   useEffect(() => {
     try {
       if (!id) return;
+      setLoading(true);
       getProductById(Number(id)).then((data) => setProduct(data));
-      getReviewsByProductId(id).then(setReviews);
+      getReviewsByProductId(id)
+        .then(setReviews)
+        .finally(() => setLoading(false));
     } catch (error) {
+      setLoading(false);
       throw new Error(`Information of product not found, ${error}`);
     }
   }, [id]);
@@ -74,33 +80,61 @@ export function Productdetail() {
 
   return (
     <section className="space-y-2 flex flex-col items-center">
-      <h1 className="text-5xl font-semibold">
-        {product?.name} #{product?.product_id}
-      </h1>
+      {loading ? (
+        <Skeleton className="h-12 w-3/4 max-w-md my-2" />
+      ) : (
+        <h1 className="text-5xl font-semibold">
+          {product?.name} #{product?.product_id}
+        </h1>
+      )}
+
       <div className="text-xl flex flex-col justify-center items-center gap-5 p-5">
-        <h2 className="text-3xl flex justify-center">{product?.brand}</h2>
-        <img src={product?.image} alt="" className="w-72 h-96" />
-        <p>{product?.description}</p>
-        <div className="flex flex-row gap-2 items-center">
-          <p className="font-bold">${product?.price}</p>
-          <Star className="text-[#fae843] fill-[#fae843]" />
-          <p>{product?.rating}</p>
-        </div>
-        <Button
-          className="w-fit"
-          onClick={() => product && addToCart(product, 1)}
-          disabled={!product || product.stock === 0}
-        >
-          <ShoppingBasket />
-        </Button>
+        {loading ? (
+          <>
+            <Skeleton className="h-8 w-40" /> {/* Marca */}
+            <Skeleton className="w-72 h-96 rounded-lg" /> {/* Imagen */}
+            <Skeleton className="h-20 w-full" /> {/* Descripción */}
+            <div className="flex gap-2">
+              <Skeleton className="h-6 w-16" />
+              <Skeleton className="h-6 w-16" />
+            </div>
+            <Skeleton className="h-10 w-32" /> {/* Botón Carrito */}
+          </>
+        ) : (
+          <>
+            <h2 className="text-3xl flex justify-center">{product?.brand}</h2>
+            <img src={product?.image} alt="" className="w-72 h-96" />
+            <p>{product?.description}</p>
+            <div className="flex flex-row gap-2 items-center">
+              <p className="font-bold">${product?.price}</p>
+              <Star className="text-[#fae843] fill-[#fae843]" />
+              <p>{product?.rating}</p>
+            </div>
+            <Button
+              className="w-fit"
+              onClick={() => product && addToCart(product, 1)}
+              disabled={!product || product.stock === 0}
+            >
+              <ShoppingBasket />
+            </Button>
+          </>
+        )}
       </div>
 
       <hr className="w-full max-w-2xl border-[#555]" />
 
       <div className="w-full max-w-2xl space-y-6">
-        <h3 className="text-2xl font-bold italic">Opiniones de la comunidad</h3>
+        {loading ? (
+          <Skeleton className="h-8 w-54" />
+        ) : (
+          <h3 className="text-2xl font-bold italic">
+            Opiniones de la comunidad
+          </h3>
+        )}
 
-        {user && !hasReviewed ? (
+        {loading ? (
+          <Skeleton className="h-48 w-full rounded-lg" /> /* Skeleton del Formulario */
+        ) : user && !hasReviewed ? (
           <form
             onSubmit={handleSubmitReview}
             className="border p-6 rounded-lg bg-[#b3acac] shadow-sm"
@@ -149,7 +183,11 @@ export function Productdetail() {
         )}
 
         <div className="grid grid-cols-1 gap-4">
-          {reviews.length > 0 ? (
+          {loading ? (
+            Array.from({ length: 2 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            ))
+          ) : reviews.length > 0 ? (
             reviews.map((review) => (
               <div
                 key={review.review_id}
