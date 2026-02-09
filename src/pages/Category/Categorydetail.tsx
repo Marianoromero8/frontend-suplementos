@@ -7,17 +7,24 @@ import type { ProductSchema } from "@/schemas/product.schema";
 import { CardProducts } from "@/components/CardProducts";
 import { ArrowLeftIcon } from "lucide-react";
 import { Pagination } from "@/components/Pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function Categorydetail() {
   const { id } = useParams();
   const idCat = Number(id);
   const [category, setCategory] = useState<CategorySchema | null>(null);
   const [products, setProducts] = useState<ProductSchema[]>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!idCat) return;
-    getCategoryById(idCat).then(setCategory);
-    getProductsByCategory(idCat).then(setProducts);
+    setLoading(true);
+    getCategoryById(idCat).then((data) => {
+      setCategory(data);
+    });
+    getProductsByCategory(idCat).then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
   }, [idCat]);
 
   const [page, setPage] = useState(1);
@@ -36,21 +43,46 @@ export function Categorydetail() {
     <section className="flex flex-col items-center gap-5">
       <div className="flex flex-row items-center">
         <div className="flex flex-col items-center">
-          <h1 className="text-4xl font-bold">{category?.name}</h1>
-          <p className="opacity-70">{category?.description}</p>
+          {loading ? (
+            <>
+              <Skeleton className="h-10 w-48" />
+              <Skeleton className="h-5 w-64" />
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl font-bold">{category?.name}</h1>
+              <p className="opacity-70">{category?.description}</p>
+            </>
+          )}
         </div>
       </div>
 
-      {productsPagination.length > 0 ? (
+      {loading ? (
+        <div className="grid md:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex flex-col space-y-3 p-4 border rounded-xl"
+            >
+              <Skeleton className="h-[200px] w-[250px] rounded-xl" />
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : productsPagination.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-8">
           {productsPagination.map((product) => (
             <CardProducts key={product.product_id} product={product} />
           ))}
         </div>
       ) : (
-        <h1>----- No hay productos en esta categoria -----</h1>
+        <p className="flex flex-row justify-center">
+          ----- No hay productos en esta categoria -----
+        </p>
       )}
-      {products.length > 0 && (
+
+      {!loading && products.length > 0 && (
         <Pagination
           page={page}
           pageSize={pageSize}

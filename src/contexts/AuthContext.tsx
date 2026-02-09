@@ -1,4 +1,10 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useState,
+} from "react";
 
 interface User {
   id: number;
@@ -27,6 +33,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 
 interface AuthContextType {
   user: User | null;
+  loading: boolean;
   login: (user: User, token: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
@@ -45,12 +52,14 @@ function getInitialUser(): User | null {
 }
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, { user: getInitialUser() });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       dispatch({ type: "LOGIN", payload: JSON.parse(savedUser) });
     }
+    setLoading(false);
   }, []);
 
   const login = (user: User, token: string) => {
@@ -70,7 +79,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user: state.user, login, logout, isAuthenticated, isAdmin }}
+      value={{
+        user: state.user,
+        loading,
+        login,
+        logout,
+        isAuthenticated,
+        isAdmin,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -84,6 +100,5 @@ export function useAuth() {
     throw new Error("useAuth dentro de AuthProvider");
   }
 
-  
   return context;
 }
