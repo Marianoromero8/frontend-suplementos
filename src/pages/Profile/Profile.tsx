@@ -27,11 +27,13 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { OrderPDF } from "../Dashboard/components/Orders/OrderPdf";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Perfil() {
   const { user } = useAuth();
   const [orders, setOrders] = useState<OrderSchema[]>([]);
   const [edit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -43,6 +45,7 @@ export default function Perfil() {
   useEffect(() => {
     const loadUserData = async () => {
       if (!user?.id) return;
+      setLoading(true);
 
       try {
         const userById = await getUserById(Number(user.id));
@@ -62,6 +65,8 @@ export default function Perfil() {
         }
       } catch (error) {
         console.error("Error loading profile:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -110,7 +115,9 @@ export default function Perfil() {
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
-      <h1 className="flex text-5xl font-bold justify-center">Perfil</h1>
+      <h1 className="flex text-5xl font-bold justify-center">
+        {loading ? <Skeleton className="h-12 w-40" /> : "Perfil"}
+      </h1>
 
       <Card>
         <CardHeader>
@@ -120,98 +127,112 @@ export default function Perfil() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <div>
-            <label className="font-semibold">Nombre</label>
-            {edit ? (
-              <Input
-                name="name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-              />
-            ) : (
-              <p className="opacity-80">{formData?.name}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="font-semibold">Email</label>
-            {edit ? (
-              <Input
-                name="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-            ) : (
-              <p className="opacity-80">{formData?.email}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="font-semibold">Direccion</label>
-            {edit ? (
-              <Input
-                name="address"
-                value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-              />
-            ) : (
-              <p className="opacity-80">{formData?.address}</p>
-            )}
-          </div>
-
-          {edit && (
-            <div>
-              <label className="font-semibold flex items-center gap-2">
-                Confirmar Contraseña
-              </label>
-              <Input
-                type="password"
-                name="password"
-                placeholder="Enter your current or new password"
-                className="bg-white"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
-            </div>
-          )}
-
-          <div>
-            <label className="font-semibold">Rol</label>
-            <p className="opacity-80">{user?.role}</p>
-          </div>
-
-          {edit ? (
-            <div className="flex flex-col gap-3">
-              <Button className="w-full" onClick={handleSave}>
-                Guardar Cambios
-              </Button>
-              <Button
-                variant="secondary"
-                className="w-full"
-                onClick={() => {
-                  setEdit(false);
-                }}
-              >
-                Cancelar
-              </Button>
+          {loading ? (
+            // Skeletons para los campos del perfil
+            <div className="space-y-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-full" />
+                </div>
+              ))}
+              <Skeleton className="h-10 w-full mt-4" />
             </div>
           ) : (
-            <Button
-              className="w-full"
-              onClick={() => {
-                setEdit(true);
-              }}
-            >
-              Editar Perfil
-            </Button>
+            <>
+              <div>
+                <label className="font-semibold">Nombre</label>
+                {edit ? (
+                  <Input
+                    name="name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
+                ) : (
+                  <p className="opacity-80">{formData?.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="font-semibold">Email</label>
+                {edit ? (
+                  <Input
+                    name="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                  />
+                ) : (
+                  <p className="opacity-80">{formData?.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="font-semibold">Direccion</label>
+                {edit ? (
+                  <Input
+                    name="address"
+                    value={formData.address}
+                    onChange={(e) =>
+                      setFormData({ ...formData, address: e.target.value })
+                    }
+                  />
+                ) : (
+                  <p className="opacity-80">{formData?.address}</p>
+                )}
+              </div>
+              {edit && (
+                <div>
+                  <label className="font-semibold flex items-center gap-2">
+                    Confirmar Contraseña
+                  </label>
+                  <Input
+                    type="password"
+                    name="password"
+                    placeholder="Escribe tu contraseña para confirmar los cambios"
+                    className="bg-white"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="font-semibold">Rol</label>
+                <p className="opacity-80">{user?.role}</p>
+              </div>
+
+              {edit ? (
+                <div className="flex flex-col gap-3">
+                  <Button className="w-full" onClick={handleSave}>
+                    Guardar Cambios
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => {
+                      setEdit(false);
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setEdit(true);
+                  }}
+                >
+                  Editar Perfil
+                </Button>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
@@ -222,7 +243,13 @@ export default function Perfil() {
             Ordenes
           </CardTitle>
           <CardContent>
-            {orders.length > 0 ? (
+            {loading ? (
+              <div className="space-y-2 pt-4">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            ) : orders.length > 0 ? (
               <Accordion type="single" collapsible className="w-full">
                 {orders.map((or) => (
                   <AccordionItem key={or.order_id} value={`${or.order_id}`}>
