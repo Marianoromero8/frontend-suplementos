@@ -63,7 +63,7 @@ export function DashboardCategories() {
           "La categoria ha sido borrada.",
           "success",
         );
-        window.location.reload();
+        getCategories().then(setCategories);
       } catch (error: any) {
         Swal.fire("Error", error.message, "error");
       }

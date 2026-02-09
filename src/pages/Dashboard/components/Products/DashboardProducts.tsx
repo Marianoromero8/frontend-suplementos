@@ -62,7 +62,7 @@ export function DashboardProducts() {
       try {
         await deleteProduct(id);
         Swal.fire("¡Eliminado!", "El producto ha sido borrado.", "success");
-        window.location.reload();
+        getProducts().then(setProducts);
       } catch (error) {
         Swal.fire("Error", "error");
       }
